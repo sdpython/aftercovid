@@ -6,7 +6,7 @@ import sys
 
 def main(args, fLOG=print):
     """
-    Implements ``python -m covidsim check <command> <args>``.
+    Implements ``python -m aftercovid check <command> <args>``.
     """
     from pyquickhelper.cli import cli_main_helper
     try:

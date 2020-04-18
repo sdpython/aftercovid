@@ -1,27 +1,27 @@
 
-covidsim: template for a python module with cython and openmp
+aftercovid: template for a python module with cython and openmp
 =============================================================
 
-.. image:: https://circleci.com/gh/sdpython/covidsim/tree/master.svg?style=svg
-    :target: https://circleci.com/gh/sdpython/covidsim/tree/master
+.. image:: https://circleci.com/gh/sdpython/aftercovid/tree/master.svg?style=svg
+    :target: https://circleci.com/gh/sdpython/aftercovid/tree/master
 
-.. image:: https://travis-ci.org/sdpython/covidsim.svg?branch=master
-    :target: https://travis-ci.org/sdpython/covidsim
+.. image:: https://travis-ci.org/sdpython/aftercovid.svg?branch=master
+    :target: https://travis-ci.org/sdpython/aftercovid
     :alt: Build status
 
 .. image:: https://ci.appveyor.com/api/projects/status/wvo6ovlaxi8ypua4?svg=true
     :target: https://ci.appveyor.com/project/sdpython/td3a-cpp
     :alt: Build Status Windows
 
-.. image:: https://dev.azure.com/xavierdupre3/covidsim/_apis/build/status/sdpython.covidsim
-    :target: https://dev.azure.com/xavierdupre3/covidsim/
+.. image:: https://dev.azure.com/xavierdupre3/aftercovid/_apis/build/status/sdpython.aftercovid
+    :target: https://dev.azure.com/xavierdupre3/aftercovid/
 
-.. image:: https://badge.fury.io/py/covidsim.svg
-    :target: http://badge.fury.io/py/covidsim
+.. image:: https://badge.fury.io/py/aftercovid.svg
+    :target: http://badge.fury.io/py/aftercovid
 
-.. image:: http://img.shields.io/github/issues/sdpython/covidsim.png
+.. image:: http://img.shields.io/github/issues/sdpython/aftercovid.png
     :alt: GitHub Issues
-    :target: https://github.com/sdpython/covidsim/issues
+    :target: https://github.com/sdpython/aftercovid/issues
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
     :alt: MIT License
@@ -40,7 +40,7 @@ to write parallelized algorithm.
     dev
 
 Sources available on
-`github/covidsim <https://github.com/sdpython/covidsim>`_.
+`github/aftercovid <https://github.com/sdpython/aftercovid>`_.
 
 *Indices and tables*
 

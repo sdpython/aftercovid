@@ -1,36 +1,36 @@
 
-.. image:: https://circleci.com/gh/sdpython/covidsim/tree/master.svg?style=svg
-    :target: https://circleci.com/gh/sdpython/covidsim/tree/master
+.. image:: https://circleci.com/gh/sdpython/aftercovid/tree/master.svg?style=svg
+    :target: https://circleci.com/gh/sdpython/aftercovid/tree/master
 
-.. image:: https://travis-ci.org/sdpython/covidsim.svg?branch=master
-    :target: https://travis-ci.org/sdpython/covidsim
+.. image:: https://travis-ci.org/sdpython/aftercovid.svg?branch=master
+    :target: https://travis-ci.org/sdpython/aftercovid
     :alt: Build status
 
 .. image:: https://ci.appveyor.com/api/projects/status/wvo6ovlaxi8ypua4?svg=true
     :target: https://ci.appveyor.com/project/sdpython/td3a-cpp
     :alt: Build Status Windows
 
-.. image:: https://dev.azure.com/xavierdupre3/covidsim/_apis/build/status/sdpython.covidsim
-    :target: https://dev.azure.com/xavierdupre3/covidsim/
+.. image:: https://dev.azure.com/xavierdupre3/aftercovid/_apis/build/status/sdpython.aftercovid
+    :target: https://dev.azure.com/xavierdupre3/aftercovid/
 
-.. image:: https://badge.fury.io/py/covidsim.svg
-    :target: http://badge.fury.io/py/covidsim
+.. image:: https://badge.fury.io/py/aftercovid.svg
+    :target: http://badge.fury.io/py/aftercovid
 
-.. image:: http://img.shields.io/github/issues/sdpython/covidsim.png
+.. image:: http://img.shields.io/github/issues/sdpython/aftercovid.png
     :alt: GitHub Issues
-    :target: https://github.com/sdpython/covidsim/issues
+    :target: https://github.com/sdpython/aftercovid/issues
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
-covidsim: epidemics simulation
+aftercovid: epidemics simulation
 ==============================
 
-.. image:: https://raw.githubusercontent.com/sdpython/covidsim/master/doc/_static/logo.png
+.. image:: https://raw.githubusercontent.com/sdpython/aftercovid/master/doc/_static/logo.png
     :width: 50
 
-`documentation <http://www.xavierdupre.fr/app/covidsim/helpsphinx/index.html>`_
+`documentation <http://www.xavierdupre.fr/app/aftercovid/helpsphinx/index.html>`_
 
 Tools, tries about :epkg:`COVID` epidemics.
 The module must be compiled to be used inplace:
@@ -67,13 +67,13 @@ To check style:
 
 ::
 
-    python -m flake8 covidsim tests examples
+    python -m flake8 aftercovid tests examples
 
-The function *check* or the command line ``python -m covidsim check``
+The function *check* or the command line ``python -m aftercovid check``
 checks the module is properly installed and returns processing
 time for a couple of functions or simply:
 
 ::
 
-    import covidsim
-    covidsim.check()
+    import aftercovid
+    aftercovid.check()

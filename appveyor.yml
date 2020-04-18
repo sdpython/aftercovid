@@ -26,13 +26,13 @@ before_test:
 test_script:
   - "%PYTHON%\\python -m unittest discover tests"
   - "%PYTHON%\\python -m flake8 tests"
-  - "%PYTHON%\\python -m flake8 covidsim"
+  - "%PYTHON%\\python -m flake8 aftercovid"
   - "%PYTHON%\\python -m flake8 examples"
 
 after_test:
   - "%PYTHON%\\python setup.py bdist_wheel"
-  - "%PYTHON%\\python -m covidsim check"
+  - "%PYTHON%\\python -m aftercovid check"
 
 artifacts:
   - path: dist
-    name: covidsim
+    name: aftercovid

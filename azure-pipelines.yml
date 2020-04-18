@@ -37,7 +37,7 @@ jobs:
       python -u setup.py bdist_wheel
     displayName: 'Build Package'
   - script: |
-      python -m covidsim check
+      python -m aftercovid check
     displayName: 'Check speed'
 #  - script: |
 #      python -u setup.py build_sphinx
@@ -99,7 +99,7 @@ jobs:
       python -u setup.py bdist_wheel
     displayName: 'Build Package'
   - script: |
-      python -m covidsim check
+      python -m aftercovid check
     displayName: 'Check speed'
   - task: PublishPipelineArtifact@0
     inputs:

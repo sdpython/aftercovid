@@ -42,7 +42,7 @@ To check style:
 
 ::
 
-    python -m flake8 covidsim tests examples
+    python -m flake8 aftercovid tests examples
 
 Setup
 +++++
@@ -50,7 +50,7 @@ Setup
 Building the module require C++ libraries (:epkg:`openmp`).
 Instructions can be found in CI files:
 
-* `Windows <https://github.com/sdpython/covidsim/blob/master/appveyor.yml>`_
-* `Linux (Debian) <https://github.com/sdpython/covidsim/blob/master/.circleci/config.yml>`_
-* `Linux (Ubuntu) <https://github.com/sdpython/covidsim/blob/master/.travis.yml>`_
-* `Mac OSX <https://github.com/sdpython/covidsim/blob/master/azure-pipelines.yml#L50>`_
+* `Windows <https://github.com/sdpython/aftercovid/blob/master/appveyor.yml>`_
+* `Linux (Debian) <https://github.com/sdpython/aftercovid/blob/master/.circleci/config.yml>`_
+* `Linux (Ubuntu) <https://github.com/sdpython/aftercovid/blob/master/.travis.yml>`_
+* `Mac OSX <https://github.com/sdpython/aftercovid/blob/master/azure-pipelines.yml#L50>`_

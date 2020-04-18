@@ -55,11 +55,11 @@ def get_defined_args():
 
 
 def get_extension_tutorial(name):
-    pattern1 = "covidsim.tutorial.%s"
-    srcs = ['covidsim/tutorial/%s.pyx' % name]
+    pattern1 = "aftercovid.tutorial.%s"
+    srcs = ['aftercovid/tutorial/%s.pyx' % name]
     args = get_defined_args()
     if name in ['dot_cython', 'experiment_cython', 'dot_cython_omp']:
-        srcs.extend(['covidsim/tutorial/%s_.cpp' % name])
+        srcs.extend(['aftercovid/tutorial/%s_.cpp' % name])
         args['language'] = "c++"
 
     ext = Extension(pattern1 % name, srcs,
@@ -88,7 +88,7 @@ if here == "":
 packages = find_packages(where=here)
 package_dir = {k: os.path.join(here, k.replace(".", "/")) for k in packages}
 package_data = {
-    "covidsim.tutorial": ["*.pyx", '*.cpp', '*.h'],
+    "aftercovid.tutorial": ["*.pyx", '*.cpp', '*.h'],
 }
 
 try:
@@ -101,12 +101,12 @@ if len(requirements) == 0 or requirements == ['']:
 
 try:
     with open(os.path.join(here, "readme.rst"), "r", encoding='utf-8') as f:
-        long_description = "covidsim:" + f.read().split('covidsim:')[1]
+        long_description = "aftercovid:" + f.read().split('aftercovid:')[1]
 except FileNotFoundError:
     long_description = ""
 
 version_str = '0.0.1'
-with open(os.path.join(here, 'covidsim/__init__.py'), "r") as f:
+with open(os.path.join(here, 'aftercovid/__init__.py'), "r") as f:
     line = [_ for _ in [_.strip("\r\n ")
                         for _ in f.readlines()]
             if _.startswith("__version__")]
@@ -118,13 +118,13 @@ for ext in ['experiment_cython']:
     ext_modules.extend(get_extension_tutorial(ext))
 
 
-setup(name='covidsim',
+setup(name='aftercovid',
       version=version_str,
       description="Code, ideas about COVID epidemics",
       long_description=long_description,
       author='Xavier Dupré, ...',
       author_email='xavier.dupre@gmail.com',
-      url='https://github.com/sdpython/covidsim',
+      url='https://github.com/sdpython/aftercovid',
       ext_modules=ext_modules,
       packages=packages,
       package_dir=package_dir,

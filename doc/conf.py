@@ -9,7 +9,7 @@ sys.path.insert(
         os.path.join(
             os.path.dirname(__file__),
             '..')))
-from covidsim import __version__  # noqa
+from aftercovid import __version__  # noqa
 
 extensions = [
     'nbsphinx',
@@ -32,7 +32,7 @@ templates_path = ['_templates']
 html_logo = '_static/logo.png'
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'covidsim'
+project = 'aftercovid'
 copyright = '2020, Xavier Dupré'
 author = 'Xavier Dupré'
 version = __version__
@@ -57,7 +57,7 @@ html_sidebars = {
     ]
 }
 
-htmlhelp_basename = 'covidsimdoc'
+htmlhelp_basename = 'aftercovid'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
@@ -78,15 +78,15 @@ latex_elements = {
 
 latex_documents = [
     (master_doc,
-     'covidsim.tex',
+     'aftercovid.tex',
      'Documentation',
      'Xavier Dupré',
      'manual'),
 ]
 
 texinfo_documents = [
-    (master_doc, 'covidsim', 'covidsim Documentation',
-     author, 'covidsim', 'One line description of project.',
+    (master_doc, 'aftercovid', 'aftercovid Documentation',
+     author, 'aftercovid', 'One line description of project.',
      'Miscellaneous'),
 ]
 
