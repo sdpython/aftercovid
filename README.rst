@@ -6,8 +6,8 @@
     :target: https://travis-ci.org/sdpython/aftercovid
     :alt: Build status
 
-.. image:: https://ci.appveyor.com/api/projects/status/wvo6ovlaxi8ypua4?svg=true
-    :target: https://ci.appveyor.com/project/sdpython/td3a-cpp
+.. image:: https://ci.appveyor.com/api/projects/status/ffne8nhh96jdqo4p?svg=true
+    :target: https://ci.appveyor.com/project/sdpython/aftercovid
     :alt: Build Status Windows
 
 .. image:: https://dev.azure.com/xavierdupre3/aftercovid/_apis/build/status/sdpython.aftercovid
