@@ -24,12 +24,10 @@ aftercovid: template for a python module with cython and openmp
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
-This package does nothing except showing how to package
-functions using :epkg:`cython` and :epkg:`openmp`
-to write parallelized algorithm.
+Modelling, statistics about :epkg:`COVID`.
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     tutorial
     api

@@ -47,7 +47,6 @@ To check style:
 Setup
 +++++
 
-Building the module require C++ libraries (:epkg:`openmp`).
 Instructions can be found in CI files:
 
 * `Windows <https://github.com/sdpython/aftercovid/blob/master/appveyor.yml>`_
