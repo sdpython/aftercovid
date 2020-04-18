@@ -13,9 +13,6 @@ aftercovid: template for a python module with cython and openmp
     :target: https://ci.appveyor.com/project/sdpython/aftercovid
     :alt: Build Status Windows
 
-.. image:: https://dev.azure.com/xavierdupre3/aftercovid/_apis/build/status/sdpython.aftercovid
-    :target: https://dev.azure.com/xavierdupre3/aftercovid/
-
 .. image:: https://badge.fury.io/py/aftercovid.svg
     :target: http://badge.fury.io/py/aftercovid
 

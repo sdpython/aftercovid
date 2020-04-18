@@ -113,6 +113,11 @@ with open(os.path.join(here, 'aftercovid/__init__.py'), "r") as f:
     if len(line) > 0:
         version_str = line[0].split('=')[1].strip('" ')
 
+requires = ["cython", "numpy", "scipy"]
+with open(os.path.join(here, 'requirements.txt'), "r") as f:
+    requires = [_.strip() for _ in f.readlines()]
+    requires = [_ for _ in requires if _]
+
 ext_modules = []
 for ext in ['experiment_cython']:
     ext_modules.extend(get_extension_tutorial(ext))
@@ -129,6 +134,6 @@ setup(name='aftercovid',
       packages=packages,
       package_dir=package_dir,
       package_data=package_data,
-      setup_requires=["cython", "numpy", "scipy"],
-      install_requires=["cython", "numpy", "scipy"],
+      setup_requires=requires,
+      install_requires=requires,
       cmdclass=get_cmd_classes())

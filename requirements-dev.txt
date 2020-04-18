@@ -8,7 +8,7 @@ pillow
 py-spy
 pandas
 pyinstrument
-pyquickhelper>=1.9.3248
+pyquickhelper>=1.9.3359
 pytest
 sphinx
 sphinx-gallery
