@@ -44,7 +44,7 @@ jobs:
           command: |
             . venv/bin/activate
             python -m flake8 tests
-            python -m flake8 td3a_cpp
+            python -m flake8 aftercovid
             python -m flake8 examples
 
       - run:
@@ -64,7 +64,7 @@ jobs:
           name: check speed
           command: |
             . venv/bin/activate
-            python -m td3a_cpp check
+            python -m aftercovid check
 
 #      - run:
 #          name: documentation

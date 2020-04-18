@@ -1,5 +1,5 @@
 """
-Implements command line ``python -m td3a_check <command> <args>``.
+Implements command line ``python -m aftercovid <command> <args>``.
 """
 import sys
 
@@ -12,7 +12,7 @@ def main(args, fLOG=print):
     try:
         from . import check
     except ImportError:  # pragma: no cover
-        from td3a_cpp import check
+        from aftercovid import check
 
     fcts = dict(check=check)
     return cli_main_helper(fcts, args=args, fLOG=fLOG)

@@ -29,7 +29,7 @@ aftercovid: epidemics simulation
 
 `documentation <http://www.xavierdupre.fr/app/aftercovid/helpsphinx/index.html>`_
 
-Tools, tries about :epkg:`COVID` epidemics.
+Tools, tries about COVID epidemics.
 The module must be compiled to be used inplace:
 
 ::

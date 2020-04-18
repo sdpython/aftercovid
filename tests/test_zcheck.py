@@ -4,7 +4,7 @@ Unit tests for ``random_strategy``.
 import unittest
 from contextlib import redirect_stdout
 import io
-from td3a_cpp import check
+from aftercovid import check
 
 
 class TestCheck(unittest.TestCase):
