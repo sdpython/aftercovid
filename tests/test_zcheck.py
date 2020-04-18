@@ -14,7 +14,7 @@ class TestCheck(unittest.TestCase):
         with redirect_stdout(f):
             res = check(verbose=1)
         self.assertIsInstance(res, list)
-        self.assertIsEmpty(res)
+        self.assertEqual(len(res), 0)
 
 
 if __name__ == '__main__':
