@@ -1,0 +1,3 @@
+"""
+Shortcuts to *dot*.
+"""
