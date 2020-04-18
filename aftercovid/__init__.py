@@ -15,4 +15,4 @@ def check(verbose=1):
     :param verbose: 0 to hide the standout output
     :return: list of dictionaries, result of each test
     """
-    return None
+    return []
