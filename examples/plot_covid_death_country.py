@@ -80,6 +80,7 @@ tdroll.plot(logy=False, lw=3, title="Nombre de décès COVID lissé", ax=ax[0])
 tdroll.plot(logy=True, lw=3, title="Nombre de décès COVID lissé", ax=ax[1])
 
 
+################################
 # Séries décalées
 # +++++++++++++++
 #
