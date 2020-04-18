@@ -1,6 +1,6 @@
 
-aftercovid: template for a python module with cython and openmp
-=============================================================
+aftercovid: modelling, simulation, statistics around COVID
+==========================================================
 
 .. image:: https://circleci.com/gh/sdpython/aftercovid/tree/master.svg?style=svg
     :target: https://circleci.com/gh/sdpython/aftercovid/tree/master
