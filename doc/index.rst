@@ -24,12 +24,13 @@ aftercovid: modelling, simulation, statistics around COVID
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
-Modelling, statistics about :epkg:`COVID`.
+Modélisation, statistiques, modelling, statistics à propos about :epkg:`COVID`.
 
 .. toctree::
     :maxdepth: 1
 
     tutorial
+    readings
     api
     auto_examples/index
     dev

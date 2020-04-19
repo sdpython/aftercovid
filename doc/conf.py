@@ -33,7 +33,7 @@ html_logo = '_static/logo.png'
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'aftercovid'
-copyright = '2020, Xavier Dupré'
+copyright = '2020, Xavier Dupré, ...'
 author = 'Xavier Dupré'
 version = __version__
 release = __version__
@@ -107,5 +107,7 @@ epkg_dictionary = {
     'numpy': 'https://numpy.org/',
     'pyinstrument': 'https://github.com/joerick/pyinstrument',
     'python': 'https://www.python.org/',
+    'SEIR': 'http://www.public.asu.edu/~hnesse/classes/seir.html',
+    'SEIHFR': 'https://freakonometrics.hypotheses.org/60514',
     'sphinx-gallery': 'https://github.com/sphinx-gallery/sphinx-gallery',
 }
