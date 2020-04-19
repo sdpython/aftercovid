@@ -29,7 +29,7 @@ class CovidSIR(BaseSIR):
         sims = list(model.iterate(60))
         df = DataFrame(sims)
         print(df.head())
-        ax = df.plot(y=['St', 'It', 'Rt', 'Dt'], kind='line')
+        ax = df.plot(y=['S', 'I', 'R', 'D'], kind='line')
         ax.set_xlabel("jours")
         ax.set_ylabel("population")
         r0 = model.R0()
@@ -45,10 +45,10 @@ class CovidSIR(BaseSIR):
     ]
 
     Q0 = [
-        ('St', 9990., 'personnes non contaminés'),
-        ('It', 10., 'nombre de personnes malades ou contaminantes'),
-        ('Rt', 0., 'personnes guéries (recovered)'),
-        ('Dt', 0., 'personnes décédées'),
+        ('S', 9990., 'personnes non contaminés'),
+        ('I', 10., 'nombre de personnes malades ou contaminantes'),
+        ('R', 0., 'personnes guéries (recovered)'),
+        ('D', 0., 'personnes décédées'),
     ]
 
     C0 = [
@@ -56,10 +56,10 @@ class CovidSIR(BaseSIR):
     ]
 
     eq = {
-        'St': '- beta * St / N * It',
-        'It': 'beta * St / N * It - mu * It - nu * It',
-        'Rt': 'mu * It',
-        'Dt': 'nu * It'
+        'S': '- beta * S / N * I',
+        'I': 'beta * S / N * I - mu * I - nu * I',
+        'R': 'mu * I',
+        'D': 'nu * I'
     }
 
     def __init__(self):

@@ -40,13 +40,13 @@ class TestModelsCovidSir(unittest.TestCase):
         model = CovidSIR()
         rst = model.to_rst()
         self.assertIn('\\frac', rst)
-        self.assertIn('It', rst)
+        self.assertIn('I', rst)
         par = model.get()
-        self.assertIn('It', par)
-        p = {'It': 5.}
+        self.assertIn('I', par)
+        p = {'I': 5.}
         model.update(**p)
         par = model.get()
-        self.assertEqual(par['It'], 5.)
+        self.assertEqual(par['I'], 5.)
 
     def test_covid_sir_eval(self):
         model = CovidSIR()
@@ -55,15 +55,15 @@ class TestModelsCovidSir(unittest.TestCase):
                                'mu': 0.07142857142857142,
                                'nu': 0.047619047619047616})
         ev = model.eval_diff()
-        self.assertEqual(ev['St'], -4.995)
+        self.assertEqual(ev['S'], -4.995)
         self.assertEqual(len(ev), 4)
 
     def test_covid_sir_loop(self):
         model = CovidSIR()
         sim = list(model.iterate())
         self.assertEqual(len(sim), 10)
-        self.assertTrue(sim[-1]['St'] >= 9500)
-        self.assertTrue(sim[-1]['St'] < 10000)
+        self.assertTrue(sim[-1]['S'] >= 9500)
+        self.assertTrue(sim[-1]['S'] < 10000)
         r0 = model.R0()
         self.assertEqual(r0, 4.2)
 
