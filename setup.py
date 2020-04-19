@@ -113,7 +113,7 @@ with open(os.path.join(here, 'aftercovid/__init__.py'), "r") as f:
     if len(line) > 0:
         version_str = line[0].split('=')[1].strip('" ')
 
-requires = ["cython", "numpy", "scipy"]
+requires = ["cython", "numpy", "scipy", "sympy"]
 with open(os.path.join(here, 'requirements.txt'), "r") as f:
     requires = [_.strip() for _ in f.readlines()]
     requires = [_ for _ in requires if _]

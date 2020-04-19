@@ -10,8 +10,16 @@ API
 Tutorial
 ++++++++
 
-filter
-^^^^^^
+Models
+++++++
+
+.. toctree::
+    :maxdepth: 1
+
+    model_covidsir
+
+dummy
+++++++
 
 .. autofunction:: aftercovid.tutorial.experiment_cython.pyfilter_dmax
 
