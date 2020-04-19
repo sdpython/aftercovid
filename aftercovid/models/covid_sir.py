@@ -14,7 +14,8 @@ class CovidSIR(BaseSIR):
         :showcode:
         :rst:
 
-        from aftercovid import CovidSIR
+        from aftercovid.models import CovidSIR
+
         model = CovidSIR
         print(model.to_rst())
     """
