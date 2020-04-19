@@ -18,30 +18,47 @@ class CovidSIR(BaseSIR):
 
         model = CovidSIR()
         print(model.to_rst())
+
+    .. plot::
+
+        from pandas import DataFrame
+        from aftercovid.models import CovidSIR
+
+        model = CovidSIR()
+        sims = list(model.iterate(60))
+        df = DataFrame(sims)
+        print(df.head())
+        ax = df.plot(y=['St', 'It', 'Rt', 'Dt'], kind='line')
+        ax.set_xlabel("jours")
+        ax.set_ylabel("population")
+        ax.set_title("Simulation SIR")
+
+        import matplotlib.pyplot as plt
+        plt.show()
     """
 
     P0 = [
-        ('beta', 2.5, 'taux de transmission dans la population'),
+        ('beta', 0.5, 'taux de transmission dans la population'),
         ('mu', 1/14., '1/. : durée moyenne jusque la guérison'),
-        ('nu', 1/10., '1/. : durée moyenne jusqu\'au décès'),
+        ('nu', 1/21., '1/. : durée moyenne jusqu\'au décès'),
     ]
 
     Q0 = [
-        ('S', None, 'personnes non contaminés'),
-        ('I', None, 'nombre de personnes malades ou contaminantes'),
-        ('R', None, 'personnes guéries (recovered)'),
-        ('D', None, 'personnes décédées'),
+        ('St', 9990., 'personnes non contaminés'),
+        ('It', 10., 'nombre de personnes malades ou contaminantes'),
+        ('Rt', 0., 'personnes guéries (recovered)'),
+        ('Dt', 0., 'personnes décédées'),
     ]
 
     C0 = [
-        ('N', None, 'population'),
+        ('N', 10000., 'population'),
     ]
 
     eq = {
-        'S': '- beta * S(t) / N * I(t)',
-        'I': 'beta * S(t) / N * I(t) - mu * I(t) - nu * I(t)',
-        'R': 'mu * I(t)',
-        'D': 'nu * I(t)'
+        'St': '- beta * St / N * It',
+        'It': 'beta * St / N * It - mu * It - nu * It',
+        'Rt': 'mu * It',
+        'Dt': 'nu * It'
     }
 
     def __init__(self):

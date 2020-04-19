@@ -3,7 +3,7 @@
 Common function for :epkg:`SIR` models.
 """
 import numpy
-from sympy import symbols, Function, Symbol
+from sympy import symbols, Symbol
 import sympy.printing as printing
 from sympy.parsing.sympy_parser import (
     parse_expr, standard_transformations, implicit_application)
@@ -38,7 +38,8 @@ class BaseSIR:
             for v in self._c:
                 locs[v[0]] = symbols(v[0], cls=Symbol)
             for v in self._q:
-                locs[v[0]] = symbols(v[0], cls=Function)
+                locs[v[0]] = symbols(v[0], cls=Symbol)
+            self._syms = locs
             tr = standard_transformations + (implicit_application, )
             self._eq = {}
             for k, v in eq.items():
@@ -55,9 +56,16 @@ class BaseSIR:
         """
         Starts from the initial values.
         """
-        self._val_p = numpy.array([(v[1] if v[1] else 0.) for v in self._p])
-        self._val_q = numpy.array([(v[1] if v[1] else 0.) for v in self._q])
-        self._val_c = numpy.array([(v[1] if v[1] else 0.) for v in self._c])
+        def _def_(name, v):
+            if v is not None:
+                return v
+            if name == 'N':
+                return 10000.
+            return 0.
+
+        self._val_p = numpy.array([_def_(v[0], v[1]) for v in self._p])
+        self._val_q = numpy.array([_def_(v[0], v[1]) for v in self._q])
+        self._val_c = numpy.array([_def_(v[0], v[1]) for v in self._c])
 
     def get_index(self, name):
         '''
@@ -132,6 +140,15 @@ class BaseSIR:
         '''
         return self._c
 
+    def update(self, **values):
+        """Updates values."""
+        for k, v in values.items():
+            self[k] = v
+
+    def get(self):
+        """Retrieves all values."""
+        return {n: self[n] for n in self.names}
+
     def to_rst(self):
         '''
         Returns a string formatted in RST.
@@ -151,10 +168,79 @@ class BaseSIR:
         for name, _, doc in self._p:
             rows.append('* *{}*: {}'.format(name, doc))
         if self._eq is not None:
-            rows.extend(['', '*E*', '', '.. math::', ''])
-            for k, v in sorted(self._eq.items()):
+            rows.extend(['', '*E*', '', '.. math::',
+                         '', '    \\begin{array}{l}'])
+            for i, (k, v) in enumerate(sorted(self._eq.items())):
                 line = "".join(
                     ["    ", "\\frac{d%s}{dt} = " % k, printing.latex(v)])
+                if i < len(self._eq) - 1:
+                    line += " \\\\"
                 rows.append(line)
+            rows.append("    \\end{array}")
 
         return '\n'.join(rows)
+
+    def evalf(self, name, t):
+        """
+        Evaluate quantity *name* at time *t*.
+        *t* is unused.
+        """
+        return self[name]
+
+    @property
+    def cst_param(self):
+        '''
+        Returns a dictionary with the constant and the parameters.
+        '''
+        res = {}
+        for k, v in zip(self._c, self._val_c):
+            res[k[0]] = v
+        for k, v in zip(self._p, self._val_p):
+            res[k[0]] = v
+        return res
+
+    def _eval_cache(self):
+        values = self.cst_param
+        svalues = {self._syms[k]: v for k, v in values.items()}
+        return svalues
+
+    def eval_diff(self, t=0):
+        """
+        Evaluates derivatives.
+        Returns a directionary.
+        """
+        svalues = self._eval_cache()
+        svalues[self._syms['t']] = t
+        for k, v in zip(self._q, self._val_q):
+            svalues[self._syms[k[0]]] = v
+
+        res = {}
+        for k, v in self._eq.items():
+            res[k] = v.evalf(subs=svalues)
+        return res
+
+    def iterate(self, n=10, t=0, derivatives=False):
+        """
+        Evalues the quantities for *n* iterations.
+        Returns a list of dictionaries.
+        If *derivatives* is True, it returns two dictionaries.
+        """
+        svalues = self._eval_cache()
+        svalues[self._syms['t']] = t
+        vals = {k[0]: v for k, v in zip(self._q, self._val_q)}
+        for i in range(t, t + n):
+
+            for k, v in zip(self._q, self._val_q):
+                svalues[self._syms[k[0]]] = v
+            diff = {}
+            for k, v in self._eq.items():
+                diff[k] = v.evalf(subs=svalues)
+
+            for k, v in diff.items():
+                vals[k] += v
+            fvals = {k: float(v) for k, v in vals.items()}
+            if derivatives:
+                yield fvals, diff
+            else:
+                yield fvals
+            self.update(**vals)

@@ -16,6 +16,9 @@ class TestModelsCovidSir(unittest.TestCase):
         with self.assertRaises(TypeError):
             BaseSIR([('p', 0.5, 'PP')], [('q', 0.6, 'QQ')],
                     ('N', 0.6, 'NN'))
+        with self.assertRaises(TypeError):
+            BaseSIR([('p', 0.5, 'PP')], [('q', 0.6, 'QQ')],
+                    [('N', 0.6, 'NN')], "r")
         models = BaseSIR([('p', 0.5, 'PP')], [('q', 0.6, 'QQ')],
                          [('N', 0.6, 'NN')])
         names = models.names
@@ -37,7 +40,30 @@ class TestModelsCovidSir(unittest.TestCase):
         model = CovidSIR()
         rst = model.to_rst()
         self.assertIn('\\frac', rst)
-        self.assertIn('I{', rst)
+        self.assertIn('It', rst)
+        par = model.get()
+        self.assertIn('It', par)
+        p = {'It': 5.}
+        model.update(**p)
+        par = model.get()
+        self.assertEqual(par['It'], 5.)
+
+    def test_covid_sir_eval(self):
+        model = CovidSIR()
+        cst = model.cst_param
+        self.assertEqual(cst, {'N': 10000.0, 'beta': 0.5,
+                               'mu': 0.07142857142857142,
+                               'nu': 0.047619047619047616})
+        ev = model.eval_diff()
+        self.assertEqual(ev['St'], -4.995)
+        self.assertEqual(len(ev), 4)
+
+    def test_covid_sir_loop(self):
+        model = CovidSIR()
+        sim = list(model.iterate())
+        self.assertEqual(len(sim), 10)
+        self.assertTrue(sim[-1]['St'] >= 9500)
+        self.assertTrue(sim[-1]['St'] < 10000)
 
 
 if __name__ == '__main__':
