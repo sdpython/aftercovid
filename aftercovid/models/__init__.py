@@ -2,4 +2,4 @@
 Shortcuts to models.
 '''
 
-from .covidsir import CovidSIR  # noqa
+from .covid_sir import CovidSIR  # noqa
