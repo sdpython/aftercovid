@@ -22,6 +22,7 @@ class CovidSIR(BaseSIR):
     .. plot::
 
         from pandas import DataFrame
+        import matplotlib.pyplot as plt
         from aftercovid.models import CovidSIR
 
         model = CovidSIR()
@@ -32,9 +33,8 @@ class CovidSIR(BaseSIR):
         ax.set_xlabel("jours")
         ax.set_ylabel("population")
         r0 = model.R0()
-        ax.set_title("Simulation SIR\nR0=%f" % r0)
+        ax.set_title("Simulation SIR\\nR0=%f" % r0)
 
-        import matplotlib.pyplot as plt
         plt.show()
     """
 
