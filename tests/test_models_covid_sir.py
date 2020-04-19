@@ -64,6 +64,8 @@ class TestModelsCovidSir(unittest.TestCase):
         self.assertEqual(len(sim), 10)
         self.assertTrue(sim[-1]['St'] >= 9500)
         self.assertTrue(sim[-1]['St'] < 10000)
+        r0 = model.R0()
+        self.assertEqual(r0, 4.2)
 
 
 if __name__ == '__main__':

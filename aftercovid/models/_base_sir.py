@@ -244,3 +244,7 @@ class BaseSIR:
             else:
                 yield fvals
             self.update(**vals)
+
+    def R0(self, t=0):
+        '''Returns R0 coefficient.'''
+        raise NotImplementedError()

@@ -31,7 +31,8 @@ class CovidSIR(BaseSIR):
         ax = df.plot(y=['St', 'It', 'Rt', 'Dt'], kind='line')
         ax.set_xlabel("jours")
         ax.set_ylabel("population")
-        ax.set_title("Simulation SIR")
+        r0 = model.R0()
+        ax.set_title("Simulation SIR\nR0=%f" % r0)
 
         import matplotlib.pyplot as plt
         plt.show()
@@ -68,3 +69,7 @@ class CovidSIR(BaseSIR):
             q=CovidSIR.Q0.copy(),
             c=CovidSIR.C0.copy(),
             eq=CovidSIR.eq.copy())
+
+    def R0(self, t=0):
+        '''Returns R0 coefficient.'''
+        return self['beta'] / (self['nu'] + self['mu'])
