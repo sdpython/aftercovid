@@ -16,7 +16,7 @@ class CovidSIR(BaseSIR):
 
         from aftercovid.models import CovidSIR
 
-        model = CovidSIR
+        model = CovidSIR()
         print(model.to_rst())
     """
 
