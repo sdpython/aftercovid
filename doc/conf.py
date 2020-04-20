@@ -109,5 +109,6 @@ epkg_dictionary = {
     'python': 'https://www.python.org/',
     'SEIR': 'http://www.public.asu.edu/~hnesse/classes/seir.html',
     'SEIHFR': 'https://freakonometrics.hypotheses.org/60514',
+    'SIR': 'https://fr.wikipedia.org/wiki/Mod%C3%A8les_compartimentaux_en_%C3%A9pid%C3%A9miologie',
     'sphinx-gallery': 'https://github.com/sphinx-gallery/sphinx-gallery',
 }

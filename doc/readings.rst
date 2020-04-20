@@ -31,6 +31,8 @@ Papiers de recherche :
   <https://covid-19-sds.github.io/assets/pdfs/Preliminary_Report_Effectiveness_of_social_distance_strategies_COVID-19.pdf>`_
 * `Epidemiological characteristics of COVID-19 cases in Italy and estimates of the reproductive numbers one month into the epidemic
   <https://www.medrxiv.org/content/10.1101/2020.04.08.20056861v1.full.pdf>`_
+* `Effectiveness of social distancing strategies for protecting a community from a pandemic with a data-driven contact network based on census and real-world mobility data
+  <https://covid-19-sds.github.io/>`_
 
 *SIR*
 
@@ -40,8 +42,6 @@ Papiers de recherche :
 * `Propagation of the SARS-CoV-2 coronavirus
   <https://github.com/gabriel-turinici/covid19/blob/master/sliadr_model_v11_HK_G_Turinici.ipynb>`_,
   modèle `SLIADRE <https://www.medrxiv.org/content/10.1101/2020.02.14.20022939v1>`_
-* `Effectiveness of social distancing strategies for protecting a community from a pandemic with a data-driven contact network based on census and real-world mobility data
-  <https://covid-19-sds.github.io/>`_
 
 *R0*
 
