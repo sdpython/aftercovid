@@ -36,6 +36,15 @@ class CovidSIR(BaseSIR):
         ax.set_title("Simulation SIR\\nR0=%f" % r0)
 
         plt.show()
+
+    Visual representation:
+
+    .. gdot::
+        :script:
+
+        from aftercovid.models import CovidSIR
+        model = CovidSIR()
+        print(model.to_dot())
     """
 
     P0 = [

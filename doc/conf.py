@@ -104,6 +104,7 @@ epkg_dictionary = {
     'C++': 'https://en.wikipedia.org/wiki/C%2B%2B',
     'COVID': 'https://en.wikipedia.org/wiki/Coronavirus_disease_2019',
     'cython': 'https://cython.org/',
+    'DOT': 'https://www.graphviz.org/doc/info/lang.html',
     'numpy': 'https://numpy.org/',
     'pyinstrument': 'https://github.com/joerick/pyinstrument',
     'python': 'https://www.python.org/',

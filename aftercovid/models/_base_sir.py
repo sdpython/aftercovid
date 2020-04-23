@@ -7,9 +7,10 @@ from sympy import symbols, Symbol
 import sympy.printing as printing
 from sympy.parsing.sympy_parser import (
     parse_expr, standard_transformations, implicit_application)
+from ._base_sir_sim import BaseSIRSimulation
 
 
-class BaseSIR:
+class BaseSIR(BaseSIRSimulation):
     """
     Base model for :epkg:`SIR` models.
 
@@ -180,6 +181,60 @@ class BaseSIR:
 
         return '\n'.join(rows)
 
+    def _enumerate_traverse(self, e, parent=None):
+        yield dict(e=e, p=parent)
+        for arg in e.args:
+            for r in self._enumerate_traverse(arg, e):
+                yield r
+
+    def enumerate_edges(self):
+        """
+        Returns the list of quantities contributing
+        to others. It ignores constants.
+        """
+        if self._eq is not None:
+            params = set(_[0] for _ in self.P)
+            quants = set(_[0] for _ in self.Q)
+            for k, v in sorted(self._eq.items()):
+                n2 = k
+                for dobj in self._enumerate_traverse(v):
+                    term = dobj['e']
+                    if not hasattr(term, 'name'):
+                        continue
+                    if term.name not in params:
+                        continue
+                    parent = dobj['p']
+                    others = list(
+                        _['e'] for _ in self._enumerate_traverse(parent))
+                    for o in others:
+                        if hasattr(o, 'name') and o.name in quants:
+                            if o.name == n2:
+                                continue
+                            yield (o.name, n2, term.name)
+
+    def to_dot(self, verbose=True):
+        """
+        Produces a graph in :epkg:`DOT` format.
+        """
+        rows = ['digraph{']
+
+        pattern = ('    {name} [label="{name}\\n{doc}"];'
+                   if verbose else '    {name} [label="{name}"];')
+        for name, _, doc in self._q:
+            rows.append(pattern.format(name=name, doc=doc))
+        for name, _, doc in self._c:
+            rows.append(pattern.format(name=name, doc=doc))
+
+        if self._eq is not None:
+            pattern = ('    {n1} -> {n2} [label="{name}\\nvalue={v:1.2g}"];'
+                       if verbose else '    {n1} -> {n2} [label="{name}"];')
+            for a, b, name in set(self.enumerate_edges()):
+                value = self[name]
+                rows.append(pattern.format(n1=a, n2=b, name=name, v=value))
+
+        rows.append('}')
+        return '\n'.join(rows)
+
     def evalf(self, name, t):
         """
         Evaluate quantity *name* at time *t*.
@@ -198,53 +253,3 @@ class BaseSIR:
         for k, v in zip(self._p, self._val_p):
             res[k[0]] = v
         return res
-
-    def _eval_cache(self):
-        values = self.cst_param
-        svalues = {self._syms[k]: v for k, v in values.items()}
-        return svalues
-
-    def eval_diff(self, t=0):
-        """
-        Evaluates derivatives.
-        Returns a directionary.
-        """
-        svalues = self._eval_cache()
-        svalues[self._syms['t']] = t
-        for k, v in zip(self._q, self._val_q):
-            svalues[self._syms[k[0]]] = v
-
-        res = {}
-        for k, v in self._eq.items():
-            res[k] = v.evalf(subs=svalues)
-        return res
-
-    def iterate(self, n=10, t=0, derivatives=False):
-        """
-        Evalues the quantities for *n* iterations.
-        Returns a list of dictionaries.
-        If *derivatives* is True, it returns two dictionaries.
-        """
-        svalues = self._eval_cache()
-        svalues[self._syms['t']] = t
-        vals = {k[0]: v for k, v in zip(self._q, self._val_q)}
-        for i in range(t, t + n):
-
-            for k, v in zip(self._q, self._val_q):
-                svalues[self._syms[k[0]]] = v
-            diff = {}
-            for k, v in self._eq.items():
-                diff[k] = v.evalf(subs=svalues)
-
-            for k, v in diff.items():
-                vals[k] += v
-            fvals = {k: float(v) for k, v in vals.items()}
-            if derivatives:
-                yield fvals, diff
-            else:
-                yield fvals
-            self.update(**vals)
-
-    def R0(self, t=0):
-        '''Returns R0 coefficient.'''
-        raise NotImplementedError()

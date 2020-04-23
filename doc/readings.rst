@@ -20,6 +20,8 @@ Données publiques
   <https://www.data.gouv.fr/fr/datasets/population-par-tranche-d-age-et-sexe-estimations-localisees-de-population/>`_
 * `Densité de population (habitants au km2) 2016
   <https://www.observatoire-des-territoires.gouv.fr/outils/cartographie-interactive/#c=indicator&i=insee_rp_hist_1968.dens_pop&s=2016&view=map26>`_
+* `Matrices de contacts française
+  <https://figshare.com/articles/French_contact_matrices/1466918>`_
 
 Lectures
 ++++++++
