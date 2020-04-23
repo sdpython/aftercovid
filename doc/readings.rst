@@ -29,6 +29,8 @@ Lectures
   <https://github.com/StephaneCanu/covid_AI_resources/blob/master/GDR_ISIS_Covid_IA_2.pdf>`_
 * `Estimating the asymptomatic proportion of coronavirus disease 2019 (COVID-19) cases on board the Diamond Princess cruise ship, Yokohama, Japan, 2020
   <https://www.eurosurveillance.org/content/10.2807/1560-7917.ES.2020.25.10.2000180>`_
+* `Modélisation de l'épidémie de COVID-19
+  <http://covid-ete.ouvaton.org/>`_
 
 *Study*
 
