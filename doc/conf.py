@@ -26,6 +26,7 @@ extensions = [
     'matplotlib.sphinxext.plot_directive',
     'pyquickhelper.sphinxext.sphinx_runpython_extension',
     'pyquickhelper.sphinxext.sphinx_epkg_extension',
+    'pyquickhelper.sphinxext.sphinx_gdot_extension',
 ]
 
 templates_path = ['_templates']
