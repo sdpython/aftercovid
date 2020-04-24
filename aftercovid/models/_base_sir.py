@@ -1,12 +1,13 @@
 # coding: utf-8
 """
-Common function for :epkg:`SIR` models.
+Common functions for :epkg:`SIR` models.
 """
 import numpy
 from sympy import symbols, Symbol
 import sympy.printing as printing
 from sympy.parsing.sympy_parser import (
     parse_expr, standard_transformations, implicit_application)
+from ._sympy_helper import enumerate_traverse
 from ._base_sir_sim import BaseSIRSimulation
 
 
@@ -181,15 +182,9 @@ class BaseSIR(BaseSIRSimulation):
 
         return '\n'.join(rows)
 
-    def _enumerate_traverse(self, e, parent=None):
-        yield dict(e=e, p=parent)
-        for arg in e.args:
-            for r in self._enumerate_traverse(arg, e):
-                yield r
-
     def enumerate_edges(self):
         """
-        Returns the list of quantities contributing
+        Enumerates the list of quantities contributing
         to others. It ignores constants.
         """
         if self._eq is not None:
@@ -197,7 +192,7 @@ class BaseSIR(BaseSIRSimulation):
             quants = set(_[0] for _ in self.Q)
             for k, v in sorted(self._eq.items()):
                 n2 = k
-                for dobj in self._enumerate_traverse(v):
+                for dobj in enumerate_traverse(v):
                     term = dobj['e']
                     if not hasattr(term, 'name'):
                         continue
@@ -205,39 +200,44 @@ class BaseSIR(BaseSIRSimulation):
                         continue
                     parent = dobj['p']
                     others = list(
-                        _['e'] for _ in self._enumerate_traverse(parent))
+                        _['e'] for _ in enumerate_traverse(parent))
                     for o in others:
                         if hasattr(o, 'name') and o.name in quants:
-                            if o.name == n2:
-                                continue
-                            yield (o.name, n2, term.name)
+                            sign = self.eqsign(n2, o.name)
+                            yield (sign, o.name, n2, term.name)
 
-    def to_dot(self, verbose=True):
+    def to_dot(self, verbose=False, full=False):
         """
         Produces a graph in :epkg:`DOT` format.
         """
         rows = ['digraph{']
 
-        pattern = ('    {name} [label="{name}\\n{doc}"];'
-                   if verbose else '    {name} [label="{name}"];')
+        pattern = ('    {name} [label="{name}\\n{doc}" shape=record];'
+                   if verbose else
+                   '    {name} [label="{name}"];')
         for name, _, doc in self._q:
             rows.append(pattern.format(name=name, doc=doc))
         for name, _, doc in self._c:
             rows.append(pattern.format(name=name, doc=doc))
 
         if self._eq is not None:
-            pattern = ('    {n1} -> {n2} [label="{name}\\nvalue={v:1.2g}"];'
-                       if verbose else '    {n1} -> {n2} [label="{name}"];')
-            for a, b, name in set(self.enumerate_edges()):
+            pattern = (
+                '    {n1} -> {n2} [label="{sg}{name}\\nvalue={v:1.2g}"];'
+                if verbose else '    {n1} -> {n2} [label="{sg}{name}"];')
+            for sg, a, b, name in set(self.enumerate_edges()):
+                if not full and (a == b or sg < 0):
+                    continue
                 value = self[name]
-                rows.append(pattern.format(n1=a, n2=b, name=name, v=value))
+                stsg = '' if sg > 0 else '-'
+                rows.append(
+                    pattern.format(n1=a, n2=b, name=name, v=value, sg=stsg))
 
         rows.append('}')
         return '\n'.join(rows)
 
     def evalf(self, name, t):
         """
-        Evaluate quantity *name* at time *t*.
+        Returns the last evaluated quantity *name* at time *t*.
         *t* is unused.
         """
         return self[name]

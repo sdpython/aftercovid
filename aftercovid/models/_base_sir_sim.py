@@ -2,12 +2,37 @@
 """
 Common function for :epkg:`SIR` models.
 """
+from sympy import Symbol, diff as sympy_diff
 
 
 class BaseSIRSimulation:
     """
     Base model for :epkg:`SIR` models simulation.
     """
+
+    def eqsign(self, eqname, name):
+        """
+        Returns the sign of the second derivative for equation
+        *eqname* against *name*.
+
+        :param eqname: equation name
+        :param name: symbol name
+        :return: boolean
+        """
+        eq = self._eq[eqname]
+        df = sympy_diff(eq, Symbol(name))
+        ev = self.evalf_eq(df)
+        return 1 if ev >= 0 else -1
+
+    def evalf_eq(self, eq, t=0):
+        """
+        Evaluates an :epkg:`sympy` expression.
+        """
+        svalues = self._eval_cache()
+        svalues[self._syms['t']] = t
+        for k, v in zip(self._q, self._val_q):
+            svalues[self._syms[k[0]]] = v
+        return eq.evalf(subs=svalues)
 
     def _eval_cache(self):
         values = self.cst_param
@@ -17,7 +42,7 @@ class BaseSIRSimulation:
     def eval_diff(self, t=0):
         """
         Evaluates derivatives.
-        Returns a directionary.
+        Returns a dictionary.
         """
         svalues = self._eval_cache()
         svalues[self._syms['t']] = t

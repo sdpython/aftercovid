@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-Implémentation d'un modèle pour la propagation de l'épidémie.
+Implementation of a model for epidemics propagation.
 """
 from ._base_sir import BaseSIR
 
@@ -49,8 +49,8 @@ class CovidSIR(BaseSIR):
 
     P0 = [
         ('beta', 0.5, 'taux de transmission dans la population'),
-        ('mu', 1/14., '1/. : durée moyenne jusque la guérison'),
-        ('nu', 1/21., '1/. : durée moyenne jusqu\'au décès'),
+        ('mu', 1 / 14., '1/. : durée moyenne jusque la guérison'),
+        ('nu', 1 / 21., '1/. : durée moyenne jusqu\'au décès'),
     ]
 
     Q0 = [

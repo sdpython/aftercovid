@@ -49,6 +49,12 @@ class TestModelsCovidSir(unittest.TestCase):
         self.assertEqual(par['I'], 5.)
         dot = model.to_dot(verbose=True)
         self.assertIn("I -> R", dot)
+        self.assertNotIn("I -> I", dot)
+        self.assertIn('beta', dot)
+        self.assertNotIn('-beta', dot)
+        dot = model.to_dot(verbose=True, full=True)
+        self.assertIn("I -> I", dot)
+        self.assertIn('-beta', dot)
 
     def test_covid_sir_eval(self):
         model = CovidSIR()
