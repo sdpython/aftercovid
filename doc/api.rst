@@ -7,9 +7,6 @@ API
 .. contents::
     :local:
 
-Tutorial
-++++++++
-
 Models
 ++++++
 
