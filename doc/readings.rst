@@ -22,6 +22,8 @@ Données publiques
   <https://www.observatoire-des-territoires.gouv.fr/outils/cartographie-interactive/#c=indicator&i=insee_rp_hist_1968.dens_pop&s=2016&view=map26>`_
 * `Matrices de contacts française
   <https://figshare.com/articles/French_contact_matrices/1466918>`_
+* `Data Drees
+  <http://www.data.drees.sante.gouv.fr/ReportFolders/reportFolders.aspx?IF_ActivePath=P,432,433,707>`_
 
 Lectures
 ++++++++

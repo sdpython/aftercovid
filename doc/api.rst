@@ -16,6 +16,7 @@ Models
 .. toctree::
     :maxdepth: 1
 
+    model_base_sir
     model_covidsir
 
 dummy

@@ -45,6 +45,9 @@ class CovidSIR(BaseSIR):
         from aftercovid.models import CovidSIR
         model = CovidSIR()
         print(model.to_dot())
+
+    See :ref:`l-base-model-sir` to get the methods
+    common to SIRx models.
     """
 
     P0 = [
