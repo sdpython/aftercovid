@@ -32,13 +32,6 @@ class TestSympyHelper(unittest.TestCase):
         ps = list(n.enumerate_parents())
         self.assertEqual(len(ps), 1)
 
-    def test_sign(self):
-        model = CovidSIR()
-        exp = model._eq['S']
-        node = SympyNode(exp)
-        sg = node.sign('beta')
-        print(sg)
-
 
 if __name__ == '__main__':
     unittest.main()
