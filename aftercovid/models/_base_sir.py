@@ -9,9 +9,10 @@ from sympy.parsing.sympy_parser import (
     parse_expr, standard_transformations, implicit_application)
 from ._sympy_helper import enumerate_traverse
 from ._base_sir_sim import BaseSIRSimulation
+from ._base_sir_skl import BaseSIRSklAPI
 
 
-class BaseSIR(BaseSIRSimulation):
+class BaseSIR(BaseSIRSimulation, BaseSIRSklAPI):
     """
     Base model for :epkg:`SIR` models.
 
@@ -120,6 +121,11 @@ class BaseSIR(BaseSIRSimulation):
         return list(sorted(
             [v[0] for v in self._p] + [v[0] for v in self._q] +
             [v[0] for v in self._c]))
+
+    @property
+    def quantity_names(self):
+        'Returns the list of quantities names (unsorted).'
+        return [v[0] for v in self._q]
 
     @property
     def P(self):

@@ -1,13 +1,14 @@
 # coding: utf-8
 """
-Common function for :epkg:`SIR` models.
+Common methods about simulation for :epkg:`SIR` models.
 """
+import numpy
 from sympy import Symbol, diff as sympy_diff
 
 
 class BaseSIRSimulation:
     """
-    Base model for :epkg:`SIR` models simulation.
+    Common methods about simulation for :epkg:`SIR` models.
     """
 
     def eqsign(self, eqname, name):
@@ -59,6 +60,12 @@ class BaseSIRSimulation:
         Evalues the quantities for *n* iterations.
         Returns a list of dictionaries.
         If *derivatives* is True, it returns two dictionaries.
+
+        :param n: number of iterations
+        :param t: first *t*
+        :param derivatives: returns the derivative as well
+        :param first: add current values stored in the model
+        :return: iterator on dictionaries
         """
         svalues = self._eval_cache()
         svalues[self._syms['t']] = t
@@ -71,14 +78,43 @@ class BaseSIRSimulation:
             for k, v in self._eq.items():
                 diff[k] = v.evalf(subs=svalues)
 
-            for k, v in diff.items():
-                vals[k] += v
             fvals = {k: float(v) for k, v in vals.items()}
             if derivatives:
                 yield fvals, diff
             else:
                 yield fvals
+
+            for k, v in diff.items():
+                vals[k] += v
             self.update(**vals)
+
+    def iterate2array(self, n=10, t=0, derivatives=False):
+        """
+        Evalues the quantities for *n* iterations.
+        Returns matrices.
+
+        :param n: number of iterations
+        :param t: first *t*
+        :param derivatives: returns the derivative as well
+        :return: iterator on dictionaries
+        """
+        clq = self.quantity_names
+        pos = {n: i for i, n in enumerate(clq)}
+        res = list(self.iterate(n=n, t=t, derivatives=derivatives))
+        qu = numpy.zeros((len(res), len(clq)), dtype=numpy.float32)
+        if derivatives:
+            de = numpy.zeros((len(res), len(clq)), dtype=numpy.float32)
+            for i, (r, d) in enumerate(res):
+                for j, n in enumerate(pos):
+                    qu[i, j] = r.get(n, numpy.nan)
+                for j, n in enumerate(pos):
+                    de[i, j] = d.get(n, numpy.nan)
+            return qu, de
+        else:
+            for i, r in enumerate(res):
+                for j, n in enumerate(pos):
+                    qu[i, j] = r.get(n, numpy.nan)
+            return qu
 
     def R0(self, t=0):
         '''Returns R0 coefficient.'''

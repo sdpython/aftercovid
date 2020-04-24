@@ -2,6 +2,8 @@
 Unit tests for ``CovidSir``.
 """
 import unittest
+import numpy
+from numpy.testing import assert_almost_equal
 from aftercovid.models._base_sir import BaseSIR
 from aftercovid.models.covid_sir import CovidSIR
 
@@ -74,6 +76,17 @@ class TestModelsCovidSir(unittest.TestCase):
         self.assertTrue(sim[-1]['S'] < 10000)
         r0 = model.R0()
         self.assertEqual(r0, 4.2)
+
+    def test_predict(self):
+        model = CovidSIR()
+        sim = list(model.iterate(derivatives=True))
+        self.assertIsInstance(sim, list)
+        X = model.iterate2array(derivatives=False)
+        self.assertIsInstance(X, numpy.ndarray)
+        X, y = model.iterate2array(derivatives=True)
+        self.assertEqual(X.shape, y.shape)
+        y2 = model.predict(X)
+        assert_almost_equal(y / 100, y2 / 100, decimal=6)
 
 
 if __name__ == '__main__':
