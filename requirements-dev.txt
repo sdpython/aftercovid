@@ -10,6 +10,7 @@ pandas
 pyinstrument
 pyquickhelper>=1.9.3359
 pytest
+pytest-cov
 sphinx
 sphinx-gallery
 tqdm

@@ -241,13 +241,6 @@ class BaseSIR(BaseSIRSimulation, BaseSIRSklAPI):
         rows.append('}')
         return '\n'.join(rows)
 
-    def evalf(self, name, t):
-        """
-        Returns the last evaluated quantity *name* at time *t*.
-        *t* is unused.
-        """
-        return self[name]
-
     @property
     def cst_param(self):
         '''

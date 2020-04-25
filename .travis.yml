@@ -11,11 +11,14 @@ before_script:
   - python setup.py build_ext --inplace
 script:
   # - python -m unittest discover tests -v -v
-  - python -m pytest
+  - python -m pytest --cov-report=xml --cov=aftercovid tests/
   - python -m flake8 tests
   - python -m flake8 aftercovid
   - python -m flake8 examples
   - python setup.py bdist_wheel
   - python -m aftercovid check
+after_script:
+  - python -m codecov
+
   
 

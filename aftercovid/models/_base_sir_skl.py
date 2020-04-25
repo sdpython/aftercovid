@@ -12,6 +12,8 @@ class BaseSIRSklAPI:
     """
 
     def _check_fit_predict(self, X, y=None):
+        if not isinstance(X, numpy.ndarray):
+            raise TypeError("X must be a numpy array.")
         if len(X.shape) != 2:
             raise ValueError("X must be a matrix.")
         clq = self.quantity_names
@@ -19,12 +21,21 @@ class BaseSIRSklAPI:
             raise ValueError(
                 "Unexpected number of columns, got {}, expected {}.".format(
                     X.shape[1], len(clq)))
+        sums = numpy.sum(X, axis=1)
+        mi, ma = sums.min(), sums.max()
+        df = abs(ma - mi)
+        if df > abs(ma) * 1e-3:
+            raise ValueError(
+                "All rows must sum up to the same amount. Current "
+                "range: [{}, {}].".format(mi, max))
         if y is not None:
+            if not isinstance(y, numpy.ndarray):
+                raise TypeError("y must be a numpy array.")
             if y.shape != X.shape:
                 raise ValueError(
                     "Unexpected shape of y, got {}, expected {}.".format(
                         y.shape, X.shape))
-        return clq
+        return clq, ma
 
     def fit(self, X, y, t=0):
         """
@@ -38,7 +49,14 @@ class BaseSIRSklAPI:
         :param t: implicit feature
         Both *X* and *y* have the same shape.
         """
-        # clq = self._check_fit_predict(X, y)
+        clq, N = self._check_fit_predict(X, y)
+        self['N'] = N
+
+        # compute derivatives
+        pos = {n: i for i, n in enumerate(clq)}
+        train = numpy.empty((X.shape[0], ), dtype=X.dtype)
+        assert train is not None
+        assert pos is not None
         raise NotImplementedError("Fit method must be rewritten.")
 
     def predict(self, X, t=0):
@@ -52,7 +70,10 @@ class BaseSIRSklAPI:
         :return: predictive derivative
         """
         cache = self._eval_cache()
-        clq = self._check_fit_predict(X)
+        clq, N = self._check_fit_predict(X)
+        if N != self['N']:
+            raise ValueError(
+                "All rows must sum up to {} not {}.".format(self.N, N))
         pos = {n: i for i, n in enumerate(clq)}
         pred = numpy.empty(X.shape, dtype=X.dtype)
 

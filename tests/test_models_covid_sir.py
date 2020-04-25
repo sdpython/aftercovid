@@ -57,6 +57,10 @@ class TestModelsCovidSir(unittest.TestCase):
         dot = model.to_dot(verbose=True, full=True)
         self.assertIn("I -> I", dot)
         self.assertIn('-beta', dot)
+        model['beta'] = 0.5
+        self.assertEqual(model['beta'], 0.5)
+        model['N'] = 100000
+        self.assertEqual(model['N'], 100000)
 
     def test_covid_sir_eval(self):
         model = CovidSIR()
@@ -87,6 +91,30 @@ class TestModelsCovidSir(unittest.TestCase):
         self.assertEqual(X.shape, y.shape)
         y2 = model.predict(X)
         assert_almost_equal(y / 100, y2 / 100, decimal=6)
+        with self.assertRaises(TypeError):
+            model.predict({})
+        with self.assertRaises(ValueError):
+            model.predict(numpy.array([4]))
+        with self.assertRaises(ValueError):
+            model.predict(numpy.array([[4, 5, 6, 7, 8]]))
+        X2 = X.copy()
+        X2[0, 0] = -5
+        with self.assertRaises(ValueError):
+            model.predict(X2)
+
+    def test_fit(self):
+        model = CovidSIR()
+        X, y = model.iterate2array(derivatives=True)
+        with self.assertRaises(TypeError):
+            model.fit(X, {})
+        with self.assertRaises(ValueError):
+            model.fit(X, numpy.array([4]))
+        with self.assertRaises(ValueError):
+            model.fit(X, numpy.array([[4, 5, 6, 7, 8]]))
+        X2 = X.copy()
+        X2[0, 0] = -5
+        with self.assertRaises(ValueError):
+            model.fit(X2, y)
 
 
 if __name__ == '__main__':
