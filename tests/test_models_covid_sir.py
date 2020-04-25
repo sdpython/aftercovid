@@ -98,7 +98,11 @@ class TestModelsCovidSir(unittest.TestCase):
         with self.assertRaises(ValueError):
             model.predict(numpy.array([[4, 5, 6, 7, 8]]))
         X2 = X.copy()
-        X2[0, 0] = -5
+        X2[0, 0] -= 50
+        with self.assertRaises(ValueError):
+            model.predict(X2)
+        X2 = X.copy()
+        X2[:, 0] -= 50
         with self.assertRaises(ValueError):
             model.predict(X2)
 

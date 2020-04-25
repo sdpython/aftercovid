@@ -10,7 +10,6 @@ before_script:
   - gcc --version
   - python setup.py build_ext --inplace
 script:
-  # - python -m unittest discover tests -v -v
   - python -m pytest --cov-report=xml --cov=aftercovid tests/
   - python -m flake8 tests
   - python -m flake8 aftercovid
@@ -18,6 +17,7 @@ script:
   - python setup.py bdist_wheel
   - python -m aftercovid check
 after_script:
+  - export
   - python -m codecov
 
   

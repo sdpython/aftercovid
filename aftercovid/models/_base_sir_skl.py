@@ -73,7 +73,7 @@ class BaseSIRSklAPI:
         clq, N = self._check_fit_predict(X)
         if N != self['N']:
             raise ValueError(
-                "All rows must sum up to {} not {}.".format(self.N, N))
+                "All rows must sum up to {} not {}.".format(self['N'], N))
         pos = {n: i for i, n in enumerate(clq)}
         pred = numpy.empty(X.shape, dtype=X.dtype)
 
