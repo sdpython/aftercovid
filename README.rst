@@ -10,6 +10,9 @@
     :target: https://ci.appveyor.com/project/sdpython/aftercovid
     :alt: Build Status Windows
 
+.. image:: https://codecov.io/gh/sdpython/aftercovid/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/sdpython/aftercovid
+
 .. image:: https://badge.fury.io/py/aftercovid.svg
     :target: http://badge.fury.io/py/aftercovid
 
