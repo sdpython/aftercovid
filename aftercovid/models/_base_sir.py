@@ -48,7 +48,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIRSklAPI):
             for k, v in eq.items():
                 try:
                     self._eq[k] = parse_expr(v, locs, transformations=tr)
-                except (TypeError, ValueError) as e:
+                except (TypeError, ValueError) as e:  # pragma: no cover
                     raise RuntimeError(
                         "Unable to parse '{}'.".format(v)) from e
         else:

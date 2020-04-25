@@ -23,6 +23,8 @@ class TestModelsCovidSir(unittest.TestCase):
                     [('N', 0.6, 'NN')], "r")
         models = BaseSIR([('p', 0.5, 'PP')], [('q', 0.6, 'QQ')],
                          [('N', 0.6, 'NN')])
+        with self.assertRaises(NotImplementedError):
+            models.R0()
         names = models.names
         self.assertEqual(names, ['N', 'p', 'q'])
         self.assertEqual(models['p'], 0.5)

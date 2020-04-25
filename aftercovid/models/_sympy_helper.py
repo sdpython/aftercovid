@@ -29,7 +29,8 @@ class SympyNode:
 
     def __init__(self, e, parent=None):
         if parent is not None and not isinstance(parent, SympyNode):
-            raise TypeError("parent must be None or SympyNode")
+            raise TypeError(  # pragma: no cover
+                "parent must be None or SympyNode")
         self._e = e
         self._parent = parent
         self._children = []
