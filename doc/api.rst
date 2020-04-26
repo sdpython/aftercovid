@@ -15,6 +15,7 @@ Models
 
     model_base_sir
     model_covidsir
+    optim
 
 dummy
 ++++++

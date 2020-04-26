@@ -52,7 +52,7 @@ class BaseOptimizer:
         Performs update to learning rate and potentially other states at the
         end of an iteration.
         """
-        pass
+        pass  # pragma: no cover
 
     def train(self, X, y, fct_loss, fct_grad, max_iter=100, verbose=False):
         """

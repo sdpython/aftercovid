@@ -78,8 +78,8 @@ class TestModelsCovidSir(unittest.TestCase):
         model = CovidSIR()
         sim = list(model.iterate())
         self.assertEqual(len(sim), 10)
-        self.assertTrue(sim[-1]['S'] >= 9500)
-        self.assertTrue(sim[-1]['S'] < 10000)
+        self.assertGreater(sim[-1]['S'], 9500)
+        self.assertLess(sim[-1]['S'], 10000)
         r0 = model.R0()
         self.assertEqual(r0, 4.2)
 

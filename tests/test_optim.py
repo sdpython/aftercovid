@@ -26,9 +26,13 @@ class TestOptim(unittest.TestCase):
 
         gr = fct_grad(numpy.array([0., 0., 0.]), X[0, :], y[0])
         no = numpy.linalg.norm(gr)
-        self.assertTrue(no > 0.001)
+        self.assertGreater(no, 0.001)
 
+        with self.assertRaises(TypeError):
+            SGDOptimizer({})
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]))
+        with self.assertRaises(ValueError):
+            sgd.update_coef(numpy.array([0., 0., 0., 0.]))
         with self.assertRaises(TypeError):
             sgd.train(X, {}, fct_loss, fct_grad)
         with self.assertRaises(TypeError):
@@ -41,7 +45,7 @@ class TestOptim(unittest.TestCase):
             ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
         out = buf.getvalue()
         self.assertIn("15/15: loss", out)
-        self.assertTrue(ls < 0.01)
+        self.assertLess(ls, 0.01)
         self.assertEqual(sgd.learning_rate, 0.1)
 
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]), lr_schedule='invscaling')
@@ -50,8 +54,8 @@ class TestOptim(unittest.TestCase):
             ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
         out = buf.getvalue()
         self.assertIn("15/15: loss", out)
-        self.assertTrue(ls < 1)
-        self.assertTrue(sgd.learning_rate < 0.01)
+        self.assertLess(ls, 1)
+        self.assertLess(sgd.learning_rate, 0.01)
 
 
 if __name__ == '__main__':
