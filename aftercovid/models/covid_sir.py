@@ -19,23 +19,26 @@ class CovidSIR(BaseSIR):
         model = CovidSIR()
         print(model.to_rst())
 
-    .. plot::
+    .. exref::
+        :title: SIR simulation and plotting
 
-        from pandas import DataFrame
-        import matplotlib.pyplot as plt
-        from aftercovid.models import CovidSIR
+        .. plot::
 
-        model = CovidSIR()
-        sims = list(model.iterate(60))
-        df = DataFrame(sims)
-        print(df.head())
-        ax = df.plot(y=['S', 'I', 'R', 'D'], kind='line')
-        ax.set_xlabel("jours")
-        ax.set_ylabel("population")
-        r0 = model.R0()
-        ax.set_title("Simulation SIR\\nR0=%f" % r0)
+            from pandas import DataFrame
+            import matplotlib.pyplot as plt
+            from aftercovid.models import CovidSIR
 
-        plt.show()
+            model = CovidSIR()
+            sims = list(model.iterate(60))
+            df = DataFrame(sims)
+            print(df.head())
+            ax = df.plot(y=['S', 'I', 'R', 'D'], kind='line')
+            ax.set_xlabel("jours")
+            ax.set_ylabel("population")
+            r0 = model.R0()
+            ax.set_title("Simulation SIR\\nR0=%f" % r0)
+
+            plt.show()
 
     Visual representation:
 

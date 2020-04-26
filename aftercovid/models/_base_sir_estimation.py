@@ -9,7 +9,7 @@ from sympy.core.numbers import Zero
 from ..optim import SGDOptimizer
 
 
-class BaseSIRSklAPI:
+class BaseSIREstimation:
     """
     Common methods about training, predicting for :epkg:`SIR` models.
     """
@@ -50,7 +50,8 @@ class BaseSIRSklAPI:
             every column is mapped to the list returned by
             :meth:`quantity_names <aftercovid.models._base_sir.quantity_names>`
         :param y: known derivative for every quantity at time *t*,
-            comes in the same order as *X*
+            comes in the same order as *X*,
+            both *X* and *y* have the same shape.
         :param t: implicit feature
         :param max_iter: number of iteration
         :param learning_rate_init: see :class:`SGDOptimizer
@@ -63,13 +64,12 @@ class BaseSIRSklAPI:
             <aftercovid.optim.SGDOptimizer>`
         :param verbose: see :class:`SGDOptimizer
             <aftercovid.optim.SGDOptimizer>`
-        Both *X* and *y* have the same shape.
 
         The training needs two steps. The first one creates a training
         datasets. The second one estimates the coefficients by using
         a stochastic gradient descent (see :class:`SGDOptimizer
         <aftercovid.optim.SGDOptimizer>`).
-        Let's use a SIDR model (see :class:`CovidSIR
+        Let's use a SIR model (see :class:`CovidSIR
         <aftercovid.models.CovidSIR>`).as an example.
         Let's denote the parameters as :math:`\\Omega`
         and :math:`Z_1=S`, ...,  :math:`Z_4=R`.
@@ -77,7 +77,7 @@ class BaseSIRSklAPI:
         :math:`\\frac{dZ_i}{dt} = f_i(\\Omega, Z)`
         where :math:`Z=(Z_1, ..., Z_4)`.
         *y* is used to compute the expected derivates
-        :math:`\\frac{dZ_i}{dt}`. The loss function is defined as
+        :math:`\\frac{dZ_i}{dt}`. The loss function is defined as:
 
         .. math::
 
@@ -173,7 +173,7 @@ class BaseSIRSklAPI:
              momentum, power_t, verbose):
         '''
         See method :meth:`fit
-        <aftercovid.models._base_sir_estimation.BaseSIRSklAPI.fit>`
+        <aftercovid.models._base_sir_estimation.BaseSIREstimation.fit>`
         and :class:`SGDOptimizer <aftercovid.optim.SGDOptimizer>`.
         '''
         clq, N = self._check_fit_predict(X, y)
@@ -210,7 +210,7 @@ class BaseSIRSklAPI:
                         res += loss.evalf(subs=svalues)
                     except (AttributeError, TypeError,  # pragma: no cover
                             IndexError) as e:
-                        raise RuntimeError(
+                        raise RuntimeError(  # pragma: no cover
                             'Unable to calculate loss for [{}] with '
                             'values={}.'.format(
                                 loss, pformat(svalues))) from e
@@ -235,7 +235,7 @@ class BaseSIRSklAPI:
                         res[i] = g.evalf(subs=svalues)
                     except (AttributeError, TypeError,  # pragma: no cover
                             IndexError) as e:
-                        raise RuntimeError(
+                        raise RuntimeError(  # pragma: no cover
                             'Unable to calculate gradient for [{}] with '
                             'values={}.'.format(
                                 g, pformat(svalues))) from e

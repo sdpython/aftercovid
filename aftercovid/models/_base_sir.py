@@ -9,10 +9,10 @@ from sympy.parsing.sympy_parser import (
     parse_expr, standard_transformations, implicit_application)
 from ._sympy_helper import enumerate_traverse
 from ._base_sir_sim import BaseSIRSimulation
-from ._base_sir_estimation import BaseSIRSklAPI
+from ._base_sir_estimation import BaseSIREstimation
 
 
-class BaseSIR(BaseSIRSimulation, BaseSIRSklAPI):
+class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
     """
     Base model for :epkg:`SIR` models.
 

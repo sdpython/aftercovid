@@ -64,7 +64,6 @@ class BaseSIRSimulation:
         :param n: number of iterations
         :param t: first *t*
         :param derivatives: returns the derivative as well
-        :param first: add current values stored in the model
         :return: iterator on dictionaries
         """
         svalues = self._eval_cache()

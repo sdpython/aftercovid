@@ -25,7 +25,7 @@
     :target: http://opensource.org/licenses/MIT
 
 aftercovid: epidemics simulation
-==============================
+================================
 
 .. image:: https://raw.githubusercontent.com/sdpython/aftercovid/master/doc/_static/logo.png
     :width: 50

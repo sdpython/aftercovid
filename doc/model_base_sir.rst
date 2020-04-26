@@ -1,5 +1,5 @@
 
-_l-base-model-sir:
+.. _l-base-model-sir:
 
 Base implementation for SIR models
 ==================================
@@ -19,8 +19,8 @@ BaseSIRSimulation
 .. autoclass:: aftercovid.models._base_sir_sim.BaseSIRSimulation
     :members:
 
-BaseSIRSkl
-++++++++++
+BaseSIREstimation
++++++++++++++++++
 
-.. autoclass:: aftercovid.models._base_sir_sim.BaseSIRSkl
+.. autoclass:: aftercovid.models._base_sir_estimation.BaseSIREstimation
     :members:

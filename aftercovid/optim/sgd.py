@@ -11,19 +11,14 @@ class BaseOptimizer:
     """
     Base stochastic gradient descent optimizer.
 
-    Parameters
-    ----------
+    :param coef: array, initial coefficient
+    :param learning_rate_init: float
+        The initial learning rate used. It controls the step-size
+        in updating the weights.
 
-    coef : array, initial coefficient
+    The class holds the following attributes:
 
-    learning_rate_init : float, default=0.1
-        The initial learning rate used. It controls the step-size in updating
-        the weights
-
-    Attributes
-    ----------
-    learning_rate : float
-        the current learning rate
+    * *learning_rate*: float, the current learning rate
     """
 
     def __init__(self, coef, learning_rate_init=0.1):
@@ -99,65 +94,59 @@ class SGDOptimizer(BaseOptimizer):
     """
     Stochastic gradient descent optimizer with momentum.
 
-    Parameters
-    ----------
-
-    coef : array, initial coefficient
-
-    learning_rate_init : float, default=0.1
-        The initial learning rate used. It controls the step-size in updating
-        the weights
-
-    lr_schedule : {'constant', 'adaptive', 'invscaling'}, default='constant'
-        Learning rate schedule for weight updates.
-        -'constant', is a constant learning rate given by
-         'learning_rate_init'.
-        -'invscaling' gradually decreases the learning rate 'learning_rate_'
-          at each time step 't' using an inverse scaling exponent of
-          'power_t'. learning_rate_ = learning_rate_init / pow(t, power_t)
-        -'adaptive', keeps the learning rate constant to
-         'learning_rate_init' as long as the training keeps decreasing.
-         Each time 2 consecutive epochs fail to decrease the training loss by
-         tol, or fail to increase validation score by tol if 'early_stopping'
-         is on, the current learning rate is divided by 5.
-
-    momentum : float, default=0.9
+    :param coef: array, initial coefficient
+    :param learning_rate_init: float
+        The initial learning rate used. It controls the step-size
+        in updating the weights,
+    :param lr_schedule: `{'constant', 'adaptive', 'invscaling'}`,
+        learning rate schedule for weight updates,
+        `'constant'` for a constant learning rate given by
+        *learning_rate_init*. `'invscaling'` gradually decreases
+        the learning rate *learning_rate_* at each time step *t*
+        using an inverse scaling exponent of *power_t*.
+        `learning_rate_ = learning_rate_init / pow(t, power_t)`,
+        `'adaptive'`, keeps the learning rate constant to
+        *learning_rate_init* as long as the training keeps decreasing.
+        Each time 2 consecutive epochs fail to decrease the training loss by
+        tol, or fail to increase validation score by tol if 'early_stopping'
+        is on, the current learning rate is divided by 5.
+    :param momentum: float
         Value of momentum used, must be larger than or equal to 0
+    :param power_t: double
+        The exponent for inverse scaling learning rate.
 
-    Attributes
-    ----------
+    The class holds the following attributes:
 
-    learning_rate : float the current learning rate
+    * *learning_rate*: float, the current learning rate
+    * velocity*: array, velocity that are used to update params
 
-    velocity : array, velocity that are used to update params
+    .. exref::
+        :title: Stochastic Gradient Descent applied to linear regression
 
-    Example
-    -------
+        The following example how to optimize a simple linear regression.
 
-    The following example how to optimize a simple linear regression.
+        .. runpython::
+            :showcode:
 
-    .. runpython::
-        :showcode:
-
-        import numpy
-        from aftercovid.optim import SGDOptimizer
-
-
-        def fct_loss(c, X, y):
-            return numpy.linalg.norm(X @ c - y) ** 2
+            import numpy
+            from aftercovid.optim import SGDOptimizer
 
 
-        def fct_grad(c, x, y):
-            return x * (x @ c - y) * 0.1
+            def fct_loss(c, X, y):
+                return numpy.linalg.norm(X @ c - y) ** 2
 
 
-        coef = numpy.array([0.5, 0.6, -0.7])
-        X = numpy.random.randn(10, 3)
-        y = X @ coef
+            def fct_grad(c, x, y):
+                return x * (x @ c - y) * 0.1
 
-        sgd = SGDOptimizer(numpy.random.randn(3))
-        sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
-        print('optimized coefficients:', sgd.coef)
+
+            coef = numpy.array([0.5, 0.6, -0.7])
+            X = numpy.random.randn(10, 3)
+            y = X @ coef
+
+            sgd = SGDOptimizer(numpy.random.randn(3))
+            sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
+            print('optimized coefficients:', sgd.coef)
     """
 
     def __init__(self, coef, learning_rate_init=0.1, lr_schedule='constant',

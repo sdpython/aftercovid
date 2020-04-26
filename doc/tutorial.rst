@@ -6,6 +6,12 @@ Tutorial (français)
     :local:
     :depth: 1
 
+Exemples
+++++++++
+
+.. exreflist::
+    :contents:
+
 Ligne de commande
 +++++++++++++++++
 

@@ -7,15 +7,22 @@ API
 .. contents::
     :local:
 
+Base classes
+++++++++++++
+
+.. toctree::
+    :maxdepth: 1
+
+    model_base_sir
+    optim
+
 Models
 ++++++
 
 .. toctree::
     :maxdepth: 1
 
-    model_base_sir
     model_covidsir
-    optim
 
 dummy
 ++++++

@@ -25,7 +25,11 @@ extensions = [
     'alabaster',
     'matplotlib.sphinxext.plot_directive',
     'pyquickhelper.sphinxext.sphinx_cmdref_extension',
+    'pyquickhelper.sphinxext.sphinx_collapse_extension',
+    'pyquickhelper.sphinxext.sphinx_docassert_extension',
     'pyquickhelper.sphinxext.sphinx_epkg_extension',
+    'pyquickhelper.sphinxext.sphinx_exref_extension',
+    'pyquickhelper.sphinxext.sphinx_faqref_extension',
     'pyquickhelper.sphinxext.sphinx_gdot_extension',
     'pyquickhelper.sphinxext.sphinx_runpython_extension',
 ]
@@ -115,4 +119,5 @@ epkg_dictionary = {
     'SIR': ('https://fr.wikipedia.org/wiki/Mod%C3%A8les_compartimentaux_en'
             '_%C3%A9pid%C3%A9miologie'),
     'sphinx-gallery': 'https://github.com/sphinx-gallery/sphinx-gallery',
+    'sympy': 'https://www.sympy.org/en/index.html',
 }
