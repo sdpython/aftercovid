@@ -189,7 +189,7 @@ class BaseSIRSklAPI:
         losses = self._losses_sympy()
         grads = self._grads_sympy()
 
-        def pformat(d):
+        def pformat(d):  # pragma: no cover
             nd = {str(k): (str(v), type(v), type(k)) for k, v in d.items()}
             return pprint.pformat(nd)
 
@@ -208,7 +208,8 @@ class BaseSIRSklAPI:
                 for loss in losses:
                     try:
                         res += loss.evalf(subs=svalues)
-                    except (AttributeError, TypeError, IndexError) as e:
+                    except (AttributeError, TypeError,  # pragma: no cover
+                            IndexError) as e:
                         raise RuntimeError(
                             'Unable to calculate loss for [{}] with '
                             'values={}.'.format(
@@ -232,7 +233,8 @@ class BaseSIRSklAPI:
                         continue
                     try:
                         res[i] = g.evalf(subs=svalues)
-                    except (AttributeError, TypeError, IndexError) as e:
+                    except (AttributeError, TypeError,  # pragma: no cover
+                            IndexError) as e:
                         raise RuntimeError(
                             'Unable to calculate gradient for [{}] with '
                             'values={}.'.format(
