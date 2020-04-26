@@ -48,6 +48,35 @@ class BaseSIRSklAPI:
             comes in the same order as *X*
         :param t: implicit feature
         Both *X* and *y* have the same shape.
+
+        The training needs two steps. The first one creates a training
+        datasets. The second one estimates the coefficients by using
+        a stochastic gradient descent (see :class:`SGDOptimizer
+        <aftercovid.optim.SGDOptimizer>`).
+        Let's use a SIDR model (see :class:`CovidSIR
+        <aftercovid.models.CovidSIR>`).as an example.
+        Let's denote the parameters as :math:`\\Omega`
+        and :math:`Z_1=S`, ...,  :math:`Z_4=R`.
+        The model is defined by
+        :math:`\\frac{dZ_i}{dt} = f_i(\\Omega, Z)`
+        where :math:`Z=(Z_1, ..., Z_4)`.
+        *y* is used to compute the expected derivates
+        :math:`\\frac{dZ_i}{dt}`. The loss function is defined as
+
+        .. math::
+
+            L(\\Omega,Z) = \\sum_{i=1}^4 \\left( f_i(\\Omega,Z) -
+            \\frac{dZ_i}{dt}\\right)^2
+
+        Then the gradient is:
+
+        .. math::
+
+            \\frac{\\partial L(\\Omega,Z)}{\\partial\\Omega} =
+            2 \\sum_{i=1}^4 \\frac{\\partial f_i(\\Omega,Z)}{\\partial\\Omega}
+            \\left( f_i(\\Omega,Z) - \\frac{dZ_i}{dt} \\right)
+
+        A stochastic gradient descent takes care of the rest.
         """
         clq, N = self._check_fit_predict(X, y)
         self['N'] = N
