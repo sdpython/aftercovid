@@ -25,11 +25,11 @@ class TestOptim(unittest.TestCase):
         y = X @ coef
 
         ls = fct_loss(coef, X, y)
-        self.assertEqual(ls, 0)
+        self.assertLess(ls, 1e-10)
 
         gr = fct_grad(coef, X[0, :], y[0])
         no = numpy.linalg.norm(gr)
-        self.assertEqual(no, 0)
+        self.assertLess(no, 1e-10)
 
         gr = fct_grad(numpy.array([0., 0., 0.]), X[0, :], y[0])
         no = numpy.linalg.norm(gr)
