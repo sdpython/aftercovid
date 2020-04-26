@@ -2,18 +2,25 @@
 Unit tests for ``optim``.
 """
 import io
-import unittest
 from contextlib import redirect_stdout
+import unittest
 import numpy
 from aftercovid.optim import SGDOptimizer
+
+
+def fct_loss(c, X, y):
+    return numpy.linalg.norm(X @ c - y) ** 2
+
+
+def fct_grad(c, x, y):
+    return x * (x @ c - y) * 0.1
 
 
 class TestOptim(unittest.TestCase):
 
     def test_sgd_optimizer(self):
         coef = numpy.array([0.5, 0.6, 0.7])
-        def fct_loss(c, X, y): return numpy.linalg.norm(X @ c - y) ** 2
-        def fct_grad(c, x, y): return x * (x @ c - y) * 0.1
+
         X = numpy.random.randn(10, 3)
         y = X @ coef
 

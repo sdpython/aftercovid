@@ -1,6 +1,8 @@
 """
 Unit tests for ``CovidSir``.
 """
+import io
+from contextlib import redirect_stdout
 import unittest
 import numpy
 from numpy.testing import assert_almost_equal
@@ -108,6 +110,17 @@ class TestModelsCovidSir(unittest.TestCase):
         with self.assertRaises(ValueError):
             model.predict(X2)
 
+    def test_prefit(self):
+        model = CovidSIR()
+        losses = model._losses_sympy()
+        self.assertIsInstance(losses, list)
+        self.assertEqual(len(losses), 4)
+        grads = model._grads_sympy()
+        self.assertIsInstance(grads, list)
+        for row in grads:
+            self.assertIsInstance(row, list)
+            self.assertEqual(len(row), 3)
+
     def test_fit(self):
         model = CovidSIR()
         X, y = model.iterate2array(derivatives=True)
@@ -121,6 +134,20 @@ class TestModelsCovidSir(unittest.TestCase):
         X2[0, 0] = -5
         with self.assertRaises(ValueError):
             model.fit(X2, y)
+        exp = numpy.array([model['beta'], model['nu'], model['mu']])
+        model.fit(X, y, verbose=False, max_iter=10)
+        coef = numpy.array([model['beta'], model['nu'], model['mu']])
+        err = numpy.linalg.norm(exp - coef)
+        self.assertLess(err, 1e-5)
+        model['nu'] = model['mu'] = model['beta'] = 0.1
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            model.fit(X, y, verbose=True, max_iter=20)
+        out = buf.getvalue()
+        self.assertIn('20/20', out)
+        coef = numpy.array([model['beta'], model['nu'], model['mu']])
+        err = numpy.linalg.norm(exp - coef)
+        self.assertLess(err, 1e-1)
 
 
 if __name__ == '__main__':

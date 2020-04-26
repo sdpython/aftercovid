@@ -9,7 +9,7 @@ from sympy.parsing.sympy_parser import (
     parse_expr, standard_transformations, implicit_application)
 from ._sympy_helper import enumerate_traverse
 from ._base_sir_sim import BaseSIRSimulation
-from ._base_sir_skl import BaseSIRSklAPI
+from ._base_sir_estimation import BaseSIRSklAPI
 
 
 class BaseSIR(BaseSIRSimulation, BaseSIRSklAPI):
@@ -126,6 +126,11 @@ class BaseSIR(BaseSIRSimulation, BaseSIRSklAPI):
     def quantity_names(self):
         'Returns the list of quantities names (unsorted).'
         return [v[0] for v in self._q]
+
+    @property
+    def param_names(self):
+        'Returns the list of parameters names (unsorted).'
+        return [v[0] for v in self._p]
 
     @property
     def P(self):
