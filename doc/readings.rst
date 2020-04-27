@@ -103,3 +103,13 @@ Lectures
   <https://academic.oup.com/aje/article/164/10/936/162511>`_
 * `Unifying Markov Chain Approach for Disease and Rumor Spreading in Complex Networks
   <https://arxiv.org/pdf/1609.00682.pdf>`_
+
+Modules
++++++++
+
+* :epkg:`pyepydemic`, comme ce modules, il permet de simuler
+  une épidémie mais il ne permet pas d'estimer les coefficients
+  ce qui est l'objectif visé ici.
+* `Mathematics of Epidemics on Networks
+  <https://github.com/springer-math/Mathematics-of-Epidemics-on-Networks>`_,
+  c'est autant un livre qu'un module.

@@ -5,7 +5,7 @@ import fire
 from aftercovid import check
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     fire.Fire({
         'check': check,
     })

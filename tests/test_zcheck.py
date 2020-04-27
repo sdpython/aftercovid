@@ -16,6 +16,9 @@ class TestCheck(unittest.TestCase):
         self.assertIsInstance(res, list)
         self.assertEqual(len(res), 0)
 
+    def test__main__(self):
+        import aftercovid.__main__  # noqa
+
 
 if __name__ == '__main__':
     unittest.main()

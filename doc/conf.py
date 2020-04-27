@@ -111,6 +111,7 @@ epkg_dictionary = {
     'COVID': 'https://en.wikipedia.org/wiki/Coronavirus_disease_2019',
     'cython': 'https://cython.org/',
     'DOT': 'https://www.graphviz.org/doc/info/lang.html',
+    'pyepydemic': 'https://pyepydemic.readthedocs.io/en/latest/index.html',
     'numpy': 'https://numpy.org/',
     'pyinstrument': 'https://github.com/joerick/pyinstrument',
     'python': 'https://www.python.org/',
