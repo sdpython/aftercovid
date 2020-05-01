@@ -36,6 +36,22 @@ Lectures
 * `Modélisation de l'épidémie de COVID-19
   <http://covid-ete.ouvaton.org/>`_
 
+Une série d'articles intéressantes...
+
+* `Coronavirus: Learning How to Dance (Part 1)
+  <https://medium.com/@tomaspueyo/coronavirus-learning-how-to-dance-b8420170203e>`_
+* `Coronavirus: The Basic Dance Steps Everybody Can Follow (Part 2)
+  <https://medium.com/@tomaspueyo/coronavirus-learning-how-to-dance-b8420170203e>`_
+* `Coronavirus: How to Do Testing and Contact Tracing (Part 3)
+  <https://medium.com/@tomaspueyo/coronavirus-learning-how-to-dance-b8420170203e>`_
+  
+Et la critique que France Culture faisait de l'auteur le 16 mars 2020
+sur son article
+`Coronavirus : Agissez Aujourd'hui
+<https://medium.com/tomas-pueyo/coronavirus-agissez-aujourdhui-2bd1dc7838f6>`_ :
+`Coronavirus : une épidémie de faux articles scientifiques
+<https://www.franceculture.fr/emissions/radiographies-du-coronavirus-la-chronique/radiographies-du-coronavirus-du-lundi-16-mars-2020>`_.
+
 *Study*
 
 * `MODELING COVID-19 IN THE UNITED STATES <https://covid19.gleamproject.org/>`_ (dashboard)
