@@ -102,7 +102,7 @@ sphinx_gallery_conf = {
     # path to your examples scripts
     'examples_dirs': os.path.join(os.path.dirname(__file__), '../examples'),
     # path where to save gallery generated examples
-    'gallery_dirs': 'auto_examples'
+    'gallery_dirs': 'auto_examples',
     'capture_repr': ('_repr_html_', '__repr__'),
     'ignore_repr_types': r'matplotlib.text|matplotlib.axes',
 }
