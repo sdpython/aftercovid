@@ -55,6 +55,23 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
             self._eq = None
         self._init()
 
+    def __getstate__(self):
+        '''
+        Returns the pickled data.
+        '''
+        return {k: getattr(self, k) for k in [
+            '_p', '_q', '_c', '_eq', '_val_p', '_val_q', '_val_c',
+            '_val_ind', '_val_len', '_syms']}
+
+    def __setstate__(self, state):
+        '''
+        Sets the pickled data.
+        '''
+        for k, v in state.items():
+            setattr(self, k, v)
+        if hasattr(self, '_eq') and self._eq is not None:
+            self._init_lambda_()
+
     def _init(self):
         """
         Starts from the initial values.
