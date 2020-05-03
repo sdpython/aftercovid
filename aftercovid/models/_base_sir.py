@@ -3,7 +3,7 @@
 Common functions for :epkg:`SIR` models.
 """
 import numpy
-from sympy import symbols, Symbol, latex
+from sympy import symbols, Symbol, latex, lambdify
 import sympy.printing as printing
 from sympy.parsing.sympy_parser import (
     parse_expr, standard_transformations, implicit_application)
@@ -55,6 +55,23 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
             self._eq = None
         self._init()
 
+    def __getstate__(self):
+        '''
+        Returns the pickled data.
+        '''
+        return {k: getattr(self, k) for k in [
+            '_p', '_q', '_c', '_eq', '_val_p', '_val_q', '_val_c',
+            '_val_ind', '_val_len', '_syms']}
+
+    def __setstate__(self, state):
+        '''
+        Sets the pickled data.
+        '''
+        for k, v in state.items():
+            setattr(self, k, v)
+        if hasattr(self, '_eq') and self._eq is not None:
+            self._init_lambda_()
+
     def _init(self):
         """
         Starts from the initial values.
@@ -66,9 +83,35 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
                 return 10000.
             return 0.
 
-        self._val_p = numpy.array([_def_(v[0], v[1]) for v in self._p])
-        self._val_q = numpy.array([_def_(v[0], v[1]) for v in self._q])
-        self._val_c = numpy.array([_def_(v[0], v[1]) for v in self._c])
+        self._val_p = numpy.array(
+            [_def_(v[0], v[1]) for v in self._p], dtype=numpy.float64)
+        self._val_q = numpy.array(
+            [_def_(v[0], v[1]) for v in self._q], dtype=numpy.float64)
+        self._val_c = numpy.array(
+            [_def_(v[0], v[1]) for v in self._c], dtype=numpy.float64)
+        self._val_len = (len(self._val_p) + len(self._val_q) +
+                         len(self._val_c))
+        self._val_ind = numpy.array([
+            0, len(self._val_q), len(self._val_q) + len(self._val_p),
+            len(self._val_q) + len(self._val_p) + len(self._val_c)])
+
+        if hasattr(self, '_eq') and self._eq is not None:
+            self._init_lambda_()
+
+    def _init_lambda_(self):
+        self._leq = {}
+        for k, v in self._eq.items():
+            fct = self._lambdify_(k, v)
+            eval1 = float(self.evalf_eq(v))
+            eval2 = self.evalf_leq(k)
+            err = (eval2 - eval1) / max(abs(eval1), abs(eval2))
+            if err > 1e-8:
+                raise ValueError(
+                    "Lambdification failed for function '{}': {} "
+                    "({} ({}) != {} ({}), error={})".format(
+                        k, v, eval1, type(eval1), eval2, type(eval2), err))
+            self._leq[k] = fct
+        self._leqa = [self._leq[_[0]] for _ in self._q]
 
     def get_index(self, name):
         '''
@@ -131,6 +174,39 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
     def param_names(self):
         'Returns the list of parameters names (unsorted).'
         return [v[0] for v in self._p]
+
+    @property
+    def cst_names(self):
+        'Returns the list of constants names (unsorted).'
+        return [v[0] for v in self._c]
+
+    @property
+    def vect_names(self):
+        'Returns the list of names.'
+        return ([v[0] for v in self._q] + [v[0] for v in self._p] +
+                [v[0] for v in self._c] + ['t'])
+
+    def vect(self, t=0, out=None, derivative=False):
+        """
+        Returns all values as a vector.
+
+        :param
+        """
+        if derivative:
+            if out is None:
+                out = numpy.empty((self._val_len + 1 + self._val_ind[1], ),
+                                  dtype=numpy.float64)
+            self.vect(t=t, out=out)
+            for i, v in enumerate(self._leqa):
+                out[i - self._val_ind[1]] = v(*out[:self._val_len + 1])
+        else:
+            if out is None:
+                out = numpy.empty((self._val_len + 1, ), dtype=numpy.float64)
+        out[:self._val_ind[1]] = self._val_q
+        out[self._val_ind[1]:self._val_ind[2]] = self._val_p
+        out[self._val_ind[2]:self._val_ind[3]] = self._val_c
+        out[self._val_ind[3]] = t
+        return out
 
     @property
     def P(self):
@@ -286,4 +362,92 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
             res[k[0]] = v
         for k, v in zip(self._p, self._val_p):
             res[k[0]] = v
+        return res
+
+    def evalf_eq(self, eq, t=0):
+        """
+        Evaluates an :epkg:`sympy` expression.
+        """
+        svalues = self._eval_cache()
+        svalues[self._syms['t']] = t
+        for k, v in zip(self._q, self._val_q):
+            svalues[self._syms[k[0]]] = v
+        return eq.evalf(subs=svalues)
+
+    def evalf_leq(self, name, t=0):
+        """
+        Evaluates a lambdified expression.
+
+        :param name: name of the lambdified expresion
+        :param t: t values
+        :return: evaluation
+        """
+        leq = self._lambdified_(name)
+        if leq is None:
+            raise RuntimeError(
+                "Equation '{}' was not lambdified.".format(name))
+        return leq(*self.vect(t))
+
+    def _eval_cache(self):
+        values = self.cst_param
+        svalues = {self._syms[k]: v for k, v in values.items()}
+        return svalues
+
+    def _lambdify_(self, name, eq, derivative=False):
+        'Lambdifies an expression and caches in member `_lambda_`.'
+        if not hasattr(self, '_lambda_'):
+            self._lambda_ = {}
+        if name not in self._lambda_:
+            names = (self.quantity_names + self.param_names +
+                     self.cst_names + ['t'])
+            sym = [Symbol(n) for n in names]
+            if derivative:
+                sym += [Symbol('d' + n) for n in self.quantity_names]
+            self._lambda_[name] = {
+                'names': names,
+                'symbols': sym,
+                'eq': eq,
+                'pos': {n: i for i, n in enumerate(names)},
+            }
+            ll = lambdify(sym, eq, 'numpy')
+            self._lambda_[name]['la'] = ll
+        return self._lambda_[name]['la']
+
+    def _lambdified_(self, name):
+        """
+        Returns the lambdified expression of name *name*.
+        """
+        if hasattr(self, '_lambda_'):
+            r = self._lambda_.get(name, None)
+            if r is not None:
+                return r['la']
+        return None
+
+    def _eval_diff_sympy(self, t=0):
+        """
+        Evaluates derivatives.
+        Returns a dictionary.
+        """
+        svalues = self._eval_cache()
+        svalues[self._syms['t']] = t
+        for k, v in zip(self._q, self._val_q):
+            svalues[self._syms[k[0]]] = v
+
+        x = self.vect(t=t)
+        res = {}
+        for k, v in self._eq.items():
+            res[k] = v.evalf(subs=svalues)
+        for k, v in self._leq.items():
+            res[k] = v(*x)
+        return res
+
+    def eval_diff(self, t=0):
+        """
+        Evaluates derivatives.
+        Returns a dictionary.
+        """
+        x = self.vect(t=t)
+        res = {}
+        for k, v in self._leq.items():
+            res[k] = v(*x)
         return res

@@ -20,40 +20,20 @@ class BaseSIRSimulation:
         :param name: symbol name
         :return: boolean
         """
-        eq = self._eq[eqname]
-        df = sympy_diff(eq, Symbol(name))
-        ev = self.evalf_eq(df)
+        leqname = 'd' + eqname + '/d' + name
+        eql = self._lambdified_(leqname)
+        if eql is None:
+            eq = self._eq[eqname]
+            df = sympy_diff(eq, Symbol(name))
+            self._lambdify_(leqname, df)
+            eval1 = self.evalf_eq(df)
+            eval2 = self.evalf_leq(leqname)
+            if eval1 != eval2:
+                raise ValueError(
+                    "Lambdification failed for derivative '{}' by '{}' "
+                    "({} != {})".format(eqname, name, eval1, eval2))
+        ev = self.evalf_leq(leqname)
         return 1 if ev >= 0 else -1
-
-    def evalf_eq(self, eq, t=0):
-        """
-        Evaluates an :epkg:`sympy` expression.
-        """
-        svalues = self._eval_cache()
-        svalues[self._syms['t']] = t
-        for k, v in zip(self._q, self._val_q):
-            svalues[self._syms[k[0]]] = v
-        return eq.evalf(subs=svalues)
-
-    def _eval_cache(self):
-        values = self.cst_param
-        svalues = {self._syms[k]: v for k, v in values.items()}
-        return svalues
-
-    def eval_diff(self, t=0):
-        """
-        Evaluates derivatives.
-        Returns a dictionary.
-        """
-        svalues = self._eval_cache()
-        svalues[self._syms['t']] = t
-        for k, v in zip(self._q, self._val_q):
-            svalues[self._syms[k[0]]] = v
-
-        res = {}
-        for k, v in self._eq.items():
-            res[k] = v.evalf(subs=svalues)
-        return res
 
     def iterate(self, n=10, t=0, derivatives=False):
         """
@@ -66,22 +46,15 @@ class BaseSIRSimulation:
         :param derivatives: returns the derivative as well
         :return: iterator on dictionaries
         """
-        svalues = self._eval_cache()
-        svalues[self._syms['t']] = t
-        vals = {k[0]: v for k, v in zip(self._q, self._val_q)}
         for i in range(t, t + n):
+            x = self.vect(t=i)
+            diff = {k: v(*x) for k, v in self._leq.items()}
+            vals = {k[0]: v for k, v in zip(self._q, x)}
 
-            for k, v in zip(self._q, self._val_q):
-                svalues[self._syms[k[0]]] = v
-            diff = {}
-            for k, v in self._eq.items():
-                diff[k] = v.evalf(subs=svalues)
-
-            fvals = {k: float(v) for k, v in vals.items()}
             if derivatives:
-                yield fvals, diff
+                yield vals.copy(), diff
             else:
-                yield fvals
+                yield vals.copy()
 
             for k, v in diff.items():
                 vals[k] += v

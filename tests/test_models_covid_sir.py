@@ -164,6 +164,12 @@ class TestModelsCovidSir(unittest.TestCase):
         assert_almost_equal(s1, s2)
         self.assertGreater(diff, 1)
 
+    def test_eval_diff(self):
+        model = CovidSIR()
+        df1 = model.eval_diff()
+        df2 = model._eval_diff_sympy()
+        self.assertEqual(df1, df2)
+
 
 if __name__ == '__main__':
     unittest.main()
