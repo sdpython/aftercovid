@@ -1,7 +1,7 @@
 # coding: utf-8
 """
-Estimation des paramètres
-=========================
+Estimation des paramètres d'un modèle SIR
+=========================================
 
 On part d'un modèle :class:`CovidSIR <aftercovid.models.CovidSIR>`
 qu'on utilise pour simuler des données. On regarde s'il est possible
@@ -14,14 +14,13 @@ Simulation des données
 ++++++++++++++++++++++
 """
 
-
+import warnings
+from pprint import pprint
 import numpy
 from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
 import matplotlib.pyplot as plt
-import warnings
-from aftercovid.models import EpidemicRegressor
 import pandas
-from aftercovid.models import CovidSIR
+from aftercovid.models import EpidemicRegressor, CovidSIR
 
 model = CovidSIR()
 model
@@ -33,11 +32,11 @@ model
 model['beta'] = 0.4
 model["mu"] = 0.06
 model["nu"] = 0.04
-print(model.P)
+pprint(model.P)
 
 ###################################
 # Point de départ
-print(model.Q)
+pprint(model.Q)
 
 
 ###################################
@@ -65,7 +64,7 @@ df.plot(title="Simulation SIR")
 m = EpidemicRegressor('SIR', verbose=True, learning_rate_init=1e-2,
                       max_iter=10, early_th=1)
 m.fit(X, y)
-print(m.model_.P)
+pprint(m.model_.P)
 
 
 ###############################################
