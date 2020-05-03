@@ -13,6 +13,8 @@ class TestEpidemicRegressor(unittest.TestCase):
     def test_fit(self):
         model = CovidSIR()
         X, y = model.iterate2array(derivatives=True)
+        with self.assertRaises(ValueError):
+            EpidemicRegressor('sir2')
         epi = EpidemicRegressor(max_iter=10)
         with self.assertRaises(RuntimeError):
             epi.score(X, y)

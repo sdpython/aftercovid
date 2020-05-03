@@ -21,7 +21,7 @@ url = ("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/"
        "master/csse_covid_19_data/"
        "csse_covid_19_time_series/time_series_covid19_deaths_global.csv")
 df = pandas.read_csv(url)
-print(df.head())
+df.head()
 
 #################################
 #  Tous les pays
@@ -36,7 +36,7 @@ print(" --- ".join(sorted(set(df['Country/Region']))))
 keep = ['France', 'Belgium', 'Italy', 'United Kingdom',
         'US', 'Spain', 'Germany']
 eur = df[df['Country/Region'].isin(keep) & df['Province/State'].isna()]
-print(eur)
+eur
 
 #######################################
 # En colonne.
@@ -44,7 +44,7 @@ print(eur)
 cols = list(eur['Country/Region'])
 tf = eur.T.iloc[4:]
 tf.columns = cols
-print(tf.head())
+tf.head()
 
 
 ########################################
@@ -62,14 +62,14 @@ tf.plot(logy=True, lw=3, title="Nombre de décès COVID", ax=ax[1])
 cols = list(eur['Country/Region'])
 tf = eur.T.iloc[4:]
 tf.columns = cols
-print(tf.head())
+tf.head()
 
 
 #########################################
 # On lisse sur quelques jours.
 
 tdroll = tf.rolling(3, center=False, win_type='triang').sum()
-print(tdroll.head())
+tdroll.head()
 
 ##################################
 # Séries lissées.
@@ -111,7 +111,7 @@ data = {}
 for c in tdroll.columns:
     data[c] = delag(tdroll[c], 20)
 dl = pandas.DataFrame(data)
-print(dl.head())
+dl.head()
 
 ####################################
 # Graphes.

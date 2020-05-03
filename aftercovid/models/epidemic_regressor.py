@@ -48,6 +48,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         self.power_t = power_t
         self.early_th = early_th
         self.verbose = verbose
+        self._get_model()
 
     def _get_model(self):
         if self.model.lower() == 'sir':

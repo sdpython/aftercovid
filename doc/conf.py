@@ -117,6 +117,7 @@ epkg_dictionary = {
     'numpy': 'https://numpy.org/',
     'pyinstrument': 'https://github.com/joerick/pyinstrument',
     'python': 'https://www.python.org/',
+    'scikit-learn': 'https://scikit-learn.org/stable/',
     'SEIR': 'http://www.public.asu.edu/~hnesse/classes/seir.html',
     'SEIHFR': 'https://freakonometrics.hypotheses.org/60514',
     'SIR': ('https://fr.wikipedia.org/wiki/Mod%C3%A8les_compartimentaux_en'

@@ -24,7 +24,7 @@ import pandas
 from aftercovid.models import CovidSIR
 
 model = CovidSIR()
-print(model)
+model
 
 
 ###########################################
@@ -45,7 +45,7 @@ print(model.Q)
 
 X, y = model.iterate2array(50, derivatives=True)
 df = pandas.DataFrame({_[0]: x for _, x in zip(model.Q, X.T)})
-print(df.tail())
+df.tail()
 
 ######################################
 # Visualisation
@@ -108,8 +108,11 @@ for k in range(0, X.shape[0], 5):
     obs.update({k: v for k, v in zip(m.model_.param_names, m.model_._val_p)})
     coefs.append(obs)
 
+#######################################
+# Résumé
+
 dfcoef = pandas.DataFrame(coefs).set_index('k')
-print(dfcoef)
+dfcoef
 
 #############################################################
 # On visualise.
