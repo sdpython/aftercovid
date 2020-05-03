@@ -4,8 +4,7 @@ Common methods about training, predicting for :epkg:`SIR` models.
 """
 import pprint
 import numpy
-from sympy import Symbol, diff as sympy_diff  # , lambdify
-from sympy.core.numbers import Zero
+from sympy import Symbol, diff as sympy_diff
 from ..optim import SGDOptimizer
 
 
@@ -112,7 +111,9 @@ class BaseSIREstimation:
         for name in clq:
             sym = Symbol('d' + name)
             eq = self._eq[name]
-            res.append((eq - sym) ** 2)
+            lo = (eq - sym) ** 2
+            la = self._lambdify_('loss-%s' % name, lo, derivative=True)
+            res.append((lo, la))
         return res
 
     def _grads_sympy(self):
@@ -129,8 +130,10 @@ class BaseSIREstimation:
             row = []
             for pn in prn:
                 pns = Symbol(pn)
-                df = sympy_diff(eq, pns)
-                row.append(df)
+                df = sympy_diff(eq[0], pns)
+                gr = self._lambdify_('grad-%s/%s' % (name, pn), df,
+                                     derivative=True)
+                row.append((df, gr))
             res.append(row)
         return res
 
@@ -144,24 +147,20 @@ class BaseSIREstimation:
         :param t: implicit feature
         :return: predictive derivative
         """
-        cache = self._eval_cache()
-        clq, N = self._check_fit_predict(X)
-        if N != self['N']:
+        N = self._check_fit_predict(X)[1]
+        err = abs(N - self['N']) / N
+        if err > 1e-4:
             raise ValueError(
                 "All rows must sum up to {} not {}.".format(self['N'], N))
-        pos = {n: i for i, n in enumerate(clq)}
+        n = X.shape[0]
+        C = X.shape[1]
         pred = numpy.empty(X.shape, dtype=X.dtype)
-
-        for i in range(0, X.shape[0]):
-            svalues = {self._syms['t']: t + i}
-            svalues.update(cache)
-            for n, v in zip(clq, X[i, :]):
-                svalues[self._syms[n]] = v
-
-            for k, v in self._eq.items():
-                ev = v.evalf(subs=svalues)
-                pred[i, pos[k]] = ev
-
+        x = self.vect(t=t)
+        for i in range(t, t + n):
+            x[-1] = i
+            x[:C] = X[i, :]
+            for c, f in enumerate(self._leqa):
+                pred[i, c] = f(*x)
         return pred
 
     def score(self, X, y, t=0):
@@ -188,18 +187,16 @@ class BaseSIREstimation:
         <aftercovid.models._base_sir_estimation.BaseSIREstimation.fit>`
         and :class:`SGDOptimizer <aftercovid.optim.SGDOptimizer>`.
         '''
-        clq, N = self._check_fit_predict(X, y)
-        pnames = self.param_names
-        self['N'] = N
-
-        symbol_clq = [Symbol(n) for n in clq]
-        symbol_d_clq = [Symbol('d' + n) for n in clq]
-        symbol_N = Symbol('N')
-        symbol_params = [Symbol(n) for n in pnames]
+        N = self._check_fit_predict(X, y)[1]
+        err = abs(N - self['N']) / N
+        if err > 1e-4:
+            raise ValueError(
+                "All rows must sum up to {} not {}.".format(self['N'], N))
 
         # loss and gradients functions
         losses = self._losses_sympy()
         grads = self._grads_sympy()
+        xy0 = self.vect(t=0, derivative=True)
 
         def pformat(d):  # pragma: no cover
             nd = {str(k): (str(v), type(v), type(k)) for k, v in d.items()}
@@ -207,52 +204,30 @@ class BaseSIREstimation:
 
         def fct_loss(coef, X, y):
             'Computes the loss function for every X and y.'
-            svalues = {symbol_N: N}
-            for p, c in zip(symbol_params, coef):
-                svalues[p] = c
+            xy0[self._val_ind[1]:self._val_ind[2]] = coef
 
             res = 0.
             for i in range(X.shape[0]):
-                for n, v in zip(symbol_clq, X[i, :]):
-                    svalues[n] = v
-                for n, v in zip(symbol_d_clq, y[i, :]):
-                    svalues[n] = v
+                xy0[-1] = i
+                xy0[:X.shape[1]] = X[i, :]
+                xy0[-self._val_ind[1]:] = y[i, :]
                 for loss in losses:
-                    try:
-                        res += loss.evalf(subs=svalues)
-                    except (AttributeError, TypeError,  # pragma: no cover
-                            IndexError) as e:
-                        raise RuntimeError(  # pragma: no cover
-                            'Unable to calculate loss for [{}] with '
-                            'values={}.'.format(
-                                loss, pformat(svalues))) from e
+                    res += loss[1](*xy0)
             return res
 
-        def fct_grad(coef, x, y):
+        def fct_grad(coef, x, y, i):
             'Computes the gradient function for every X and y.'
-            svalues = {symbol_N: N}
-            for p, c in zip(symbol_params, coef):
-                svalues[p] = c
+            xy0[:self._val_ind[1]] = x
+            xy0[self._val_ind[1]:self._val_ind[2]] = coef
+            xy0[-self._val_ind[1]:] = y
 
-            res = numpy.zeros((len(pnames), ), dtype=x.dtype)
-            for n, v in zip(symbol_clq, x):
-                svalues[n] = v
-            for n, v in zip(symbol_d_clq, y):
-                svalues[n] = v
+            res = numpy.zeros((coef.shape[0], ), dtype=x.dtype)
             for row in grads:
                 for i, g in enumerate(row):
-                    if isinstance(g, Zero):
-                        continue
-                    try:
-                        res[i] = g.evalf(subs=svalues)
-                    except (AttributeError, TypeError,  # pragma: no cover
-                            IndexError) as e:
-                        raise RuntimeError(  # pragma: no cover
-                            'Unable to calculate gradient for [{}] with '
-                            'values={}.'.format(
-                                g, pformat(svalues))) from e
+                    res[i] += g[1](*xy0)
             return res
 
+        pnames = self.param_names
         coef = numpy.array([self[p] for p in pnames])
         lrn = 1. / (N ** 1.5)
         sgd = SGDOptimizer(

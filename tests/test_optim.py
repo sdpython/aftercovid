@@ -12,7 +12,7 @@ def fct_loss(c, X, y):
     return numpy.linalg.norm(X @ c - y) ** 2
 
 
-def fct_grad(c, x, y):
+def fct_grad(c, x, y, i):
     return x * (x @ c - y) * 0.1
 
 
@@ -27,11 +27,11 @@ class TestOptim(unittest.TestCase):
         ls = fct_loss(coef, X, y)
         self.assertLess(ls, 1e-10)
 
-        gr = fct_grad(coef, X[0, :], y[0])
+        gr = fct_grad(coef, X[0, :], y[0], 0)
         no = numpy.linalg.norm(gr)
         self.assertLess(no, 1e-10)
 
-        gr = fct_grad(numpy.array([0., 0., 0.]), X[0, :], y[0])
+        gr = fct_grad(numpy.array([0., 0., 0.]), X[0, :], y[0], 0)
         no = numpy.linalg.norm(gr)
         self.assertGreater(no, 0.001)
 

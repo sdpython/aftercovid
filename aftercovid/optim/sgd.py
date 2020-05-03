@@ -57,7 +57,8 @@ class BaseOptimizer:
         :param X: datasets (array)
         :param y: expected target
         :param fct_loss: loss function, signature: `f(coef, X, y) -> float`
-        :param fct_grad: gradient function, signature: `g(coef, x, y) -> array`
+        :param fct_grad: gradient function,
+            signature: `g(coef, x, y, i) -> array`
         :param max_iter: number maximum of iteration
         :param early_th: stops the training if the error goes below
             this threshold
@@ -78,7 +79,7 @@ class BaseOptimizer:
         for it in range(max_iter):
             irows = numpy.random.choice(X.shape[0], X.shape[0])
             for irow in irows:
-                grad = fct_grad(self.coef, X[irow, :], y[irow])
+                grad = fct_grad(self.coef, X[irow, :], y[irow], irow)
                 self.update_coef(grad)
                 n_samples += 1
 
@@ -143,7 +144,7 @@ class SGDOptimizer(BaseOptimizer):
                 return numpy.linalg.norm(X @ c - y) ** 2
 
 
-            def fct_grad(c, x, y):
+            def fct_grad(c, x, y, i=0):
                 return x * (x @ c - y) * 0.1
 
 
