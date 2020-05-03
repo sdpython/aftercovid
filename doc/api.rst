@@ -24,6 +24,14 @@ Models
 
     model_covidsir
 
+scikti-learn API
+++++++++++++++++
+
+.. toctree::
+    :maxdepth: 1
+
+    model_epireg
+
 dummy
 ++++++
 

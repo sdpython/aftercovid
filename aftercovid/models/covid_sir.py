@@ -2,6 +2,7 @@
 """
 Implementation of a model for epidemics propagation.
 """
+import numpy.random
 from ._base_sir import BaseSIR
 
 
@@ -88,3 +89,37 @@ class CovidSIR(BaseSIR):
     def R0(self, t=0):
         '''Returns R0 coefficient.'''
         return self['beta'] / (self['nu'] + self['mu'])
+
+    def rnd(self):
+        '''
+        Draws random parameters.
+        Not perfect.
+        '''
+        self['beta'] = numpy.random.randn(1) * 0.1 + 0.5
+        self['mu'] = numpy.random.randn(1) * 0.1 + 1. / 14
+        self['nu'] = numpy.random.randn(1) * 0.1 + 1. / 21
+
+    @staticmethod
+    def add_noise(X, epsilon=1.):
+        """
+        Tries to add reasonable noise to the quantities stored in *X*.
+
+        :param epsilon: amplitude
+        :return: new X
+        """
+        rnd = numpy.random.randn(*X.shape) * epsilon + 1.
+        rnd = numpy.maximum(rnd, 0)
+
+        X2 = X.copy().astype(numpy.float64)
+        grad = (X2[1:] - X2[:-1])
+        grad[:, 3] *= rnd[1:, 3]
+        grad[:, 2] *= (rnd[1:, 2] - 1) / 5 + 1.
+
+        X2[1:] = X2[0, :] + numpy.cumsum(grad, axis=0)
+
+        fact = numpy.multiply(numpy.sum(X2, axis=1), 1. / numpy.sum(X, axis=1))
+        X2 = numpy.multiply(X2, fact.reshape(X.shape[0], 1))
+        delta = numpy.sum(X, axis=1) - numpy.sum(X2, axis=1)
+        delta /= X.shape[1]
+        X2 = numpy.add(X2, delta.reshape(-1, 1))
+        return X2

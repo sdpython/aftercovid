@@ -4,7 +4,7 @@ Common methods about training, predicting for :epkg:`SIR` models.
 """
 import pprint
 import numpy
-from sympy import Symbol, diff as sympy_diff
+from sympy import Symbol, diff as sympy_diff  # , lambdify
 from sympy.core.numbers import Zero
 from ..optim import SGDOptimizer
 
@@ -42,7 +42,7 @@ class BaseSIREstimation:
 
     def fit(self, X, y, t=0, max_iter=100,
             learning_rate_init=0.1, lr_schedule='constant',
-            momentum=0.9, power_t=0.5, verbose=False):
+            momentum=0.9, power_t=0.5, early_th=None, verbose=False):
         """
         Fits a model :class:`BaseSIR <aftercovid.models._base_sir.BaseSIR>`.
 
@@ -61,6 +61,8 @@ class BaseSIREstimation:
         :param momentum: see :class:`SGDOptimizer
             <aftercovid.optim.SGDOptimizer>`
         :param power_t: see :class:`SGDOptimizer
+            <aftercovid.optim.SGDOptimizer>`
+        :param early_th: see :class:`SGDOptimizer
             <aftercovid.optim.SGDOptimizer>`
         :param verbose: see :class:`SGDOptimizer
             <aftercovid.optim.SGDOptimizer>`
@@ -94,16 +96,10 @@ class BaseSIREstimation:
 
         A stochastic gradient descent takes care of the rest.
         """
-        self._fit(
-            X,
-            y,
-            t=0,
-            max_iter=max_iter,
-            learning_rate_init=learning_rate_init,
-            lr_schedule=lr_schedule,
-            momentum=momentum,
-            power_t=power_t,
-            verbose=verbose)
+        self._fit(X, y, t=0, max_iter=max_iter,
+                  learning_rate_init=learning_rate_init,
+                  lr_schedule=lr_schedule, momentum=momentum,
+                  power_t=power_t, verbose=verbose, early_th=early_th)
         return self
 
     def _losses_sympy(self):
@@ -168,9 +164,25 @@ class BaseSIREstimation:
 
         return pred
 
+    def score(self, X, y, t=0):
+        """
+        Scores the predictions.
+
+        :param X: known values for every quantity at time *t*,
+            every column is mapped to the list returned by
+            :meth:`quantity_names <aftercovid.models._base_sir.quantity_names>`
+        :param y: expected values
+        :param t: implicit feature
+        :return: predictive derivative
+        """
+        self._check_fit_predict(X, y)
+        pred = self.predict(X, t=t)
+        delta = (pred - y) ** 2
+        return numpy.sum(delta) / X.shape[0]
+
     def _fit(self, X, y, t, max_iter,
              learning_rate_init, lr_schedule,
-             momentum, power_t, verbose):
+             momentum, power_t, early_th, verbose):
         '''
         See method :meth:`fit
         <aftercovid.models._base_sir_estimation.BaseSIREstimation.fit>`
@@ -249,9 +261,10 @@ class BaseSIREstimation:
             power_t=power_t)
 
         sgd.train(X, y, fct_loss, fct_grad, max_iter=max_iter,
-                  verbose=verbose)
+                  early_th=early_th, verbose=verbose)
 
         # uses trained coefficients
         coef = sgd.coef
         for n, c in zip(pnames, coef):
             self[n] = c
+        self.iter_ = sgd.iter_

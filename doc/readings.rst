@@ -119,6 +119,9 @@ sur son article
   <https://academic.oup.com/aje/article/164/10/936/162511>`_
 * `Unifying Markov Chain Approach for Disease and Rumor Spreading in Complex Networks
   <https://arxiv.org/pdf/1609.00682.pdf>`_
+* `Modèle CAST <https://blog.parcoor.com/2020-04-22-cast-prediction-propagation/>`_,
+  `notebook <https://github.com/parcoor/py-propagsim/blob/master/examples/example0.ipynb>`_,
+  `py-propagsim <https://github.com/parcoor/py-propagsim>`_
 
 Modules
 +++++++

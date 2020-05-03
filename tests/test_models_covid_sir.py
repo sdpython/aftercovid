@@ -65,6 +65,8 @@ class TestModelsCovidSir(unittest.TestCase):
         self.assertEqual(model['beta'], 0.5)
         model['N'] = 100000
         self.assertEqual(model['N'], 100000)
+        ht = model._repr_html_()
+        self.assertIn("{equation}", ht)
 
     def test_covid_sir_eval(self):
         model = CovidSIR()
@@ -148,6 +150,19 @@ class TestModelsCovidSir(unittest.TestCase):
         coef = numpy.array([model['beta'], model['nu'], model['mu']])
         err = numpy.linalg.norm(exp - coef)
         self.assertLess(err, 1e-1)
+        loss = model.score(X, y)
+        self.assertGreater(loss, 0)
+
+    def test_noise(self):
+        model = CovidSIR()
+        X, y = model.iterate2array(derivatives=True)
+        X2 = model.add_noise(X)
+        diff = numpy.abs(X - X2).max()
+        self.assertEqual(X.shape, X.shape)
+        s1 = numpy.sum(X, axis=1)
+        s2 = numpy.sum(X2, axis=1)
+        assert_almost_equal(s1, s2)
+        self.assertGreater(diff, 1)
 
 
 if __name__ == '__main__':

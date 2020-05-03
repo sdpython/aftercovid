@@ -49,7 +49,8 @@ class BaseOptimizer:
         """
         pass  # pragma: no cover
 
-    def train(self, X, y, fct_loss, fct_grad, max_iter=100, verbose=False):
+    def train(self, X, y, fct_loss, fct_grad, max_iter=100,
+              early_th=None, verbose=False):
         """
         Optimizes the coefficients.
 
@@ -58,6 +59,8 @@ class BaseOptimizer:
         :param fct_loss: loss function, signature: `f(coef, X, y) -> float`
         :param fct_grad: gradient function, signature: `g(coef, x, y) -> array`
         :param max_iter: number maximum of iteration
+        :param early_th: stops the training if the error goes below
+            this threshold
         :param verbose: display information
         :return: loss
         """
@@ -83,6 +86,9 @@ class BaseOptimizer:
             loss = fct_loss(self.coef, X, y)
             if verbose:
                 self._display_progress(it + 1, max_iter, loss)
+            self.iter_ = it + 1
+            if early_th is not None and loss <= early_th:
+                break
         return loss
 
     def _display_progress(self, it, max_iter, loss):
@@ -114,6 +120,7 @@ class SGDOptimizer(BaseOptimizer):
         Value of momentum used, must be larger than or equal to 0
     :param power_t: double
         The exponent for inverse scaling learning rate.
+    :param early_th: stops if the error goes below that threshold
 
     The class holds the following attributes:
 
@@ -150,11 +157,12 @@ class SGDOptimizer(BaseOptimizer):
     """
 
     def __init__(self, coef, learning_rate_init=0.1, lr_schedule='constant',
-                 momentum=0.9, power_t=0.5):
+                 momentum=0.9, power_t=0.5, early_th=None):
         super().__init__(coef, learning_rate_init)
         self.lr_schedule = lr_schedule
         self.momentum = momentum
         self.power_t = power_t
+        self.early_th = early_th
         self.velocity = numpy.zeros_like(coef)
 
     def iteration_ends(self, time_step):

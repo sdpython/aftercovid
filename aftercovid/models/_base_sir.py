@@ -3,7 +3,7 @@
 Common functions for :epkg:`SIR` models.
 """
 import numpy
-from sympy import symbols, Symbol
+from sympy import symbols, Symbol, latex
 import sympy.printing as printing
 from sympy.parsing.sympy_parser import (
     parse_expr, standard_transformations, implicit_application)
@@ -137,21 +137,21 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         '''
         Returns the parameters
         '''
-        return self._p
+        return [(a[0], b, a[2]) for a, b in zip(self._p, self._val_p)]
 
     @property
     def Q(self):
         '''
         Returns the quantities
         '''
-        return self._q
+        return [(a[0], b, a[2]) for a, b in zip(self._q, self._val_q)]
 
     @property
     def C(self):
         '''
         Returns the quantities
         '''
-        return self._c
+        return [(a[0], b, a[2]) for a, b in zip(self._c, self._val_c)]
 
     def update(self, **values):
         """Updates values."""
@@ -169,19 +169,19 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         rows = [
             '*{}*'.format(self.__class__.__name__),
             '',
-            '*Q*',
+            '*Quantities*',
             ''
         ]
         for name, _, doc in self._q:
             rows.append('* *{}*: {}'.format(name, doc))
-        rows.extend(['', '*C*', ''])
+        rows.extend(['', '*Constants*', ''])
         for name, _, doc in self._c:
             rows.append('* *{}*: {}'.format(name, doc))
-        rows.extend(['', '*P*', ''])
+        rows.extend(['', '*Parameters*', ''])
         for name, _, doc in self._p:
             rows.append('* *{}*: {}'.format(name, doc))
         if self._eq is not None:
-            rows.extend(['', '*E*', '', '.. math::',
+            rows.extend(['', '*Equations*', '', '.. math::',
                          '', '    \\begin{array}{l}'])
             for i, (k, v) in enumerate(sorted(self._eq.items())):
                 line = "".join(
@@ -190,6 +190,36 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
                     line += " \\\\"
                 rows.append(line)
             rows.append("    \\end{array}")
+
+        return '\n'.join(rows)
+
+    def _repr_html_(self):
+        '''
+        Returns a string formatted in RST.
+        '''
+        rows = [
+            '<p><b>{}</b></p>'.format(self.__class__.__name__),
+            '',
+            '<p><i>Quantities</i></p>',
+            '',
+            '<ul>'
+        ]
+        for name, _, doc in self._q:
+            rows.append('<li><i>{}</i>: {}</li>'.format(name, doc))
+        rows.extend(['</ul>', '', '<p><i>Constants</i></p>', '', '<ul>'])
+        for name, _, doc in self._c:
+            rows.append('<li><i>{}</i>: {}</li>'.format(name, doc))
+        rows.extend(['</ul>', '', '<p><i>Parameters</i></p>', '', '<ul>'])
+        for name, _, doc in self._p:
+            rows.append('<li><i>{}</i>: {}</li>'.format(name, doc))
+        if self._eq is not None:
+            rows.extend(['</ul>', '', '<p><i>Equations</i></p>', '', '<ul>'])
+            for i, (k, v) in enumerate(sorted(self._eq.items())):
+                lats = "\\frac{d%s}{dt} = %s" % (k, printing.latex(v))
+                lat = latex(lats, mode='equation')
+                line = "".join(["<li>", str(lat), '</li>'])
+                rows.append(line)
+            rows.append("</ul>")
 
         return '\n'.join(rows)
 
