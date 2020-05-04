@@ -35,8 +35,12 @@ Lectures
   <https://www.eurosurveillance.org/content/10.2807/1560-7917.ES.2020.25.10.2000180>`_
 * `Modélisation de l'épidémie de COVID-19
   <http://covid-ete.ouvaton.org/>`_
+* `AI v Covid-19 <http://people.idsia.ch/~juergen/ai-covid.html>`_ (catalogue d'articles)
+* `Inferring COVID-19 spreading rates and potential change points for case number forecasts
+  <https://arxiv.org/abs/2004.01105>`_
+  
 
-Une série d'articles intéressantes...
+Une série d'articles intéressants...
 
 * `Coronavirus: Learning How to Dance (Part 1)
   <https://medium.com/@tomaspueyo/coronavirus-learning-how-to-dance-b8420170203e>`_
@@ -123,6 +127,21 @@ sur son article
   `notebook <https://github.com/parcoor/py-propagsim/blob/master/examples/example0.ipynb>`_,
   `py-propagsim <https://github.com/parcoor/py-propagsim>`_
 
+*Temporal Point Process*
+
+* `COVID-19 machine learning projects at Max Planck Institute
+  <https://ellis.eu/en/covid-19/talks/covid-19-machine-learning-projects-at-max-planck-institute>`_
+* `Learning with Temporal Point Processes
+  <http://learning.mpi-sws.org/tpp-icml18/>`_
+* `An Introduction to Event History Analysis
+  <https://spia.uga.edu/faculty_pages/rbakker/pols8501/OxfordOneNotes.pdf>`_
+* `Survival and Event History Analysis, A Process Point of View
+  <https://epdf.pub/survival-and-event-history-analysis-a-process-point-of-view.html>`_
+* `An Introduction to the Theory of Point Processes, volume I, Elementary Theory and Methods, 2nd Edition
+  <https://epdf.pub/an-introduction-to-the-theory-of-point-processes.html>`_
+* `An Introduction to the Theory of Point Processes, volume II, General Thoery and Structure, 2nd Edition
+  <https://epdf.pub/an-introduction-to-the-theory-of-point-processes-volume-ii-general-theory-and-st.html>`_
+
 Modules
 +++++++
 
@@ -132,3 +151,11 @@ Modules
 * `Mathematics of Epidemics on Networks
   <https://github.com/springer-math/Mathematics-of-Epidemics-on-Networks>`_,
   c'est autant un livre qu'un module.
+  
+Code
+++++
+
+* `Bayesian inference and forecast of COVID-19
+  <https://github.com/Priesemann-Group/covid19_inference_forecast>`_
+* `A Spatiotemporal Epidemic Model to Quantify The Effects of Testing, Contact Tracing and Containment
+  <https://github.com/covid19-model/simulator>`_
