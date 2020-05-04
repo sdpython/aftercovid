@@ -141,6 +141,11 @@ with warnings.catch_warnings():
 ####################################################
 # Différentes tailles d'estimation
 # ++++++++++++++++++++++++++++++++
+#
+# Le paramètre `beta` a été estimé sur une période de 10 jours.
+# Est-ce que cela change sur une période plus courte ou plus longue ?
+# Sur des données parfaites (sans bruit), cela ne devrait pas changer
+# grand chose.
 
 coefs = []
 for delay in [4, 5, 6, 7, 8, 9, 10]:
@@ -185,6 +190,10 @@ with warnings.catch_warnings():
     df.plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la simulation '
                  'avec différentes tailles de fenêtre', fontsize=12)
+
+###################################
+# Le graphique manque de légende.
+# Ce sera pour plus tard.
 
 ######################################################
 # Données bruitées
