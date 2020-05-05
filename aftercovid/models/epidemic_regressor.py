@@ -2,6 +2,7 @@
 """
 Implementation of a model for epidemics propagation.
 """
+import numpy
 from sklearn.base import BaseEstimator, RegressorMixin
 from .covid_sir import CovidSIR
 
@@ -36,7 +37,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
     def __init__(self, model='SIR', t=0, max_iter=100,
                  learning_rate_init=0.1, lr_schedule='constant',
                  momentum=0.9, power_t=0.5, early_th=None,
-                 verbose=False):
+                 min_threshold=None, verbose=False):
         BaseEstimator.__init__(self)
         RegressorMixin.__init__(self)
         self.t = t
@@ -48,6 +49,10 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         self.power_t = power_t
         self.early_th = early_th
         self.verbose = verbose
+        if min_threshold is None:
+            if model == 'SIR':
+                min_threshold = 0.02
+        self.min_threshold = min_threshold
         self._get_model()
 
     def _get_model(self):
@@ -63,11 +68,20 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         if not hasattr(self, 'model_'):
             self.model_ = self._get_model()
             self.model_.rnd()
+        total = numpy.sum(X, axis=1)
+        mi, ma = total.min(), total.max()
+        err = (ma - mi) / mi
+        if err > 1e-5:
+            raise RuntimeError(
+                "Population is not constant, in [{}, {}].".format(
+                    mi, ma))
+        self.model_['N'] = (ma + mi) / 2
         self.model_.fit(
             X, y, learning_rate_init=self.learning_rate_init,
             max_iter=self.max_iter, early_th=self.early_th,
             verbose=self.verbose, lr_schedule=self.lr_schedule,
-            power_t=self.power_t, momentum=self.momentum)
+            power_t=self.power_t, momentum=self.momentum,
+            min_threshold=self.min_threshold)
         self.iter_ = self.model_.iter_
         return self
 

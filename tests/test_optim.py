@@ -52,7 +52,7 @@ class TestOptim(unittest.TestCase):
             ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
         out = buf.getvalue()
         self.assertIn("15/15: loss", out)
-        self.assertLess(ls, 0.01)
+        self.assertLess(ls, 0.1)
         self.assertEqual(sgd.learning_rate, 0.1)
 
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]), lr_schedule='invscaling')
@@ -62,7 +62,7 @@ class TestOptim(unittest.TestCase):
         out = buf.getvalue()
         self.assertIn("15/15: loss", out)
         self.assertLess(ls, 1)
-        self.assertLess(sgd.learning_rate, 0.01)
+        self.assertLess(sgd.learning_rate, 0.1)
 
 
 if __name__ == '__main__':
