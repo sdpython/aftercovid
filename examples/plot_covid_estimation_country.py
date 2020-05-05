@@ -65,6 +65,13 @@ df.tail()
 
 df.plot(logy=True, title="Données COVID")
 
+################################################
+# On voit qu'en France, les données sont difficilement
+# exploitables en l'état. Et on sait qu'en France
+# la pénurie de tests implique une sous-estimation
+# du nombre de cas positifs. L'estimation du modèle
+# est très compromise.
+
 ############################################
 # Estimation d'un modèle
 # ++++++++++++++++++++++
@@ -137,7 +144,7 @@ dfcoef
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
     fig, ax = plt.subplots(2, 3, figsize=(14, 6))
-    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0])
+    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0"]].plot(ax=ax[0, 2])

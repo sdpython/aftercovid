@@ -27,7 +27,9 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
     :param early_th: see :class:`SGDOptimizer
         <aftercovid.optim.SGDOptimizer>`
     :param verbose: see :class:`SGDOptimizer
-        <aftercovid.optim.SGDOptimizer>`
+        <aftercovid.optim.SGDOptimizer>`, the value depends on the
+        models, if is `0.01` for model `SIR`, it means
+        every coefficient must be greater than 0.01.
 
     Once trained the model holds a member`model_`
     which contains the trained model and `iter_`
@@ -37,7 +39,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
     def __init__(self, model='SIR', t=0, max_iter=100,
                  learning_rate_init=0.1, lr_schedule='constant',
                  momentum=0.9, power_t=0.5, early_th=None,
-                 min_threshold=None, verbose=False):
+                 min_threshold='auto', verbose=False):
         BaseEstimator.__init__(self)
         RegressorMixin.__init__(self)
         self.t = t
@@ -49,9 +51,9 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         self.power_t = power_t
         self.early_th = early_th
         self.verbose = verbose
-        if min_threshold is None:
+        if min_threshold == 'auto':
             if model == 'SIR':
-                min_threshold = 0.02
+                min_threshold = 0.01
         self.min_threshold = min_threshold
         self._get_model()
 
