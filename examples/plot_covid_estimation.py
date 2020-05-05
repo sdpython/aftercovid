@@ -75,7 +75,7 @@ pprint(m.model_.P)
 # fenêtre glissante.
 
 
-def find_best_model(X, y, lrs, th):
+def find_best_model(Xt, yt, lrs, th):
     best_est, best_loss = None, None
     for lr in lrs:
         with warnings.catch_warnings():

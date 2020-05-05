@@ -15,18 +15,20 @@ class BaseOptimizer:
     :param learning_rate_init: float
         The initial learning rate used. It controls the step-size
         in updating the weights.
+    :param min_threshold: coefficients must be higher than *min_thresold*
 
     The class holds the following attributes:
 
     * *learning_rate*: float, the current learning rate
     """
 
-    def __init__(self, coef, learning_rate_init=0.1):
+    def __init__(self, coef, learning_rate_init=0.1, min_threshold=None):
         if not isinstance(coef, numpy.ndarray):
             raise TypeError("coef must be an array.")
         self.coef = coef
         self.learning_rate_init = learning_rate_init
         self.learning_rate = float(learning_rate_init)
+        self.min_threshold = min_threshold
 
     def _get_updates(self, grad):
         raise NotImplementedError("Must be overwritten.")  # pragma no cover
@@ -41,6 +43,8 @@ class BaseOptimizer:
             raise ValueError("coef and grad must have the same shape.")
         update = self._get_updates(grad)
         self.coef += update
+        if self.min_threshold is not None:
+            self.coef = numpy.maximum(self.coef, self.min_threshold)
 
     def iteration_ends(self, time_step):
         """
@@ -122,6 +126,7 @@ class SGDOptimizer(BaseOptimizer):
     :param power_t: double
         The exponent for inverse scaling learning rate.
     :param early_th: stops if the error goes below that threshold
+    :param min_threshold: only positive values are allowed
 
     The class holds the following attributes:
 
@@ -158,8 +163,10 @@ class SGDOptimizer(BaseOptimizer):
     """
 
     def __init__(self, coef, learning_rate_init=0.1, lr_schedule='constant',
-                 momentum=0.9, power_t=0.5, early_th=None):
-        super().__init__(coef, learning_rate_init)
+                 momentum=0.9, power_t=0.5, early_th=None,
+                 min_threshold=None):
+        super().__init__(coef, learning_rate_init,
+                         min_threshold=min_threshold)
         self.lr_schedule = lr_schedule
         self.momentum = momentum
         self.power_t = power_t
