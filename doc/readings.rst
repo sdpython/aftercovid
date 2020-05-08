@@ -24,6 +24,8 @@ Données publiques
   <https://figshare.com/articles/French_contact_matrices/1466918>`_
 * `Data Drees
   <http://www.data.drees.sante.gouv.fr/ReportFolders/reportFolders.aspx?IF_ActivePath=P,432,433,707>`_
+* `SNCF - COVID-19 : évolution de la mobilité des français
+  <https://presse.ouitalk.oui.sncf/covid-19-evolution-de-la-mobilite-des-francais-infographie/>`_
 
 Lectures
 ++++++++
