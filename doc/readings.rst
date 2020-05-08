@@ -84,6 +84,9 @@ sur son article
   <https://www.lewuathe.com/covid-19-dynamics-with-sir-model.html>`_
 * `Infectious Disease Modelling: Beyond the Basic SIR Model
   <https://towardsdatascience.com/infectious-disease-modelling-beyond-the-basic-sir-model-216369c584c4>`_
+* `Infectious Disease Modelling: Fit Your Model to Coronavirus Data
+  <https://towardsdatascience.com/infectious-disease-modelling-fit-your-model-to-coronavirus-data-2568e672dbc7>`_,
+  `notebook <https://github.com/hf2000510/infectious_disease_modelling/blob/master/part_three.ipynb>`_
 
 *R0*
 
