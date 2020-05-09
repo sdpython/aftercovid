@@ -73,6 +73,9 @@ sur son article
   <https://hal-pasteur.archives-ouvertes.fr/pasteur-02548181>`_
 * `Experts envision two scenarios if the new coronavirus isn't contained
   <https://www.statnews.com/2020/02/04/two-scenarios-if-new-coronavirus-isnt-contained/>`_
+* `OpenSAFELY: factors associated with COVID-19-related hospital death in the
+  linked electronic health records of 17 million adult NHS patients.
+  <https://www.medrxiv.org/content/10.1101/2020.05.06.20092999v1>`_
 
 *SIR*
 
