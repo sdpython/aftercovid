@@ -95,6 +95,26 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             raise RuntimeError("Model was not trained.")
         return self.model_.predict(X)
 
+    def predict_many(self, X, n=7):
+        """
+        Predicts the derivatives and the series
+        for many days.
+
+        :param X: series
+        :param n: number of days
+        :return: derivates and series
+        """
+        if not hasattr(self, 'model_'):
+            raise RuntimeError("Model was not trained.")
+        deri = numpy.empty(X.shape + (n, ))
+        curv = numpy.empty(X.shape + (n, ))
+        for i in range(0, n):
+            d = self.predict(X)
+            deri[:, :, i] = d
+            X += d
+            curv[:, :, i] = X
+        return deri, curv
+
     def score(self, X, y):
         """
         Predicts the derivatives.

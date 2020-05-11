@@ -64,6 +64,11 @@ class TestEpidemicRegressor(unittest.TestCase):
         epi2 = pickle.load(io.BytesIO(f.getvalue()))
         pred2 = epi2.predict(X)
         assert_almost_equal(pred1, pred2)
+        ds, cs = epi2.predict_many(X)
+        self.assertEqual(ds.shape, cs.shape)
+        self.assertEqual(X.shape + (7, ), ds.shape)
+        dd = cs[:, :, 1:] - cs[:, :, :-1]
+        assert_almost_equal(dd / 100, ds[:, :, 1:] / 100, decimal=4)
 
     def test_real_data(self):
         this = os.path.join(os.path.dirname(__file__), "data_france.csv")
