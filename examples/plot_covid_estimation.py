@@ -185,6 +185,8 @@ with warnings.catch_warnings():
             ax=ax[0, 2], logy=True, legend=False).set_title('beta')
         dfcoef.pivot('k', 'delay', 'R0').plot(
             ax=ax[1, 2], logy=True, legend=False).set_title('R0')
+        ax[1, 2].plot([dfcoef.index[0], dfcoef.index[-1]], [1, 1], '--',
+                      label="R0=1")
         dfcoef.pivot('k', 'delay', 'loss').plot(
             ax=ax[1, 0], logy=True, legend=False).set_title('loss')
     df.plot(ax=ax[1, 1])

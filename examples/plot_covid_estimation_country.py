@@ -148,6 +148,8 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0"]].plot(ax=ax[0, 2])
+    ax[0, 2].plot([dfcoef.index[0], dfcoef.index[-1]], [1, 1], '--',
+                  label="R0=1")
     df.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
 
