@@ -68,7 +68,7 @@ tf.head()
 #########################################
 # On lisse sur quelques jours.
 
-tdroll = tf.rolling(3, center=False, win_type='triang').sum()
+tdroll = tf.rolling(3, center=False, win_type='triang').mean()
 tdroll.head()
 
 ##################################
