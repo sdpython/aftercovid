@@ -167,3 +167,9 @@ Code
   <https://github.com/Priesemann-Group/covid19_inference_forecast>`_
 * `A Spatiotemporal Epidemic Model to Quantify The Effects of Testing, Contact Tracing and Containment
   <https://github.com/covid19-model/simulator>`_
+
+Tools
++++++
+
+* `Analytics can identify infected patients
+  <https://covidanalytics.io/infection_calculator>`_
