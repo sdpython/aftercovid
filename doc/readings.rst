@@ -92,6 +92,8 @@ sur son article
 * `Infectious Disease Modelling: Fit Your Model to Coronavirus Data
   <https://towardsdatascience.com/infectious-disease-modelling-fit-your-model-to-coronavirus-data-2568e672dbc7>`_,
   `notebook <https://github.com/hf2000510/infectious_disease_modelling/blob/master/part_three.ipynb>`_
+* `COVID-19 pandemic control: balancing detection policy and lockdown intervention under ICU sustainability
+  <https://freakonometrics.hypotheses.org/60931>`_
 
 *R0*
 
