@@ -172,6 +172,8 @@ Code
   <https://github.com/Priesemann-Group/covid19_inference_forecast>`_
 * `A Spatiotemporal Epidemic Model to Quantify The Effects of Testing, Contact Tracing and Containment
   <https://github.com/covid19-model/simulator>`_
+* `COVID-19 CovidSim Model
+  <https://github.com/mrc-ide/covid-sim>`_ (R + C++)
 * `pyross <https://github.com/rajeshrinet/pyross>`_,
   PyRoss: Infectious disease models in Python
 
