@@ -26,6 +26,9 @@ Données publiques
   <http://www.data.drees.sante.gouv.fr/ReportFolders/reportFolders.aspx?IF_ActivePath=P,432,433,707>`_
 * `SNCF - COVID-19 : évolution de la mobilité des français
   <https://presse.ouitalk.oui.sncf/covid-19-evolution-de-la-mobilite-des-francais-infographie/>`_
+* `PopulationPyramid.net 
+  <https://www.populationpyramid.net/western-europe/2019/>`_,
+  le même site sur les départements français serait une bonne idée
 
 Lectures
 ++++++++
@@ -169,6 +172,8 @@ Code
   <https://github.com/Priesemann-Group/covid19_inference_forecast>`_
 * `A Spatiotemporal Epidemic Model to Quantify The Effects of Testing, Contact Tracing and Containment
   <https://github.com/covid19-model/simulator>`_
+* `pyross <https://github.com/rajeshrinet/pyross>`_,
+  PyRoss: Infectious disease models in Python
 
 Tools
 +++++
