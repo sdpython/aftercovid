@@ -88,6 +88,7 @@ if here == "":
 packages = find_packages(where=here)
 package_dir = {k: os.path.join(here, k.replace(".", "/")) for k in packages}
 package_data = {
+    "aftercovid.data": ["*.bmp"],
     "aftercovid.tutorial": ["*.pyx", '*.cpp', '*.h'],
 }
 
@@ -114,7 +115,7 @@ with open(os.path.join(here, 'aftercovid/__init__.py'), "r") as f:
         version_str = line[0].split('=')[1].strip('" ')
 
 requires = ["cython", "fire", "numpy", "pandas", "scikit-learn",
-            "scipy", "sympy"]
+            "scipy", "sympy", 'scikit-image']
 with open(os.path.join(here, 'requirements.txt'), "r") as f:
     requires = [_.strip() for _ in f.readlines()]
     requires = [_ for _ in requires if _]

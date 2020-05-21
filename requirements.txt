@@ -2,6 +2,7 @@ cython
 fire
 numpy
 pandas
+scikit-image
 scikit-learn
 scipy
 sympy
