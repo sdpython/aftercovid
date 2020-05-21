@@ -34,6 +34,7 @@ Modélisation, statistiques, modelling, statistics à propos about :epkg:`COVID`
 
     tutorial
     readings
+    thoughts
     api
     auto_examples/index
     dev
