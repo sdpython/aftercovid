@@ -4,16 +4,19 @@ Unit tests for ``data``.
 import unittest
 from numpy.testing import assert_almost_equal
 from aftercovid.models import CovidSIR
-from aftercovid.grid import GridMap
+from aftercovid.grid import GridMapSIR
 
 
 class TestGrid(unittest.TestCase):
 
     def test_grid_sir_france(self):
-        grid = GridMap(CovidSIR())
+        grid = GridMapSIR(CovidSIR())
         met = grid.metric()
         self.assertEqual(met.shape, (10, 12))
         assert_almost_equal(grid.grid * 9990., met)
+        su = grid['S']
+        self.assertEqual(su, met.sum())
+        self.assertEqual(su, 649350.0)
 
 
 if __name__ == '__main__':

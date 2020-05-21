@@ -6,7 +6,7 @@ from ..data import load_grid_image
 from ..data.image_helper import reduce_image
 
 
-class GridMap:
+class GridMapSIR:
     """
     Implements a grid of models.
 
@@ -46,6 +46,16 @@ class GridMap:
                                 self.grid[ii, jj] == 1):
                             edges.append(((i, j), (i + ii, j + jj)))
         self.edges_ = edges
+
+    def __getitem__(self, name):
+        """
+        Returns the sum of the metrics all over a grid.
+
+        :param name: quantity name
+        :return: float
+        """
+        g = self.metric(name)
+        return g.sum()
 
     def metric(self, metric="S"):
         """
