@@ -21,6 +21,9 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
     :param c: list of `[(name, initial value or None, comment)]` (constants)
     :param eq: equations
     """
+    _pickled_atts = [
+        '_p', '_q', '_c', '_eq', '_val_p', '_val_q', '_val_c',
+        '_val_ind', '_val_len', '_syms']
 
     def __init__(self, p, q, c=None, eq=None):
         if not isinstance(p, list):
@@ -55,13 +58,19 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
             self._eq = None
         self._init()
 
+    def copy(self):
+        inst = self.__class__.__new__(self.__class__)
+        for k in BaseSIR._pickled_atts:
+            setattr(inst, k, getattr(self, k))
+        if hasattr(inst, '_eq') and inst._eq is not None:
+            inst._init_lambda_()
+        return inst
+
     def __getstate__(self):
         '''
         Returns the pickled data.
         '''
-        return {k: getattr(self, k) for k in [
-            '_p', '_q', '_c', '_eq', '_val_p', '_val_q', '_val_c',
-            '_val_ind', '_val_len', '_syms']}
+        return {k: getattr(self, k) for k in BaseSIR._pickled_atts}
 
     def __setstate__(self, state):
         '''
