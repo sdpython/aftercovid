@@ -23,6 +23,12 @@ url = ("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/"
 df = pandas.read_csv(url)
 df.head()
 
+#######################################
+#
+
+df.tail()
+
+
 #################################
 #  Tous les pays
 
@@ -44,7 +50,7 @@ eur
 cols = list(eur['Country/Region'])
 tf = eur.T.iloc[4:]
 tf.columns = cols
-tf.head()
+tf.tail()
 
 
 ########################################
@@ -62,14 +68,14 @@ tf.plot(logy=True, lw=3, title="Nombre de décès COVID", ax=ax[1])
 cols = list(eur['Country/Region'])
 tf = eur.T.iloc[4:]
 tf.columns = cols
-tf.head()
+tf.tail()
 
 
 #########################################
 # On lisse sur quelques jours.
 
 tdroll = tf.rolling(3, center=False, win_type='triang').mean()
-tdroll.head()
+tdroll.tail()
 
 ##################################
 # Séries lissées.
@@ -114,6 +120,11 @@ dl = pandas.DataFrame(data)
 dl.head()
 
 ####################################
+#
+
+dl.tail()
+
+####################################
 # Graphes.
 
 
@@ -133,7 +144,7 @@ ax[0].set_title(
 # l'évolution de l'épidémie.
 
 
-tfdiff = tf.diff().rolling(3, center=False, win_type='triang').sum()
+tfdiff = tf.diff().rolling(3, center=False, win_type='triang').mean()
 
 ########################################
 

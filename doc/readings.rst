@@ -102,6 +102,8 @@ sur son article
 
 * `The R0 package: a toolbox to estimate reproduction numbers for epidemic outbreaks
   <https://bmcmedinformdecismak.biomedcentral.com/track/pdf/10.1186/1472-6947-12-147>`_
+* `Estimating the overdispersion in COVID-19 transmission using outbreak sizes outside China
+  <https://wellcomeopenresearch.org/articles/5-67/v1>`_
 
 *SIR + Kalman*
 
