@@ -43,7 +43,10 @@ Lectures
 * `AI v Covid-19 <http://people.idsia.ch/~juergen/ai-covid.html>`_ (catalogue d'articles)
 * `Inferring COVID-19 spreading rates and potential change points for case number forecasts
   <https://arxiv.org/abs/2004.01105>`_
-  
+* `Des chercheurs revoient le seuil d’immunité collective à la baisse
+  <https://www.mediapart.fr/journal/france/220520/des-chercheurs-revoient-le-seuil-d-immunite-collective-la-baisse>`_  
+* `Economic considerations for social distancing and behavioral based policies during an epidemic
+  <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3659402/>`_
 
 Une série d'articles intéressants...
 
@@ -79,6 +82,8 @@ sur son article
 * `OpenSAFELY: factors associated with COVID-19-related hospital death in the
   linked electronic health records of 17 million adult NHS patients.
   <https://www.medrxiv.org/content/10.1101/2020.05.06.20092999v1>`_
+* `Individual variation in susceptibility or exposure to SARS-CoV-2 lowers the herd immunity threshold
+  <https://www.medrxiv.org/content/10.1101/2020.04.27.20081893v1.full.pdf>`_
 
 *SIR*
 
