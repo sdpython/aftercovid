@@ -48,6 +48,13 @@ Lectures
 * `Economic considerations for social distancing and behavioral based policies during an epidemic
   <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3659402/>`_
 
+*Biology*
+
+* `Coronavirus : au cœur de la bataille immunitaire contre le virus
+  <https://www.lemonde.fr/les-decodeurs/article/2020/06/12/covid-19-au-c-ur-de-la-bataille-immunitaire-contre-le-virus_6042632_4355770.html>`_,
+  cet article explique de façon très claire comment les échanges entre
+  le virus et le corps humain.
+
 Une série d'articles intéressants...
 
 * `Coronavirus: Learning How to Dance (Part 1)
