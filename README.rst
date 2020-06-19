@@ -24,6 +24,10 @@
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
+.. image:: https://img.shields.io/github/repo-size/sdpython/aftercovid
+    :target: https://github.com/sdpython/aftercovid/
+    :alt: size
+
 aftercovid: epidemics simulation
 ================================
 

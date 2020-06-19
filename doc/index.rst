@@ -27,6 +27,10 @@ aftercovid: modelling, simulation, statistics around COVID
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
+.. image:: https://img.shields.io/github/repo-size/sdpython/aftercovid
+    :target: https://github.com/sdpython/aftercovid/
+    :alt: size
+
 Modélisation, statistiques, modelling, statistics à propos about :epkg:`COVID`.
 
 .. toctree::
