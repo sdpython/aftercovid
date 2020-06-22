@@ -151,6 +151,7 @@ tfdiff = tf.diff().rolling(3, center=False, win_type='triang').mean()
 fig, ax = plt.subplots(1, 2, figsize=(14, 6))
 tfdiff.plot(logy=False, lw=3,
             title="Nombre de décès COVID par jour lissé", ax=ax[0])
+ax[0].set_ylim(0)
 tfdiff.plot(logy=True, lw=3,
             title="Nombre de décès COVID par jour lissé", ax=ax[1])
 
@@ -168,5 +169,6 @@ dldiff = dl.diff()
 fig, ax = plt.subplots(1, 2, figsize=(14, 8))
 dldiff.plot(logy=False, lw=3, ax=ax[0])
 dldiff.plot(logy=True, lw=3, ax=ax[1])
+ax[0].set_ylim(0)
 ax[0].set_title(
     "Nombre de décès par jour après N jours\ndepuis le début de l'épidémie")
