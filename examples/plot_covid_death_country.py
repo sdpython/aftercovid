@@ -172,3 +172,4 @@ dldiff.plot(logy=True, lw=3, ax=ax[1])
 ax[0].set_ylim(0)
 ax[0].set_title(
     "Nombre de décès par jour après N jours\ndepuis le début de l'épidémie")
+plt.show()
