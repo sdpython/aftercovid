@@ -1,5 +1,5 @@
 """
-Unit tests for ``CovidSir``.
+Unit tests for ``_sympy_helper``.
 """
 import unittest
 from aftercovid.models._sympy_helper import enumerate_traverse, SympyNode

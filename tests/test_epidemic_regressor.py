@@ -1,5 +1,5 @@
 """
-Unit tests for ``CovidSir``.
+Unit tests for ``EpidemicRegressor``.
 """
 import io
 import os

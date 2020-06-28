@@ -23,6 +23,7 @@ Models
     :maxdepth: 1
 
     model_covidsir
+    model_covidsir_cst
 
 scikti-learn API
 ++++++++++++++++
