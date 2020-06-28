@@ -115,7 +115,7 @@ def find_best_model(Xt, yt, lrs, th):
     return best_est, best_loss, best_lr
 
 
-delay = 20
+delay = 21  # 3 semaines car les séries sont cycliques
 coefs = []
 for k in range(0, X.shape[0] - delay + 1, 2):
     end = min(k + delay, X.shape[0])

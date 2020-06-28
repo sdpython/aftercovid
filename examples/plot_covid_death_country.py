@@ -99,7 +99,7 @@ def find_day(ts, th):
     return tsth.index[0]
 
 
-def delag(ts, th=20, begin=-2):
+def delag(ts, th=21, begin=-2):
     index = find_day(ts, th)
     loc = ts.index.get_loc(index)
     values = ts.reset_index(drop=True)
@@ -115,7 +115,7 @@ print(find_day(tdroll['France'], 25), delag(tdroll['France'])[:15])
 
 data = {}
 for c in tdroll.columns:
-    data[c] = delag(tdroll[c], 20)
+    data[c] = delag(tdroll[c], 21)
 dl = pandas.DataFrame(data)
 dl.head()
 
