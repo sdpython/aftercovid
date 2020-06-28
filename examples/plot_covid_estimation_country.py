@@ -150,4 +150,24 @@ with warnings.catch_warnings():
     df.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
 
+
+#############################################
+# Graphe sur les derniers jours.
+
+dfcoeflast = dfcoef.iloc[-45:, :]
+dflast = df.iloc[-45:, :]
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+    dfcoeflast[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
+    dfcoeflast[["beta"]].plot(ax=ax[0, 1])
+    dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
+    dfcoeflast[["R0"]].plot(ax=ax[0, 2])
+    ax[0, 2].plot([dfcoeflast.index[0], dfcoeflast.index[-1]], [1, 1], '--',
+                  label="R0=1")
+    ax[0, 2].set_ylim(0, 5)
+    dflast.drop('total', axis=1).plot(ax=ax[1, 1])
+    fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
+
 plt.show()
