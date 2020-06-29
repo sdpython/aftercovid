@@ -127,5 +127,5 @@ epkg_dictionary = {
 }
 
 html_context = {
-    'css_files': ['my-styles.css'],
+    'css_files': ['_static/my-styles.css'],
 }
