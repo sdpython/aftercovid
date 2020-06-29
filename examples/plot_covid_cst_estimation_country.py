@@ -100,7 +100,7 @@ def find_best_model(Xt, yt, lrs, th):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
             m = EpidemicRegressor(
-                'SIR',
+                'SIRC',
                 learning_rate_init=lr,
                 max_iter=500,
                 early_th=1)
