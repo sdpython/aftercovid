@@ -59,7 +59,7 @@ class CovidSIRC(BaseSIR):
         ('beta', 0.5, 'taux de transmission dans la population'),
         ('mu', 1 / 14., '1/. : durée moyenne jusque la guérison'),
         ('nu', 1 / 21., '1/. : durée moyenne jusqu\'au décès'),
-        ('cst', 5., 'personnes contaminées et cachées'),
+        ('cst', 0.00001, 'personnes contaminées et cachées'),
     ]
 
     Q0 = [
@@ -74,11 +74,12 @@ class CovidSIRC(BaseSIR):
     ]
 
     eq = {
-        'S': '- beta * S / N * (I + cst)',
-        'I': 'beta * S / N * (I + cst) - mu * (I + cst) - nu * (I + cst)',
-        'R': 'mu * (I + cst)',
-        'D': 'nu * (I + cst)'
-    }
+        'S': '- beta * S / N * (I + cst * N / 100)',
+        'I': ('beta * S / N * (I + cst * N / 100) '
+              '- mu * (I + cst * N / 100) '
+              '- nu * (I + cst * N / 100)'),
+        'R': 'mu * (I + cst * N / 100)',
+        'D': 'nu * (I + cst * N / 100)'}
 
     def __init__(self):
         BaseSIR.__init__(
@@ -100,7 +101,7 @@ class CovidSIRC(BaseSIR):
         self['beta'] = numpy.random.randn(1) * 0.1 + 0.5
         self['mu'] = numpy.random.randn(1) * 0.1 + 1. / 14
         self['nu'] = numpy.random.randn(1) * 0.1 + 1. / 21
-        self['cst'] = numpy.random.random(1, 10)
+        self['cst'] = numpy.random.rand() * 1e-4
 
     @staticmethod
     def add_noise(X, epsilon=1.):

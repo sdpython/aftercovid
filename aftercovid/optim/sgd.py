@@ -84,6 +84,8 @@ class BaseOptimizer:
             irows = numpy.random.choice(X.shape[0], X.shape[0])
             for irow in irows:
                 grad = fct_grad(self.coef, X[irow, :], y[irow], irow)
+                if numpy.isnan(grad).sum() > 0:
+                    raise RuntimeError("The gradient has nan values.")
                 self.update_coef(grad)
                 n_samples += 1
 

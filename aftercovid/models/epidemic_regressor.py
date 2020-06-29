@@ -5,6 +5,7 @@ Implementation of a model for epidemics propagation.
 import numpy
 from sklearn.base import BaseEstimator, RegressorMixin
 from .covid_sir import CovidSIR
+from .covid_sir_cst import CovidSIRC
 
 
 class EpidemicRegressor(BaseEstimator, RegressorMixin):
@@ -13,7 +14,9 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
     Trains a model on observed data from an epidemic.
 
     :param model: model to train, `'SIR'` refers to
-        `CovidSIR <aftercovid.models.CovidSIR>`
+        `CovidSIR <aftercovid.models.CovidSIR>`,
+        `SIRC` refers to `CovidSIRC
+        <aftercovid.models.CovidSIRC>`
     :param t: implicit feature
     :param max_iter: number of iteration
     :param learning_rate_init: see :class:`SGDOptimizer
@@ -52,7 +55,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         self.early_th = early_th
         self.verbose = verbose
         if min_threshold == 'auto':
-            if model == 'SIR':
+            if model.upper() in ('SIR', 'SIRC'):
                 min_threshold = 0.01
         self.min_threshold = min_threshold
         self._get_model()
@@ -60,6 +63,8 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
     def _get_model(self):
         if self.model.lower() == 'sir':
             return CovidSIR()
+        if self.model.lower() == 'sirc':
+            return CovidSIRC()
         raise ValueError("Unknown model name '{}'.".format(self.model))
 
     def fit(self, X, y):

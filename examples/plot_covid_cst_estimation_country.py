@@ -1,13 +1,20 @@
 # coding: utf-8
 """
-.. _l-sir-france-example:
+Estimation des paramètres d'un modèle SIR étendu pour la France
+===============================================================
 
-Estimation des paramètres d'un modèle SIR pour la France
-========================================================
-
-On récupère les données réelles pour un pays
-et on cherche à estimer un modèle
-:class:`CovidSIR <aftercovid.models.CovidSIR>`.
+Le modèle proposé dens l'exemple :ref:`l-sir-france-example`
+ne fonctionne pas très bien. Les données collectées sont erronées
+pour le recensement des personnes infectées. Comme les malades n'étaient
+pas testées au début de l'épidémie, le nombre officiel de personnes
+contaminées est en-deça de la réalité. On ajoute un paramètre
+pour tenir compte dela avec le modèle :class:`CovidSIRC
+<aftercovid.models.CovidSIRC>`. Le modèle suppose
+en outre que la contagion est la même tout au long de la
+période d'étude alors que les mesures de confinement, le port du
+masque impacte significativement le coefficient de propagation.
+L'épidémie peut sans doute être modélisée avec un modèle SIR
+mais sur une courte période.
 
 .. contents::
     :local:
@@ -15,7 +22,7 @@ et on cherche à estimer un modèle
 Récupération des données
 ++++++++++++++++++++++++
 """
-from aftercovid.models import CovidSIR, EpidemicRegressor
+from aftercovid.models import CovidSIRC, EpidemicRegressor
 import numpy
 import warnings
 import matplotlib.pyplot as plt
@@ -67,19 +74,12 @@ df.tail()
 
 df.plot(logy=True, title="Données COVID")
 
-################################################
-# On voit qu'en France, les données sont difficilement
-# exploitables en l'état. Et on sait qu'en France
-# la pénurie de tests implique une sous-estimation
-# du nombre de cas positifs. L'estimation du modèle
-# est très compromise.
-
 ############################################
 # Estimation d'un modèle
 # ++++++++++++++++++++++
 
 
-model = CovidSIR()
+model = CovidSIRC()
 print(model.quantity_names)
 
 data = df[['total', 'confirmed', 'recovered', 'deaths']
@@ -146,6 +146,7 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0"]].plot(ax=ax[0, 2])
+    dfcoef[["cst"]].plot(ax=ax[1, 2])
     ax[0, 2].plot([dfcoef.index[0], dfcoef.index[-1]], [1, 1], '--',
                   label="R0=1")
     ax[0, 2].set_ylim(0, 5)
@@ -169,6 +170,7 @@ with warnings.catch_warnings():
     ax[0, 2].plot([dfcoeflast.index[0], dfcoeflast.index[-1]], [1, 1], '--',
                   label="R0=1")
     ax[0, 2].set_ylim(0, 5)
+    dfcoeflast[["cst"]].plot(ax=ax[1, 2])
     dflast.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 

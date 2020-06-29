@@ -9,7 +9,7 @@ import warnings
 import numpy
 from numpy.testing import assert_almost_equal
 from pandas import read_csv
-from aftercovid.models import EpidemicRegressor, CovidSIR
+from aftercovid.models import EpidemicRegressor, CovidSIR, CovidSIRC
 
 
 def find_best_model(Xt, yt, lrs, th):
@@ -36,12 +36,24 @@ def find_best_model(Xt, yt, lrs, th):
 
 class TestEpidemicRegressor(unittest.TestCase):
 
-    def test_fit(self):
+    def test_fit_sir(self):
         model = CovidSIR()
         X, y = model.iterate2array(derivatives=True)
         with self.assertRaises(ValueError):
             EpidemicRegressor('sir2')
         epi = EpidemicRegressor(max_iter=10)
+        with self.assertRaises(RuntimeError):
+            epi.score(X, y)
+        with self.assertRaises(RuntimeError):
+            epi.predict(X)
+        epi.fit(X, y)
+        loss = epi.score(X, y)
+        self.assertGreater(loss, 0)
+
+    def test_fit_sirc(self):
+        model = CovidSIRC()
+        X, y = model.iterate2array(derivatives=True)
+        epi = EpidemicRegressor('sirc', max_iter=10)
         with self.assertRaises(RuntimeError):
             epi.score(X, y)
         with self.assertRaises(RuntimeError):
