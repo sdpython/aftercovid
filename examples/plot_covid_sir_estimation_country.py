@@ -82,8 +82,8 @@ df.plot(logy=True, title="Données COVID")
 model = CovidSIR()
 print(model.quantity_names)
 
-data = df[['total', 'confirmed', 'recovered', 'deaths']
-          ].values.astype(numpy.float32)
+data = df[['total', 'confirmed', 'recovered',
+           'deaths']].values.astype(numpy.float32)
 print(data[:5])
 
 X = data[:-1]
@@ -117,27 +117,34 @@ def find_best_model(Xt, yt, lrs, th):
     return best_est, best_loss, best_lr
 
 
-delay = 21  # 3 semaines car les séries sont cycliques
-coefs = []
-for k in range(0, X.shape[0] - delay + 1, 2):
-    end = min(k + delay, X.shape[0])
-    Xt, yt = X[k:end], y[k:end]
-    m, loss, lr = find_best_model(Xt, yt, [1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 10)
-    loss = m.score(Xt, yt)
-    print("k={} iter={} loss={:1.3f} coef={} R0={} lr={}".format(
-        k, m.iter_, loss, m.model_._val_p, m.model_.R0(), lr))
-    obs = dict(k=k, loss=loss, it=m.iter_,
-               R0=m.model_.R0(), lr=lr, date=dates[end - 1])
-    obs.update({k: v for k, v in zip(m.model_.param_names, m.model_._val_p)})
-    coefs.append(obs)
+def estimation(delay):
+    coefs = []
+    for k in range(0, X.shape[0] - delay + 1, 2):
+        end = min(k + delay, X.shape[0])
+        Xt, yt = X[k:end], y[k:end]
+        m, loss, lr = find_best_model(
+            Xt, yt, [1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 10)
+        loss = m.score(Xt, yt)
+        print("k={} iter={} loss={:1.3f} coef={} R0={} lr={}".format(
+            k, m.iter_, loss, m.model_._val_p, m.model_.R0(), lr))
+        obs = dict(k=k, loss=loss, it=m.iter_,
+                   R0=m.model_.R0(), lr=lr, date=dates[end - 1])
+        obs.update({k: v for k, v in zip(
+            m.model_.param_names, m.model_._val_p)})
+        coefs.append(obs)
+
+    dfcoef = pandas.DataFrame(coefs)
+    dfcoef = dfcoef.set_index("date")
+    return dfcoef
 
 
-dfcoef = pandas.DataFrame(coefs)
-dfcoef = dfcoef.set_index("date")
-dfcoef
+# 3 semaines car les séries sont cycliques
+dfcoef = estimation(21)
 
 #############################################
 # Graphe.
+
+dfcoef['R0=1'] = 1
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
@@ -145,19 +152,19 @@ with warnings.catch_warnings():
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
-    dfcoef[["R0"]].plot(ax=ax[0, 2])
-    ax[0, 2].plot([dfcoef.index[0], dfcoef.index[-1]], [1, 1], '--',
-                  label="R0=1")
+    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
     ax[0, 2].set_ylim(0, 5)
     df.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 3 semaines',
+                 fontsize=12)
 
 
 #############################################
-# Graphe sur les derniers jours.
+# Graphe sur le dernier mois.
 
-dfcoeflast = dfcoef.iloc[-45:, :]
-dflast = df.iloc[-45:, :]
+dfcoeflast = dfcoef.iloc[-30:, :]
+dflast = df.iloc[-30:, :]
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
@@ -165,11 +172,53 @@ with warnings.catch_warnings():
     dfcoeflast[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoeflast[["beta"]].plot(ax=ax[0, 1])
     dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
-    dfcoeflast[["R0"]].plot(ax=ax[0, 2])
-    ax[0, 2].plot([dfcoeflast.index[0], dfcoeflast.index[-1]], [1, 1], '--',
-                  label="R0=1")
+    dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     ax[0, 2].set_ylim(0, 5)
     dflast.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
+
+
+#################################################
+# Taille fenêtre glissante
+# ++++++++++++++++++++++++
+#
+# On fait varier le paramètre *delay* pour voir comment
+# le modèle réagit.
+
+dfcoef = estimation(14)
+dfcoef['R0=1'] = 1
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
+    dfcoef[["beta"]].plot(ax=ax[0, 1])
+    dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
+    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
+    ax[0, 2].set_ylim(0, 5)
+    df.drop('total', axis=1).plot(ax=ax[1, 1])
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 2 semaines',
+                 fontsize=12)
+
+##############################################
+# Taille de 4 semaines.
+
+dfcoef = estimation(28)
+dfcoef['R0=1'] = 1
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
+    dfcoef[["beta"]].plot(ax=ax[0, 1])
+    dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
+    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
+    ax[0, 2].set_ylim(0, 5)
+    df.drop('total', axis=1).plot(ax=ax[1, 1])
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 4 semaines',
+                 fontsize=12)
+
 
 plt.show()

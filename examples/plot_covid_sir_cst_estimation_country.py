@@ -75,15 +75,25 @@ df.tail()
 df.plot(logy=True, title="Données COVID")
 
 ############################################
+# .. _l-sliding-window-sir:
+#
 # Estimation d'un modèle
 # ++++++++++++++++++++++
+#
+# L'approche sur une fenêtre glissante suggère que le modèle
+# n'est pas bon pour approcher les données sur toute une période,
+# mais que sur une période courte, le vrai modèle peut être
+# approché par un modèle plus simple. On note :math:`W^*(t)`
+# les paramètres optimaux au temps *t*, on étudie les courbes
+# :math:`t \rightarrow W^*(t)` pour voir comment évolue
+# ces paramètres.
 
 
 model = CovidSIRC()
 print(model.quantity_names)
 
-data = df[['total', 'confirmed', 'recovered', 'deaths']
-          ].values.astype(numpy.float32)
+data = df[['total', 'confirmed', 'recovered',
+           'deaths']].values.astype(numpy.float32)
 print(data[:5])
 
 X = data[:-1]
@@ -139,26 +149,27 @@ dfcoef
 #############################################
 # Graphe.
 
+df['cache'] = dfcoef['cst'] * df['total']
+dfcoef['R0=1'] = 1
+
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
     fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
-    dfcoef[["R0"]].plot(ax=ax[0, 2])
+    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
     dfcoef[["cst"]].plot(ax=ax[1, 2])
-    ax[0, 2].plot([dfcoef.index[0], dfcoef.index[-1]], [1, 1], '--',
-                  label="R0=1")
     ax[0, 2].set_ylim(0, 5)
     df.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
 
 
 #############################################
-# Graphe sur les derniers jours.
+# Graphe sur le dernier mois.
 
-dfcoeflast = dfcoef.iloc[-45:, :]
-dflast = df.iloc[-45:, :]
+dfcoeflast = dfcoef.iloc[-30:, :]
+dflast = df.iloc[-30:, :]
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
@@ -166,9 +177,7 @@ with warnings.catch_warnings():
     dfcoeflast[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoeflast[["beta"]].plot(ax=ax[0, 1])
     dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
-    dfcoeflast[["R0"]].plot(ax=ax[0, 2])
-    ax[0, 2].plot([dfcoeflast.index[0], dfcoeflast.index[-1]], [1, 1], '--',
-                  label="R0=1")
+    dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     ax[0, 2].set_ylim(0, 5)
     dfcoeflast[["cst"]].plot(ax=ax[1, 2])
     dflast.drop('total', axis=1).plot(ax=ax[1, 1])
