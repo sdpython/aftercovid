@@ -117,7 +117,7 @@ def find_best_model(Xt, yt, lrs, th):
     return best_est, best_loss, best_lr
 
 
-def estimation(delay):
+def estimation(X, y, delay):
     coefs = []
     for k in range(0, X.shape[0] - delay + 1, 2):
         end = min(k + delay, X.shape[0])
@@ -139,7 +139,7 @@ def estimation(delay):
 
 
 # 3 semaines car les séries sont cycliques
-dfcoef = estimation(21)
+dfcoef = estimation(X, y, 21)
 
 #############################################
 # Graphe.
@@ -185,7 +185,7 @@ with warnings.catch_warnings():
 # On fait varier le paramètre *delay* pour voir comment
 # le modèle réagit.
 
-dfcoef = estimation(14)
+dfcoef = estimation(X, y, 14)
 dfcoef['R0=1'] = 1
 
 with warnings.catch_warnings():
@@ -204,7 +204,7 @@ with warnings.catch_warnings():
 ##############################################
 # Taille de 4 semaines.
 
-dfcoef = estimation(28)
+dfcoef = estimation(X, y, 28)
 dfcoef['R0=1'] = 1
 
 with warnings.catch_warnings():
