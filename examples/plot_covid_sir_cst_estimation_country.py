@@ -156,11 +156,16 @@ dfcoef.head(n=10)
 
 dfcoef.tail(n=10)
 
+#####################################
+#
+
+df['cache'] = dfcoef['cst'] * df['total'] * 1e-5
+df.tail(n=10)
+
 #############################################
 # Graphe.
 
 dfcoef['R0=1'] = 1
-df['cache'] = dfcoef['cst'] * df['total'] * 1e-5
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
