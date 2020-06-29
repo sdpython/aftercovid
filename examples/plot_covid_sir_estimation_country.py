@@ -140,6 +140,12 @@ def estimation(X, y, delay):
 
 # 3 semaines car les séries sont cycliques
 dfcoef = estimation(X, y, 21)
+dfcoef.head(n=10)
+
+#############################################
+#
+
+dfcoef.tail(n=10)
 
 #############################################
 # Graphe.
@@ -186,7 +192,13 @@ with warnings.catch_warnings():
 # le modèle réagit.
 
 dfcoef = estimation(X, y, 14)
+dfcoef.tail()
+
+#######################################
+#
+
 dfcoef['R0=1'] = 1
+
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
@@ -205,6 +217,11 @@ with warnings.catch_warnings():
 # Taille de 4 semaines.
 
 dfcoef = estimation(X, y, 28)
+dfcoef.tail()
+
+#########################################
+#
+
 dfcoef['R0=1'] = 1
 
 with warnings.catch_warnings():

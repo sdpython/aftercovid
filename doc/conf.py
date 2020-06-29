@@ -125,7 +125,3 @@ epkg_dictionary = {
     'sphinx-gallery': 'https://github.com/sphinx-gallery/sphinx-gallery',
     'sympy': 'https://www.sympy.org/en/index.html',
 }
-
-html_context = {
-    'css_files': ['_static/my-styles.css'],
-}

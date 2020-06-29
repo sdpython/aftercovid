@@ -74,12 +74,12 @@ class CovidSIRC(BaseSIR):
     ]
 
     eq = {
-        'S': '- beta * S / N * (I + cst * N)',
-        'I': ('beta * S / N * (I + cst * N) '
-              '- mu * (I + cst * N) '
-              '- nu * (I + cst * N)'),
-        'R': 'mu * (I + cst * N)',
-        'D': 'nu * (I + cst * N)'}
+        'S': '- beta * S / N * (I + cst * N * 1e-5)',
+        'I': ('beta * S / N * (I + cst * N * 1e-5) '
+              '- mu * (I + cst * N * 1e-5) '
+              '- nu * (I + cst * N * 1e-5)'),
+        'R': 'mu * (I + cst * N * 1e-5)',
+        'D': 'nu * (I + cst * N * 1e-5)'}
 
     def __init__(self):
         BaseSIR.__init__(

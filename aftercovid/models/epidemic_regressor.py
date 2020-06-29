@@ -55,8 +55,11 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         self.early_th = early_th
         self.verbose = verbose
         if min_threshold == 'auto':
-            if model.upper() in ('SIR', 'SIRC'):
-                min_threshold = 0.01
+            if model.upper() == 'SIR':
+                min_threshold = 0.001
+            if model.upper() == 'SIRC':
+                pmin = dict(beta=0.001, nu=0.001, mu=0.001, cst=0.001)
+                min_threshold = numpy.array([pmin[k[0]] for k in CovidSIRC.P0])
         self.min_threshold = min_threshold
         self._get_model()
 

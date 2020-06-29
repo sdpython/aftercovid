@@ -66,7 +66,7 @@ class BaseSIREstimation:
             <aftercovid.optim.SGDOptimizer>`
         :param verbose: see :class:`SGDOptimizer
             <aftercovid.optim.SGDOptimizer>`
-        :param min_threshold:  see :class:`SGDOptimizer
+        :param min_threshold: see :class:`SGDOptimizer
             <aftercovid.optim.SGDOptimizer>`
 
         The training needs two steps. The first one creates a training

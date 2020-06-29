@@ -149,6 +149,12 @@ def estimation(X, y, delay):
 
 # 3 semaines car les séries sont cycliques
 dfcoef = estimation(X, y, 21)
+dfcoef.head(n=10)
+
+#####################################
+#
+
+dfcoef.tail(n=10)
 
 #############################################
 # Graphe.
@@ -186,51 +192,6 @@ with warnings.catch_warnings():
     dfcoeflast[["cst"]].plot(ax=ax[1, 2])
     dflast.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
-
-
-#################################################
-# Taille fenêtre glissante
-# ++++++++++++++++++++++++
-#
-# On fait varier le paramètre *delay* pour voir comment
-# le modèle réagit.
-
-dfcoef = estimation(X, y, 14)
-dfcoef['R0=1'] = 1
-df['cache'] = dfcoef['cst'] * df['total']
-
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
-    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
-    dfcoef[["beta"]].plot(ax=ax[0, 1])
-    dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
-    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    ax[0, 2].set_ylim(0, 5)
-    df.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 tout au long de la période\n'
-                 'Estimation sur 2 semaines',
-                 fontsize=12)
-
-##############################################
-# Taille de 4 semaines.
-
-dfcoef = estimation(X, y, 28)
-dfcoef['R0=1'] = 1
-df['cache'] = dfcoef['cst'] * df['total']
-
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
-    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
-    dfcoef[["beta"]].plot(ax=ax[0, 1])
-    dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
-    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    ax[0, 2].set_ylim(0, 5)
-    df.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 tout au long de la période\n'
-                 'Estimation sur 4 semaines',
-                 fontsize=12)
 
 
 plt.show()
