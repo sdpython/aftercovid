@@ -79,7 +79,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         mi, ma = total.min(), total.max()
         err = (ma - mi) / mi
         if err > 1e-5:
-            raise RuntimeError(
+            raise RuntimeError(  # pragma: no cover
                 "Population is not constant, in [{}, {}].".format(
                     mi, ma))
         self.model_['N'] = (ma + mi) / 2
@@ -125,5 +125,6 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         Predicts the derivatives.
         """
         if not hasattr(self, 'model_'):
-            raise RuntimeError("Model was not trained.")
+            raise RuntimeError(  # pragma: no cover
+                "Model was not trained.")
         return self.model_.score(X, y)

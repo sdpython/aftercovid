@@ -115,7 +115,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
             eval2 = self.evalf_leq(k)
             err = (eval2 - eval1) / max(abs(eval1), abs(eval2))
             if err > 1e-8:
-                raise ValueError(
+                raise ValueError(  # pragma: no cover
                     "Lambdification failed for function '{}': {} "
                     "({} ({}) != {} ({}), error={})".format(
                         k, v, eval1, type(eval1), eval2, type(eval2), err))
@@ -393,7 +393,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         """
         leq = self._lambdified_(name)
         if leq is None:
-            raise RuntimeError(
+            raise RuntimeError(  # pragma: no cover
                 "Equation '{}' was not lambdified.".format(name))
         return leq(*self.vect(t))
 

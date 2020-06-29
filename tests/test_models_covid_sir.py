@@ -41,6 +41,7 @@ class TestModelsCovidSir(unittest.TestCase):
         self.assertEqual(models['q'], 6.1)
         rst = models.to_rst()
         self.assertIn('*q*: QQ', rst)
+        self.assertEqual(models.vect_names, ['q', 'p', 'N', 't'])
 
     def test_covid_sir(self):
         model = CovidSIR()

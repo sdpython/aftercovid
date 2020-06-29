@@ -29,7 +29,7 @@ class BaseSIRSimulation:
             eval1 = self.evalf_eq(df)
             eval2 = self.evalf_leq(leqname)
             if abs(eval1 - eval2) > 1e-5:
-                raise ValueError(
+                raise ValueError(  # pragma: no cover
                     "Lambdification failed for derivative '{}' by '{}' "
                     "({} != {})".format(eqname, name, eval1, eval2))
         ev = self.evalf_leq(leqname)

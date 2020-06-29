@@ -154,7 +154,7 @@ class BaseSIREstimation:
         N = self._check_fit_predict(X)[1]
         err = abs(N - self['N']) / N
         if err > 1e-4:
-            raise ValueError(
+            raise ValueError(  # pragma: no cover
                 "All rows must sum up to {} not {}.".format(self['N'], N))
         n = X.shape[0]
         C = X.shape[1]
