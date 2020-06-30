@@ -77,6 +77,7 @@ fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID", ax=ax[0])
 df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+plt.show()
 
 #########################################
 # On lisse car les séries sont très agitées
@@ -87,6 +88,7 @@ fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
 df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+plt.show()
 
 ############################################
 # .. _l-sliding-window-sir:
@@ -187,10 +189,15 @@ dfcoef.head(n=10)
 
 dfcoef.tail(n=10)
 
+#############################################
+#
+
+dfcoef.describe()
+
 #####################################
 #
 
-df['cache'] = dfcoef['cst'] * df['total'] * 1e-5
+df['cache'] = (dfcoef['cst'] * df['total'] * 1e-5).fillna(method='bfill')
 df.tail(n=10)
 
 #############################################
@@ -209,7 +216,7 @@ with warnings.catch_warnings():
     ax[0, 2].set_ylim(0, 5)
     df.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
-
+plt.show()
 
 #############################################
 # Graphe sur le dernier mois.
@@ -228,3 +235,4 @@ with warnings.catch_warnings():
     dfcoeflast[["cst"]].plot(ax=ax[1, 2])
     dflast.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
+plt.show()

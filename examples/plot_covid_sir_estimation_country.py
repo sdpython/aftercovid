@@ -71,6 +71,7 @@ df.plot(logy=True, title="Données COVID", ax=ax[0])
 df[['recovered', 'confirmed', 'infected']].diff().plot(
     title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+plt.show()
 
 #########################################
 # On lisse car les séries sont très agitées
@@ -82,6 +83,7 @@ df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
 df[['recovered', 'confirmed', 'infected']].diff().plot(
     title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+plt.show()
 
 ################################################
 # On voit qu'en France, les données sont difficilement
@@ -180,6 +182,11 @@ dfcoef.tail(n=10)
 #############################################
 #
 
+dfcoef.describe()
+
+#############################################
+#
+
 df.tail(n=10)
 
 #############################################
@@ -199,7 +206,7 @@ with warnings.catch_warnings():
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 3 semaines',
                  fontsize=12)
-
+plt.show()
 
 #############################################
 # Graphe sur le dernier mois.
@@ -217,7 +224,7 @@ with warnings.catch_warnings():
     ax[0, 2].set_ylim(0, 5)
     dflast.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
-
+plt.show()
 
 #################################################
 # Taille fenêtre glissante
@@ -247,6 +254,7 @@ with warnings.catch_warnings():
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 1 semaine',
                  fontsize=12)
+plt.show()
 
 #######################################
 # Sur 14 jours.
@@ -272,6 +280,7 @@ with warnings.catch_warnings():
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 2 semaines',
                  fontsize=12)
+plt.show()
 
 ##############################################
 # Sur 4 semaines.
@@ -296,3 +305,4 @@ with warnings.catch_warnings():
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 4 semaines',
                  fontsize=12)
+plt.show()
