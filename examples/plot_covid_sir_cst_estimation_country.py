@@ -76,7 +76,7 @@ df.tail()
 fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID", ax=ax[0])
 df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
-df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+df[['deaths']].diff().plot(title="Différences", ax=ax[2]);
 
 #########################################
 # On lisse car les séries sont très agitées
@@ -86,7 +86,7 @@ df = df.rolling(7, center=True).mean()
 fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
 df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
-df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+df[['deaths']].diff().plot(title="Différences", ax=ax[2]);
 
 ############################################
 # .. _l-sliding-window-sir:
@@ -208,7 +208,7 @@ with warnings.catch_warnings():
     dfcoef[["cst"]].plot(ax=ax[1, 2])
     ax[0, 2].set_ylim(0, 5)
     df.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
+    fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12);
 
 
 #############################################
@@ -227,7 +227,4 @@ with warnings.catch_warnings():
     ax[0, 2].set_ylim(0, 5)
     dfcoeflast[["cst"]].plot(ax=ax[1, 2])
     dflast.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
-
-
-plt.show()
+    fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12);
