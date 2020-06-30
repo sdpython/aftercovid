@@ -185,6 +185,11 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         return [v[0] for v in self._p]
 
     @property
+    def params_dict(self):
+        'Returns the list of parameters names in a dictionary.'
+        return {k: self[k] for k in self.param_names}
+
+    @property
     def cst_names(self):
         'Returns the list of constants names (unsorted).'
         return [v[0] for v in self._c]

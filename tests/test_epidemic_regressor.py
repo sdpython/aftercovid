@@ -18,10 +18,8 @@ def find_best_model(Xt, yt, lrs, th):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
             m = EpidemicRegressor(
-                'SIR',
-                learning_rate_init=lr,
-                max_iter=500,
-                early_th=1)
+                'SIR', learning_rate_init=lr,
+                max_iter=500, early_th=1)
             m.fit(Xt, yt)
             loss = m.score(Xt, yt)
             if numpy.isnan(loss):
@@ -49,6 +47,10 @@ class TestEpidemicRegressor(unittest.TestCase):
         epi.fit(X, y)
         loss = epi.score(X, y)
         self.assertGreater(loss, 0)
+        pars = epi.coef_
+        self.assertIsInstance(pars, dict)
+        epi2 = EpidemicRegressor(max_iter=10, init=epi)
+        self.assertEqual(epi.coef_, epi2.coef_)
 
     def test_fit_sirc(self):
         model = CovidSIRC()

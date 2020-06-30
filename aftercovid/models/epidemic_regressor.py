@@ -30,19 +30,35 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
     :param early_th: see :class:`SGDOptimizer
         <aftercovid.optim.SGDOptimizer>`
     :param verbose: see :class:`SGDOptimizer
-        <aftercovid.optim.SGDOptimizer>`, the value depends on the
-        models, if is `0.01` for model `SIR`, it means
-        every coefficient must be greater than 0.01.
+        <aftercovid.optim.SGDOptimizer>`
+    :param min_threshold: see :class:`SGDOptimizer
+        <aftercovid.optim.SGDOptimizer>`, if `'auto'`,
+        the value depends on the models, if is `0.01`
+        for model `SIR`, it means every coefficient must
+        be greater than 0.01.
+    :param max_threshold: see :class:`SGDOptimizer
+        <aftercovid.optim.SGDOptimizer>`, upper bound
+    :param init: dictionary, initializes the model
+        with this parameters
 
-    Once trained the model holds a member`model_`
+    Once trained the model holds a member `model_`
     which contains the trained model and `iter_`
     which holds the number of training iteration.
+    It also keep track of the coefficients in a dictionary
+    in attribute `coef_`.
     """
 
     def __init__(self, model='SIR', t=0, max_iter=100,
                  learning_rate_init=0.1, lr_schedule='constant',
                  momentum=0.9, power_t=0.5, early_th=None,
-                 min_threshold='auto', verbose=False):
+                 min_threshold='auto', max_threshold='auto',
+                 verbose=False, init=None):
+        if init is not None:
+            if isinstance(init, EpidemicRegressor) and hasattr(init, 'coef_'):
+                init = init.coef_.copy()
+            elif not isinstance(init, dict):
+                raise TypeError(
+                    "init must be a dictionary not {}.".format(type(init)))
         BaseEstimator.__init__(self)
         RegressorMixin.__init__(self)
         self.t = t
@@ -57,18 +73,29 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         if min_threshold == 'auto':
             if model.upper() == 'SIR':
                 min_threshold = 0.0001
-            if model.upper() == 'SIRC':
+            elif model.upper() == 'SIRC':
                 pmin = dict(beta=0.001, nu=0.0001, mu=0.0001, cst=0.00001)
                 min_threshold = numpy.array([pmin[k[0]] for k in CovidSIRC.P0])
+        if max_threshold == 'auto':
+            if model.upper() == 'SIR':
+                max_threshold = 1.
+            elif model.upper() == 'SIRC':
+                pmax = dict(beta=1., nu=0.5, mu=0.5, cst=1e5)
+                max_threshold = numpy.array([pmax[k[0]] for k in CovidSIRC.P0])
         self.min_threshold = min_threshold
+        self.max_threshold = max_threshold
         self._get_model()
+        self.init = init
+        if init is not None:
+            self.coef_ = init
 
     def _get_model(self):
         if self.model.lower() == 'sir':
             return CovidSIR()
         if self.model.lower() == 'sirc':
             return CovidSIRC()
-        raise ValueError("Unknown model name '{}'.".format(self.model))
+        raise ValueError(
+            "Unknown model name '{}'.".format(self.model))
 
     def fit(self, X, y):
         """
@@ -85,14 +112,19 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             raise RuntimeError(  # pragma: no cover
                 "Population is not constant, in [{}, {}].".format(
                     mi, ma))
+        if self.init is not None:
+            for k, v in self.init.items():
+                self.model_[k] = v
         self.model_['N'] = (ma + mi) / 2
         self.model_.fit(
             X, y, learning_rate_init=self.learning_rate_init,
             max_iter=self.max_iter, early_th=self.early_th,
             verbose=self.verbose, lr_schedule=self.lr_schedule,
             power_t=self.power_t, momentum=self.momentum,
-            min_threshold=self.min_threshold)
+            min_threshold=self.min_threshold,
+            max_threshold=self.max_threshold)
         self.iter_ = self.model_.iter_
+        self.coef_ = self.model_.params_dict
         return self
 
     def predict(self, X):

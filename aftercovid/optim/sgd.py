@@ -5,6 +5,7 @@ It is inspired from `_stochastic_optimizers.py
 neural_network/_stochastic_optimizers.py>`_.
 """
 import numpy
+from numpy.core._exceptions import UFuncTypeError
 
 
 class BaseOptimizer:
@@ -16,19 +17,22 @@ class BaseOptimizer:
         The initial learning rate used. It controls the step-size
         in updating the weights.
     :param min_threshold: coefficients must be higher than *min_thresold*
+    :param max_threshold: coefficients must be below than *max_thresold*
 
     The class holds the following attributes:
 
     * *learning_rate*: float, the current learning rate
     """
 
-    def __init__(self, coef, learning_rate_init=0.1, min_threshold=None):
+    def __init__(self, coef, learning_rate_init=0.1,
+                 min_threshold=None, max_threshold=None):
         if not isinstance(coef, numpy.ndarray):
             raise TypeError("coef must be an array.")
         self.coef = coef
         self.learning_rate_init = learning_rate_init
         self.learning_rate = float(learning_rate_init)
         self.min_threshold = min_threshold
+        self.max_threshold = max_threshold
 
     def _get_updates(self, grad):
         raise NotImplementedError("Must be overwritten.")  # pragma no cover
@@ -44,7 +48,19 @@ class BaseOptimizer:
         update = self._get_updates(grad)
         self.coef += update
         if self.min_threshold is not None:
-            self.coef = numpy.maximum(self.coef, self.min_threshold)
+            try:
+                self.coef = numpy.maximum(self.coef, self.min_threshold)
+            except UFuncTypeError:
+                raise RuntimeError(
+                    "Unable to compute an upper bound with coef={} "
+                    "max_threshold={}".format(self.coef, self.min_threshold))
+        if self.max_threshold is not None:
+            try:
+                self.coef = numpy.minimum(self.coef, self.max_threshold)
+            except UFuncTypeError:
+                raise RuntimeError(
+                    "Unable to compute a lower bound with coef={} "
+                    "max_threshold={}".format(self.coef, self.max_threshold))
 
     def iteration_ends(self, time_step):
         """
@@ -75,8 +91,13 @@ class BaseOptimizer:
             raise TypeError("y must be an array.")
         if X.shape[0] != y.shape[0]:
             raise ValueError("X and y must have the same number of rows.")
+        if any(numpy.isnan(X.ravel())):
+            raise ValueError("X contains nan value.")
+        if any(numpy.isnan(y.ravel())):
+            raise ValueError("y contains nan value.")
 
         loss = fct_loss(self.coef, X, y)
+        losses = [loss]
         if verbose:
             self._display_progress(0, max_iter, loss)
         n_samples = 0
@@ -95,13 +116,47 @@ class BaseOptimizer:
             if verbose:
                 self._display_progress(it + 1, max_iter, loss)
             self.iter_ = it + 1
-            if early_th is not None and loss <= early_th:
+            losses.append(loss)
+            if self._evaluate_early_stopping(
+                    it, max_iter, losses, early_th, verbose=verbose):
                 break
         return loss
 
-    def _display_progress(self, it, max_iter, loss):
+    def _evaluate_early_stopping(
+            self,
+            it,
+            max_iter,
+            losses,
+            early_th,
+            verbose=False):
+        if len(losses) < 5 or early_th is None:
+            return False
+        if numpy.isnan(losses[-5]):
+            if numpy.isnan(losses[-1]):
+                if verbose:
+                    self._display_progress(it + 1, max_iter, losses[-1],
+                                           losses=losses[-5:])
+                return True
+            return False
+        if numpy.isnan(losses[-1]):
+            if verbose:
+                self._display_progress(it + 1, max_iter, losses[-1],
+                                       losses=losses[-5:])
+            return True
+        if abs(losses[-1] - losses[-5]) <= early_th:
+            if verbose:
+                self._display_progress(it + 1, max_iter, losses[-1],
+                                       losses=losses[-5:])
+            return True
+        return False
+
+    def _display_progress(self, it, max_iter, loss, losses=None):
         'Displays training progress.'
-        print('{}/{}: loss: {:1.4g}'.format(it, max_iter, loss))
+        if losses is None:
+            print('{}/{}: loss: {:1.4g}'.format(it, max_iter, loss))
+        else:
+            print('{}/{}: loss: {:1.4g} losses: {}'.format(
+                it, max_iter, loss, losses))
 
 
 class SGDOptimizer(BaseOptimizer):
@@ -129,7 +184,8 @@ class SGDOptimizer(BaseOptimizer):
     :param power_t: double
         The exponent for inverse scaling learning rate.
     :param early_th: stops if the error goes below that threshold
-    :param min_threshold: only positive values are allowed
+    :param min_threshold: lower bound for parameters (can be None)
+    :param max_threshold: upper bound for parameters (can be None)
 
     The class holds the following attributes:
 
@@ -167,9 +223,10 @@ class SGDOptimizer(BaseOptimizer):
 
     def __init__(self, coef, learning_rate_init=0.1, lr_schedule='constant',
                  momentum=0.9, power_t=0.5, early_th=None,
-                 min_threshold=None):
+                 min_threshold=None, max_threshold=None):
         super().__init__(coef, learning_rate_init,
-                         min_threshold=min_threshold)
+                         min_threshold=min_threshold,
+                         max_threshold=max_threshold)
         self.lr_schedule = lr_schedule
         self.momentum = momentum
         self.power_t = power_t

@@ -43,9 +43,9 @@ class TestModelsCovidSirCst(unittest.TestCase):
         self.assertEqual(cst, {'N': 10000.0, 'beta': 0.5,
                                'mu': 0.07142857142857142,
                                'nu': 0.047619047619047616,
-                               'cst': 1e-7})
+                               'cst': 0.01})
         ev = model.eval_diff()
-        self.assertEqual(ev['S'], -4.995000004995)
+        self.assertEqual(ev['S'], -4.995499499999999)
         self.assertEqual(len(ev), 4)
 
     def test_covid_sir_loop(self):

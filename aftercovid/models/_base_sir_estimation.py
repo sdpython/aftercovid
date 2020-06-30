@@ -42,7 +42,8 @@ class BaseSIREstimation:
     def fit(self, X, y, t=0, max_iter=100,
             learning_rate_init=0.1, lr_schedule='constant',
             momentum=0.9, power_t=0.5, early_th=None,
-            min_threshold=None, verbose=False):
+            min_threshold=None, max_threshold=None,
+            verbose=False):
         """
         Fits a model :class:`BaseSIR <aftercovid.models._base_sir.BaseSIR>`.
 
@@ -67,6 +68,8 @@ class BaseSIREstimation:
         :param verbose: see :class:`SGDOptimizer
             <aftercovid.optim.SGDOptimizer>`
         :param min_threshold: see :class:`SGDOptimizer
+            <aftercovid.optim.SGDOptimizer>`
+        :param max_threshold: see :class:`SGDOptimizer
             <aftercovid.optim.SGDOptimizer>`
 
         The training needs two steps. The first one creates a training
@@ -102,7 +105,7 @@ class BaseSIREstimation:
                   learning_rate_init=learning_rate_init,
                   lr_schedule=lr_schedule, momentum=momentum,
                   power_t=power_t, verbose=verbose, early_th=early_th,
-                  min_threshold=min_threshold)
+                  min_threshold=min_threshold, max_threshold=max_threshold)
         return self
 
     def _losses_sympy(self):
@@ -186,7 +189,7 @@ class BaseSIREstimation:
     def _fit(self, X, y, t, max_iter,
              learning_rate_init, lr_schedule,
              momentum, power_t, early_th, min_threshold,
-             verbose):
+             max_threshold, verbose):
         '''
         See method :meth:`fit
         <aftercovid.models._base_sir_estimation.BaseSIREstimation.fit>`
@@ -238,7 +241,8 @@ class BaseSIREstimation:
         sgd = SGDOptimizer(
             coef, learning_rate_init=learning_rate_init * lrn,
             lr_schedule=lr_schedule, momentum=momentum,
-            power_t=power_t, min_threshold=min_threshold)
+            power_t=power_t, min_threshold=min_threshold,
+            max_threshold=max_threshold)
 
         sgd.train(X, y, fct_loss, fct_grad, max_iter=max_iter,
                   early_th=early_th, verbose=verbose)

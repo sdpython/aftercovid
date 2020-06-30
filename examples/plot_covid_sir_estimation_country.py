@@ -55,7 +55,8 @@ def extract_whole_data(kind=['deaths', 'confirmed', 'recovered'],
         df = extract_data(k, country)
         dfs.append(df)
     conc = pandas.concat(dfs, axis=1)
-    conc['total'] = total - conc.sum(axis=1)
+    conc['infected'] = conc['confirmed'] - (conc['deaths'] + conc['recovered'])
+    conc['total'] = total - conc.drop('confirmed', axis=1).sum(axis=1)
     return conc
 
 
@@ -67,7 +68,8 @@ df.tail()
 
 fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID", ax=ax[0])
-df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
+df[['recovered', 'confirmed', 'infected']].diff().plot(
+    title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 
 #########################################
@@ -77,7 +79,8 @@ df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 df = df.rolling(7, center=True).mean()
 fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
-df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
+df[['recovered', 'confirmed', 'infected']].diff().plot(
+    title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 
 ################################################
@@ -95,7 +98,7 @@ df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 model = CovidSIR()
 print(model.quantity_names)
 
-data = df[['total', 'confirmed', 'recovered',
+data = df[['total', 'infected', 'recovered',
            'deaths']].values.astype(numpy.float32)
 print(data[:5])
 
@@ -107,19 +110,22 @@ dates = df.index[:-1]
 # Estimation.
 
 
-def find_best_model(Xt, yt, lrs, th):
+def find_best_model(Xt, yt, lrs, th, verbose=0, init=None):
     best_est, best_loss, best_lr = None, None, None
-    for lr in lrs:
+    m = None
+    for ilr, lr in enumerate(lrs):
+        if verbose:
+            print("--- TRY {}/{}: {}".format(ilr + 1, len(lrs), lr))
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
             m = EpidemicRegressor(
-                'SIR',
-                learning_rate_init=lr,
-                max_iter=500,
-                early_th=1)
+                'SIR', learning_rate_init=lr, max_iter=500,
+                early_th=1, verbose=verbose, init=m)
             try:
                 m.fit(Xt, yt)
-            except RuntimeError:
+            except RuntimeError as e:
+                if verbose:
+                    print('ERROR: {}'.format(e))
                 continue
             loss = m.score(Xt, yt)
             if numpy.isnan(loss):
@@ -135,12 +141,16 @@ def find_best_model(Xt, yt, lrs, th):
 
 def estimation(X, y, delay):
     coefs = []
+    m = None
     for k in range(0, X.shape[0] - delay + 1, 7):
         end = min(k + delay, X.shape[0])
         Xt, yt = X[k:end], y[k:end]
+        if any(numpy.isnan(Xt.ravel())) or any(numpy.isnan(yt.ravel())):
+            continue
         m, loss, lr = find_best_model(
             Xt, yt, [1e8, 1e6, 1e4, 1e2, 1,
-                     1e-2, 1e-4, 1e-6], 10)
+                     1e-2, 1e-4, 1e-6], 10,
+            init=m)
         if m is None:
             print("k={} loss=nan".format(k))
             continue
