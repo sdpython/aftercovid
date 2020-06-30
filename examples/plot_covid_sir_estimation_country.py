@@ -70,7 +70,7 @@ fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID", ax=ax[0])
 df[['recovered', 'confirmed', 'infected']].diff().plot(
     title="Différences", ax=ax[1])
-df[['deaths']].diff().plot(title="Différences", ax=ax[2]);
+df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 
 #########################################
 # On lisse car les séries sont très agitées
@@ -81,7 +81,7 @@ fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
 df[['recovered', 'confirmed', 'infected']].diff().plot(
     title="Différences", ax=ax[1])
-df[['deaths']].diff().plot(title="Différences", ax=ax[2]);
+df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 
 ################################################
 # On voit qu'en France, les données sont difficilement
@@ -198,7 +198,7 @@ with warnings.catch_warnings():
     df.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 3 semaines',
-                 fontsize=12);
+                 fontsize=12)
 
 
 #############################################
@@ -216,7 +216,7 @@ with warnings.catch_warnings():
     dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     ax[0, 2].set_ylim(0, 5)
     dflast.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12);
+    fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 
 
 #################################################
@@ -246,7 +246,7 @@ with warnings.catch_warnings():
     df.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 1 semaine',
-                 fontsize=12);
+                 fontsize=12)
 
 #######################################
 # Sur 14 jours.
@@ -271,7 +271,7 @@ with warnings.catch_warnings():
     df.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 2 semaines',
-                 fontsize=12);
+                 fontsize=12)
 
 ##############################################
 # Sur 4 semaines.
@@ -295,4 +295,4 @@ with warnings.catch_warnings():
     df.drop('total', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 4 semaines',
-                 fontsize=12);
+                 fontsize=12)
