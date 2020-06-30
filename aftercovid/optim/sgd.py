@@ -257,7 +257,11 @@ class SGDOptimizer(BaseOptimizer):
         self.velocity = update
         return update
 
-    def _display_progress(self, it, max_iter, loss):
+    def _display_progress(self, it, max_iter, loss, losses=None):
         'Displays training progress.'
-        print('{}/{}: loss: {:1.4g} lr={:1.3g}'.format(
-            it, max_iter, loss, self.learning_rate))
+        if losses is None:
+            print('{}/{}: loss: {:1.4g} lr={:1.3g}'.format(
+                it, max_iter, loss, self.learning_rate))
+        else:
+            print('{}/{}: loss: {:1.4g} lr={:1.3g} losses: {}'.format(
+                it, max_iter, loss, self.learning_rate, losses))
