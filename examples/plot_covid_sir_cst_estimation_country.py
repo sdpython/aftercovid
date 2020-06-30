@@ -199,6 +199,11 @@ df['cache'] = (dfcoef['cst'] * df['safe'] * 1e-5).fillna(method='bfill')
 df.tail(n=10)
 
 #############################################
+# Statistiques.
+
+df.describe()
+
+#############################################
 # Graphe.
 
 dfcoef['R0=1'] = 1
