@@ -65,7 +65,20 @@ df.tail()
 #########################################
 # Graphes.
 
-df.plot(logy=True, title="Données COVID")
+fig, ax = plt.subplots(1, 3, figsize=(12, 3))
+df.plot(logy=True, title="Données COVID", ax=ax[0])
+df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
+df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+
+#########################################
+# On lisse car les séries sont très agitées
+# et empêchent les modèles de bien converger.
+
+df = df.rolling(7, center=True).mean()
+fig, ax = plt.subplots(1, 3, figsize=(12, 3))
+df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
+df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
+df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 
 ################################################
 # On voit qu'en France, les données sont difficilement
@@ -104,7 +117,10 @@ def find_best_model(Xt, yt, lrs, th):
                 learning_rate_init=lr,
                 max_iter=500,
                 early_th=1)
-            m.fit(Xt, yt)
+            try:
+                m.fit(Xt, yt)
+            except RuntimeError:
+                continue
             loss = m.score(Xt, yt)
             if numpy.isnan(loss):
                 continue
@@ -119,11 +135,15 @@ def find_best_model(Xt, yt, lrs, th):
 
 def estimation(X, y, delay):
     coefs = []
-    for k in range(0, X.shape[0] - delay + 1, 2):
+    for k in range(0, X.shape[0] - delay + 1, 7):
         end = min(k + delay, X.shape[0])
         Xt, yt = X[k:end], y[k:end]
         m, loss, lr = find_best_model(
-            Xt, yt, [1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 10)
+            Xt, yt, [1e8, 1e6, 1e4, 1e2, 1,
+                     1e-2, 1e-4, 1e-6], 10)
+        if m is None:
+            print("k={} loss=nan".format(k))
+            continue
         loss = m.score(Xt, yt)
         print("k={} iter={} loss={:1.3f} coef={} R0={} lr={}".format(
             k, m.iter_, loss, m.model_._val_p, m.model_.R0(), lr))
@@ -194,7 +214,32 @@ with warnings.catch_warnings():
 # ++++++++++++++++++++++++
 #
 # On fait varier le paramètre *delay* pour voir comment
-# le modèle réagit.
+# le modèle réagit. Sur 7 jours d'abord.
+
+dfcoef = estimation(X, y, 7)
+dfcoef.tail()
+
+#######################################
+#
+
+dfcoef['R0=1'] = 1
+
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
+    dfcoef[["beta"]].plot(ax=ax[0, 1])
+    dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
+    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
+    ax[0, 2].set_ylim(0, 5)
+    df.drop('total', axis=1).plot(ax=ax[1, 1])
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 1 semaine',
+                 fontsize=12)
+
+#######################################
+# Sur 14 jours.
 
 dfcoef = estimation(X, y, 14)
 dfcoef.tail()
@@ -219,7 +264,7 @@ with warnings.catch_warnings():
                  fontsize=12)
 
 ##############################################
-# Taille de 4 semaines.
+# Sur 4 semaines.
 
 dfcoef = estimation(X, y, 28)
 dfcoef.tail()

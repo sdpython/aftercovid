@@ -61,7 +61,7 @@ class CovidSIR(BaseSIR):
     ]
 
     Q0 = [
-        ('S', 9990., 'personnes non contaminés'),
+        ('S', 9990., 'personnes non contaminées'),
         ('I', 10., 'nombre de personnes malades ou contaminantes'),
         ('R', 0., 'personnes guéries (recovered)'),
         ('D', 0., 'personnes décédées'),

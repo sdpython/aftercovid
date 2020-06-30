@@ -72,7 +72,20 @@ df.tail()
 #########################################
 # Graphes.
 
-df.plot(logy=True, title="Données COVID")
+fig, ax = plt.subplots(1, 3, figsize=(12, 3))
+df.plot(logy=True, title="Données COVID", ax=ax[0])
+df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
+df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+
+#########################################
+# On lisse car les séries sont très agitées
+# et empêchent les modèles de bien converger.
+
+df = df.rolling(7, center=True).mean()
+fig, ax = plt.subplots(1, 3, figsize=(12, 3))
+df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
+df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
+df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 
 ############################################
 # .. _l-sliding-window-sir:
@@ -113,8 +126,11 @@ def find_best_model(Xt, yt, lrs, th):
                 'SIRC',
                 learning_rate_init=lr,
                 max_iter=500,
-                early_th=1)
-            m.fit(Xt, yt)
+                early_th=1, verbose=0)
+            try:
+                m.fit(Xt, yt)
+            except RuntimeError:
+                continue
             loss = m.score(Xt, yt)
             if numpy.isnan(loss):
                 continue
@@ -133,7 +149,11 @@ def estimation(X, y, delay):
         end = min(k + delay, X.shape[0])
         Xt, yt = X[k:end], y[k:end]
         m, loss, lr = find_best_model(
-            Xt, yt, [1e-2, 1e-3, 1e-4, 1e-5, 1e-6], 10)
+            Xt, yt, [1e8, 1e6, 1e4, 1e2, 1,
+                     1e-2, 1e-4, 1e-6], 10)
+        if m is None:
+            print("k={} loss=nan".format(k))
+            continue
         loss = m.score(Xt, yt)
         print("k={} iter={} loss={:1.3f} coef={} R0={} lr={}".format(
             k, m.iter_, loss, m.model_._val_p, m.model_.R0(), lr))
