@@ -39,6 +39,8 @@ class TestEpidemicRegressor(unittest.TestCase):
         X, y = model.iterate2array(derivatives=True)
         with self.assertRaises(ValueError):
             EpidemicRegressor('sir2')
+        with self.assertRaises(TypeError):
+            EpidemicRegressor('sirc', init='r')
         epi = EpidemicRegressor(max_iter=10)
         with self.assertRaises(RuntimeError):
             epi.score(X, y)

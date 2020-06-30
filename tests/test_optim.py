@@ -35,17 +35,7 @@ class TestOptim(unittest.TestCase):
         no = numpy.linalg.norm(gr)
         self.assertGreater(no, 0.001)
 
-        with self.assertRaises(TypeError):
-            SGDOptimizer({})
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]))
-        with self.assertRaises(ValueError):
-            sgd.update_coef(numpy.array([0., 0., 0., 0.]))
-        with self.assertRaises(TypeError):
-            sgd.train(X, {}, fct_loss, fct_grad)
-        with self.assertRaises(TypeError):
-            sgd.train({}, y, fct_loss, fct_grad)
-        with self.assertRaises(ValueError):
-            sgd.train(X[:4], y, fct_loss, fct_grad)
 
         buf = io.StringIO()
         with redirect_stdout(buf):
@@ -63,6 +53,48 @@ class TestOptim(unittest.TestCase):
         self.assertIn("15/15: loss", out)
         self.assertLess(ls, 1)
         self.assertLess(sgd.learning_rate, 0.1)
+
+    def test_sgd_optimizer_raise(self):
+        coef = numpy.array([0.5, 0.6, 0.7])
+
+        X = numpy.random.randn(10, 3)
+        y = X @ coef
+
+        ls = fct_loss(coef, X, y)
+        self.assertLess(ls, 1e-10)
+
+        gr = fct_grad(coef, X[0, :], y[0], 0)
+        no = numpy.linalg.norm(gr)
+        self.assertLess(no, 1e-10)
+
+        gr = fct_grad(numpy.array([0., 0., 0.]), X[0, :], y[0], 0)
+        no = numpy.linalg.norm(gr)
+        self.assertGreater(no, 0.001)
+
+        with self.assertRaises(TypeError):
+            SGDOptimizer({})
+        sgd = SGDOptimizer(numpy.array([0., 0., 0.]))
+        with self.assertRaises(ValueError):
+            sgd.update_coef(numpy.array([0., 0., 0., 0.]))
+        with self.assertRaises(TypeError):
+            sgd.train(X, {}, fct_loss, fct_grad)
+        with self.assertRaises(TypeError):
+            sgd.train({}, y, fct_loss, fct_grad)
+        with self.assertRaises(ValueError):
+            sgd.train(X[:4], y, fct_loss, fct_grad)
+        with self.assertRaises(TypeError):
+            sgd.train(X, y, fct_loss, fct_grad, max_iter=15, min_threshold="e")
+        with self.assertRaises(TypeError):
+            sgd.train(X, y, fct_loss, fct_grad, max_iter=15, max_threshold="e")
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            X[0, 0] = numpy.nan
+            with self.assertRaises(ValueError):
+                sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
+            X[0, 0] = 1.
+            y[0] = numpy.nan
+            with self.assertRaises(ValueError):
+                sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
 
 
 if __name__ == '__main__':
