@@ -56,7 +56,7 @@ def extract_whole_data(kind=['deaths', 'confirmed', 'recovered'],
         dfs.append(df)
     conc = pandas.concat(dfs, axis=1)
     conc['infected'] = conc['confirmed'] - (conc['deaths'] + conc['recovered'])
-    conc['total'] = total - conc.drop('confirmed', axis=1).sum(axis=1)
+    conc['safe'] = total - conc.drop('confirmed', axis=1).sum(axis=1)
     return conc
 
 
@@ -71,7 +71,6 @@ df.plot(logy=True, title="Données COVID", ax=ax[0])
 df[['recovered', 'confirmed', 'infected']].diff().plot(
     title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
-plt.show()
 
 #########################################
 # On lisse car les séries sont très agitées
@@ -83,7 +82,6 @@ df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
 df[['recovered', 'confirmed', 'infected']].diff().plot(
     title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
-plt.show()
 
 ################################################
 # On voit qu'en France, les données sont difficilement
@@ -100,7 +98,7 @@ plt.show()
 model = CovidSIR()
 print(model.quantity_names)
 
-data = df[['total', 'infected', 'recovered',
+data = df[['safe', 'infected', 'recovered',
            'deaths']].values.astype(numpy.float32)
 print(data[:5])
 
@@ -155,6 +153,10 @@ def estimation(X, y, delay):
             init=m)
         if m is None:
             print("k={} loss=nan".format(k))
+            find_best_model(
+                Xt, yt, [1e8, 1e6, 1e4, 1e2, 1,
+                         1e-2, 1e-4, 1e-6], 10,
+                init=m, verbose=True)
             continue
         loss = m.score(Xt, yt)
         print("k={} iter={} loss={:1.3f} coef={} R0={} lr={}".format(
@@ -175,17 +177,17 @@ dfcoef = estimation(X, y, 21)
 dfcoef.head(n=10)
 
 #############################################
-#
+# Fin de la période.
 
 dfcoef.tail(n=10)
 
 #############################################
-#
+# Statistiques.
 
 dfcoef.describe()
 
 #############################################
-#
+# Fin de la période.
 
 df.tail(n=10)
 
@@ -194,18 +196,17 @@ df.tail(n=10)
 
 dfcoef['R0=1'] = 1
 
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    ax[0, 2].set_ylim(0, 5)
-    df.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 tout au long de la période\n'
-                 'Estimation sur 3 semaines',
-                 fontsize=12)
+    df.drop('safe', axis=1).plot(ax=ax[1, 1])
+ax[0, 2].set_ylim(0, 5)
+fig.suptitle('Estimation de R0 tout au long de la période\n'
+             'Estimation sur 3 semaines', fontsize=12)
 plt.show()
 
 #############################################
@@ -214,16 +215,16 @@ plt.show()
 dfcoeflast = dfcoef.iloc[-30:, :]
 dflast = df.iloc[-30:, :]
 
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoeflast[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoeflast[["beta"]].plot(ax=ax[0, 1])
     dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    ax[0, 2].set_ylim(0, 5)
-    dflast.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
+    dflast.drop('safe', axis=1).plot(ax=ax[1, 1])
+ax[0, 2].set_ylim(0, 5)
+fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()
 
 #################################################
@@ -237,23 +238,22 @@ dfcoef = estimation(X, y, 7)
 dfcoef.tail()
 
 #######################################
-#
+# Graphe.
 
 dfcoef['R0=1'] = 1
 
 
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    ax[0, 2].set_ylim(0, 5)
-    df.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 tout au long de la période\n'
-                 'Estimation sur 1 semaine',
-                 fontsize=12)
+    df.drop('safe', axis=1).plot(ax=ax[1, 1])
+ax[0, 2].set_ylim(0, 5)
+fig.suptitle('Estimation de R0 tout au long de la période\n'
+             'Estimation sur 1 semaine', fontsize=12)
 plt.show()
 
 #######################################
@@ -263,23 +263,21 @@ dfcoef = estimation(X, y, 14)
 dfcoef.tail()
 
 #######################################
-#
+# Graphe.
 
 dfcoef['R0=1'] = 1
 
-
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    ax[0, 2].set_ylim(0, 5)
-    df.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 tout au long de la période\n'
-                 'Estimation sur 2 semaines',
-                 fontsize=12)
+    df.drop('safe', axis=1).plot(ax=ax[1, 1])
+ax[0, 2].set_ylim(0, 5)
+fig.suptitle('Estimation de R0 tout au long de la période\n'
+             'Estimation sur 2 semaines', fontsize=12)
 plt.show()
 
 ##############################################
@@ -289,20 +287,19 @@ dfcoef = estimation(X, y, 28)
 dfcoef.tail()
 
 #########################################
-#
+# Graphe.
 
 dfcoef['R0=1'] = 1
 
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    ax[0, 2].set_ylim(0, 5)
-    df.drop('total', axis=1).plot(ax=ax[1, 1])
-    fig.suptitle('Estimation de R0 tout au long de la période\n'
-                 'Estimation sur 4 semaines',
-                 fontsize=12)
+    df.drop('safe', axis=1).plot(ax=ax[1, 1])
+ax[0, 2].set_ylim(0, 5)
+fig.suptitle('Estimation de R0 tout au long de la période\n'
+             'Estimation sur 4 semaines', fontsize=12)
 plt.show()

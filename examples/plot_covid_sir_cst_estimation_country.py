@@ -63,7 +63,7 @@ def extract_whole_data(kind=['deaths', 'confirmed', 'recovered'],
         dfs.append(df)
     conc = pandas.concat(dfs, axis=1)
     conc['infected'] = conc['confirmed'] - (conc['deaths'] + conc['recovered'])
-    conc['total'] = total - conc.drop('confirmed', axis=1).sum(axis=1)
+    conc['safe'] = total - conc.drop('confirmed', axis=1).sum(axis=1)
     return conc
 
 
@@ -77,7 +77,6 @@ fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID", ax=ax[0])
 df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
-plt.show()
 
 #########################################
 # On lisse car les séries sont très agitées
@@ -88,7 +87,6 @@ fig, ax = plt.subplots(1, 3, figsize=(12, 3))
 df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
 df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
 df[['deaths']].diff().plot(title="Différences", ax=ax[2])
-plt.show()
 
 ############################################
 # .. _l-sliding-window-sir:
@@ -108,7 +106,7 @@ plt.show()
 model = CovidSIRC()
 print(model.quantity_names)
 
-data = df[['total', 'infected', 'recovered',
+data = df[['safe', 'infected', 'recovered',
            'deaths']].values.astype(numpy.float32)
 print(data[:5])
 
@@ -185,19 +183,19 @@ dfcoef = estimation(X, y, 21)
 dfcoef.head(n=10)
 
 #####################################
-#
+# Fin de la période.
 
 dfcoef.tail(n=10)
 
 #############################################
-#
+# Statistiques.
 
 dfcoef.describe()
 
 #####################################
-#
+# Fin de la période.
 
-df['cache'] = (dfcoef['cst'] * df['total'] * 1e-5).fillna(method='bfill')
+df['cache'] = (dfcoef['cst'] * df['safe'] * 1e-5).fillna(method='bfill')
 df.tail(n=10)
 
 #############################################
@@ -205,16 +203,16 @@ df.tail(n=10)
 
 dfcoef['R0=1'] = 1
 
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
     dfcoef[["cst"]].plot(ax=ax[1, 2])
     ax[0, 2].set_ylim(0, 5)
-    df.drop('total', axis=1).plot(ax=ax[1, 1])
+    df.drop('safe', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
 plt.show()
 
@@ -224,15 +222,15 @@ plt.show()
 dfcoeflast = dfcoef.iloc[-30:, :]
 dflast = df.iloc[-30:, :]
 
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoeflast[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoeflast[["beta"]].plot(ax=ax[0, 1])
     dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     ax[0, 2].set_ylim(0, 5)
     dfcoeflast[["cst"]].plot(ax=ax[1, 2])
-    dflast.drop('total', axis=1).plot(ax=ax[1, 1])
+    dflast.drop('safe', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()

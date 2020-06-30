@@ -54,8 +54,11 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
                  min_threshold='auto', max_threshold='auto',
                  verbose=False, init=None):
         if init is not None:
-            if isinstance(init, EpidemicRegressor) and hasattr(init, 'coef_'):
-                init = init.coef_.copy()
+            if isinstance(init, EpidemicRegressor):
+                if hasattr(init, 'coef_'):
+                    init = init.coef_.copy()
+                else:
+                    init = None
             elif not isinstance(init, dict):
                 raise TypeError(
                     "init must be a dictionary not {}.".format(type(init)))
