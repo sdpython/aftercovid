@@ -176,6 +176,7 @@ def estimation(X, y, delay):
                    R0=m.model_.R0(), lr=lr, date=dates[end - 1])
         obs.update({k: v for k, v in zip(
             m.model_.param_names, m.model_._val_p)})
+        obs['N'] = m.model_['N']
         coefs.append(obs)
     dfcoef = pandas.DataFrame(coefs)
     dfcoef = dfcoef.set_index("date")
@@ -199,8 +200,8 @@ dfcoef.describe()
 #####################################
 # Fin de la période.
 
-df['cacheR'] = (dfcoef['cR'] * df['N'] * 1e-5).fillna(method='bfill')
-df['cacheS'] = (dfcoef['cS'] * df['N'] * 1e-5).fillna(method='bfill')
+df['cacheR'] = (dfcoef['cR'] * dfcoef['N'] * 1e-5).fillna(method='bfill')
+df['cacheS'] = (dfcoef['cS'] * dfcoef['N'] * 1e-5).fillna(method='bfill')
 df.tail(n=10)
 
 #############################################
