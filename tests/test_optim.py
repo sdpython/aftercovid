@@ -69,7 +69,7 @@ class TestOptim(unittest.TestCase):
 
         gr = fct_grad(numpy.array([0., 0., 0.]), X[0, :], y[0], 0)
         no = numpy.linalg.norm(gr)
-        self.assertGreater(no, 0.001)
+        self.assertGreater(no, 0.0007)
 
         with self.assertRaises(TypeError):
             SGDOptimizer({})
