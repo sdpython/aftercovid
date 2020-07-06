@@ -43,9 +43,9 @@ class TestModelsCovidSirCst(unittest.TestCase):
         self.assertEqual(cst, {'N': 10000.0, 'beta': 0.5,
                                'mu': 0.07142857142857142,
                                'nu': 0.047619047619047616,
-                               'cst': 0.01})
+                               'cR': 0.01, 'cS': 0.01})
         ev = model.eval_diff()
-        self.assertEqual(ev['S'], -4.995499499999999)
+        self.assertEqual(-4.9949995, ev['S'])
         self.assertEqual(len(ev), 4)
 
     def test_covid_sir_loop(self):
@@ -91,7 +91,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
         self.assertIsInstance(grads, list)
         for row in grads:
             self.assertIsInstance(row, list)
-            self.assertEqual(len(row), 4)
+            self.assertEqual(len(row), 5)
 
     def test_fit(self):
         model = CovidSIRC()
@@ -107,11 +107,11 @@ class TestModelsCovidSirCst(unittest.TestCase):
         with self.assertRaises(ValueError):
             model.fit(X2, y, learning_rate_init=0.01)
         exp = numpy.array([model['beta'], model['nu'], model['mu'],
-                           model['cst']])
+                           model['cS'], model['cR']])
         model.fit(X, y, verbose=False, max_iter=10,
                   learning_rate_init=0.01)
         coef = numpy.array([model['beta'], model['nu'], model['mu'],
-                            model['cst']])
+                            model['cS'], model['cR']])
         err = numpy.linalg.norm(exp - coef)
         self.assertLess(err, 1e-5)
         model['nu'] = model['mu'] = model['beta'] = 0.1
@@ -121,7 +121,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
         out = buf.getvalue()
         self.assertIn('20/20', out)
         coef = numpy.array([model['beta'], model['nu'], model['mu'],
-                            model['cst']])
+                            model['cS'], model['cR']])
         err = numpy.linalg.norm(exp - coef)
         self.assertLess(err, 1)
         loss = model.score(X, y)

@@ -124,26 +124,30 @@ def find_best_model(Xt, yt, lrs, th, verbose=0, init=None):
     for ilr, lr in enumerate(lrs):
         if verbose:
             print("--- TRY {}/{}: {}".format(ilr + 1, len(lrs), lr))
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", RuntimeWarning)
-            m = EpidemicRegressor(
-                'SIRC', learning_rate_init=lr, max_iter=500,
-                early_th=1, verbose=verbose, init=m)
-            try:
-                m.fit(Xt, yt)
-            except RuntimeError as e:
-                if verbose:
-                    print('ERROR: {}'.format(e))
-                continue
-            loss = m.score(Xt, yt)
-            if numpy.isnan(loss):
-                continue
-        if best_est is None or best_loss > loss:
-            best_est = m
-            best_loss = loss
-            best_lr = lr
-        if best_loss < th:
-            return best_est, best_loss, best_lr
+        tries = [None]
+        if best_est is not None:
+            tries.append(best_est)
+        for init_m in tries:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", RuntimeWarning)
+                m = EpidemicRegressor(
+                    'SIRC', learning_rate_init=lr, max_iter=500,
+                    early_th=1, verbose=verbose, init=init_m)
+                try:
+                    m.fit(Xt, yt)
+                except RuntimeError as e:
+                    if verbose:
+                        print('ERROR: {}'.format(e))
+                    continue
+                loss = m.score(Xt, yt)
+                if numpy.isnan(loss):
+                    continue
+            if best_est is None or best_loss > loss:
+                best_est = m
+                best_loss = loss
+                best_lr = lr
+            if best_loss < th:
+                return best_est, best_loss, best_lr
     return best_est, best_loss, best_lr
 
 
@@ -158,7 +162,7 @@ def estimation(X, y, delay):
         m, loss, lr = find_best_model(
             Xt, yt, [1e8, 1e6, 1e4, 1e2, 1,
                      1e-2, 1e-4, 1e-6], 10,
-            init=m)
+            init=m, verbose=0)
         if m is None:
             print("k={} loss=nan".format(k))
             find_best_model(
@@ -195,7 +199,8 @@ dfcoef.describe()
 #####################################
 # Fin de la période.
 
-df['cache'] = (dfcoef['cst'] * df['safe'] * 1e-5).fillna(method='bfill')
+df['cacheR'] = (dfcoef['cR'] * df['N'] * 1e-5).fillna(method='bfill')
+df['cacheS'] = (dfcoef['cS'] * df['N'] * 1e-5).fillna(method='bfill')
 df.tail(n=10)
 
 #############################################
@@ -215,7 +220,7 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1])
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    dfcoef[["cst"]].plot(ax=ax[1, 2])
+    dfcoef[["cS", "cR"]].plot(ax=ax[1, 2])
     ax[0, 2].set_ylim(0, 5)
     df.drop('safe', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
@@ -235,7 +240,7 @@ with warnings.catch_warnings():
     dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     ax[0, 2].set_ylim(0, 5)
-    dfcoeflast[["cst"]].plot(ax=ax[1, 2])
+    dfcoeflast[["cS", "cR"]].plot(ax=ax[1, 2])
     dflast.drop('safe', axis=1).plot(ax=ax[1, 1])
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()

@@ -105,6 +105,8 @@ class BaseOptimizer:
             irows = numpy.random.choice(X.shape[0], X.shape[0])
             for irow in irows:
                 grad = fct_grad(self.coef, X[irow, :], y[irow], irow)
+                if isinstance(verbose, int) and verbose >= 10:
+                    self._display_progress(0, max_iter, loss, grad, 'grad')
                 if numpy.isnan(grad).sum() > 0:
                     raise RuntimeError(  # pragma: no cover
                         "The gradient has nan values.")
@@ -257,11 +259,11 @@ class SGDOptimizer(BaseOptimizer):
         self.velocity = update
         return update
 
-    def _display_progress(self, it, max_iter, loss, losses=None):
+    def _display_progress(self, it, max_iter, loss, losses=None, msg='loss'):
         'Displays training progress.'
         if losses is None:
-            print('{}/{}: loss: {:1.4g} lr={:1.3g}'.format(
-                it, max_iter, loss, self.learning_rate))
+            print('{}/{}: {}: {:1.4g} lr={:1.3g}'.format(
+                it, max_iter, msg, loss, self.learning_rate))
         else:
-            print('{}/{}: loss: {:1.4g} lr={:1.3g} losses: {}'.format(
-                it, max_iter, loss, self.learning_rate, losses))
+            print('{}/{}: {}: {:1.4g} lr={:1.3g} {}es: {}'.format(
+                it, max_iter, msg, loss, self.learning_rate, msg, losses))

@@ -11,6 +11,23 @@ class CovidSIRC(BaseSIR):
     """
     Inspiration `Modelling some COVID-19 data
     <http://webpopix.org/covidix19.html>`_.
+    This model considers that observed data are not the
+    true ones.
+
+    .. math::
+
+        \\begin{array}{rcl}
+        S_{obs} &=& S + S_c \\\\
+        I_{obs} &=& I - I_c \\\\
+        R_{obs} &=& R - R_c \\\\
+        D_{obs} &=& D
+        \\end{array}
+
+    Where :math:`S_c`, :math:`I_c`, :math:`R_c` are
+    hidden, only :math:`S_{obs}`, :math:`I_{obs}`,
+    :math:`R_{obs}` are observed.
+    As :math:`S + I + R + D = N = S_{obs} + I_{obs} + R_{obs} + D_{obs}`,
+    we get :math:`S_c = I_c + R_c`.
 
     .. runpython::
         :showcode:
@@ -59,7 +76,8 @@ class CovidSIRC(BaseSIR):
         ('beta', 0.5, 'taux de transmission dans la population'),
         ('mu', 1 / 14., '1/. : durée moyenne jusque la guérison'),
         ('nu', 1 / 21., '1/. : durée moyenne jusqu\'au décès'),
-        ('cst', 1e-2, 'personnes contaminées et cachées'),
+        ('cS', 1e-2, 'personnes non infectées et cachées'),
+        ('cR', 1e-2, 'personnes guéries et cachées'),
     ]
 
     Q0 = [
@@ -74,12 +92,12 @@ class CovidSIRC(BaseSIR):
     ]
 
     eq = {
-        'S': '- beta * S / N * (I + cst * N * 1e-5)',
-        'I': ('beta * S / N * (I + cst * N * 1e-5) '
-              '- mu * (I + cst * N * 1e-5) '
-              '- nu * (I + cst * N * 1e-5)'),
-        'R': 'mu * (I + cst * N * 1e-5)',
-        'D': 'nu * (I + cst * N * 1e-5)'}
+        'S': '- beta / N * (S - cS * N * 1e-5) * (I + (cS - cR) * N * 1e-5)',
+        'I': ('beta / N * (S - cS * N * 1e-5) * (I + (cS - cR) * N * 1e-5)'
+              '- mu * I '
+              '- nu * (I + (cS - cR) * N * 1e-5)'),
+        'R': 'mu * I',
+        'D': 'nu * (I + (cS - cR) * N * 1e-5)'}
 
     def __init__(self):
         BaseSIR.__init__(
@@ -101,7 +119,8 @@ class CovidSIRC(BaseSIR):
         self['beta'] = numpy.random.randn(1) * 0.1 + 0.5
         self['mu'] = numpy.random.randn(1) * 0.1 + 1. / 14
         self['nu'] = numpy.random.randn(1) * 0.1 + 1. / 21
-        self['cst'] = numpy.random.rand() * 1e-2
+        self['cR'] = numpy.random.rand() * 1e-4
+        self['cS'] = numpy.random.rand() * 1e-4
 
     @staticmethod
     def add_noise(X, epsilon=1.):
