@@ -116,6 +116,16 @@ sur son article
   <https://bmcmedinformdecismak.biomedcentral.com/track/pdf/10.1186/1472-6947-12-147>`_
 * `Estimating the overdispersion in COVID-19 transmission using outbreak sizes outside China
   <https://wellcomeopenresearch.org/articles/5-67/v1>`_
+* `A Robust Stochastic Method of Estimating the Transmission Potential of 2019-nCoV
+  <https://arxiv.org/pdf/2002.03828.pdf>`_
+* `Data driven inference of the reproduction number (R0) for COVID-19 before
+  and after interventions for 51 European countries
+  <https://www.medrxiv.org/content/10.1101/2020.05.21.20109314v1.full.pdf>`_
+
+*P0*
+
+* `P0: Progress to zero: A simple metric to measure COVID-19 progress by country/region
+  <https://www.medrxiv.org/content/10.1101/2020.05.21.20109298v1.full.pdf>`_
 
 *SIR + Kalman*
 
@@ -153,6 +163,8 @@ sur son article
 * `Modèle CAST <https://blog.parcoor.com/2020-04-22-cast-prediction-propagation/>`_,
   `notebook <https://github.com/parcoor/py-propagsim/blob/master/examples/example0.ipynb>`_,
   `py-propagsim <https://github.com/parcoor/py-propagsim>`_
+* `Modelling the coronavirus epidemic in a city with Python
+  <https://towardsdatascience.com/modelling-the-coronavirus-epidemic-spreading-in-a-city-with-python-babd14d82fa2>`_
 
 *Temporal Point Process*
 
