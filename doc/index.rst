@@ -27,6 +27,18 @@ aftercovid: modelling, simulation, statistics around COVID
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
+.. image:: https://pepy.tech/badge/aftercovid/month
+    :target: https://pepy.tech/project/aftercovid/month
+    :alt: Downloads
+
+.. image:: https://img.shields.io/github/forks/sdpython/aftercovid.svg
+    :target: https://github.com/sdpython/aftercovid/
+    :alt: Forks
+
+.. image:: https://img.shields.io/github/stars/sdpython/aftercovid.svg
+    :target: https://github.com/sdpython/aftercovid/
+    :alt: Stars
+
 .. image:: https://img.shields.io/github/repo-size/sdpython/aftercovid
     :target: https://github.com/sdpython/aftercovid/
     :alt: size
