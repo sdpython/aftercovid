@@ -50,14 +50,14 @@ class BaseOptimizer:
         if self.min_threshold is not None:
             try:
                 self.coef = numpy.maximum(self.coef, self.min_threshold)
-            except UFuncTypeError:
+            except UFuncTypeError:  # pragma: no cover
                 raise RuntimeError(
                     "Unable to compute an upper bound with coef={} "
                     "max_threshold={}".format(self.coef, self.min_threshold))
         if self.max_threshold is not None:
             try:
                 self.coef = numpy.minimum(self.coef, self.max_threshold)
-            except UFuncTypeError:
+            except UFuncTypeError:  # pragma: no cover
                 raise RuntimeError(
                     "Unable to compute a lower bound with coef={} "
                     "max_threshold={}".format(self.coef, self.max_threshold))
@@ -135,18 +135,18 @@ class BaseOptimizer:
             return False
         if numpy.isnan(losses[-5]):
             if numpy.isnan(losses[-1]):
-                if verbose:
+                if verbose:  # pragma: no cover
                     self._display_progress(it + 1, max_iter, losses[-1],
                                            losses=losses[-5:])
                 return True
             return False
         if numpy.isnan(losses[-1]):
-            if verbose:
+            if verbose:  # pragma: no cover
                 self._display_progress(it + 1, max_iter, losses[-1],
                                        losses=losses[-5:])
             return True
         if abs(losses[-1] - losses[-5]) <= early_th:
-            if verbose:
+            if verbose:  # pragma: no cover
                 self._display_progress(it + 1, max_iter, losses[-1],
                                        losses=losses[-5:])
             return True

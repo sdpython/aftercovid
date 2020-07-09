@@ -149,7 +149,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         :return: derivates and series
         """
         if not hasattr(self, 'model_'):
-            raise RuntimeError("Model was not trained.")
+            raise RuntimeError("Model was not trained.")  # pragma: no cover
         deri = numpy.empty(X.shape + (n, ))
         curv = numpy.empty(X.shape + (n, ))
         for i in range(0, n):
