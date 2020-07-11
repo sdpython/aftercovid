@@ -171,4 +171,17 @@ dldiff.plot(logy=False, lw=3, ax=ax[0])
 dldiff.plot(logy=True, lw=3, ax=ax[1])
 ax[0].set_ylim(0)
 ax[0].set_title(
-    "Nombre de décès par jour après N jours\ndepuis le début de l'épidémie")
+    "Nombre de décès lissé sur 3 jours\npar jour après N jours"
+    "\ndepuis le début de l'épidémie")
+
+
+################################
+
+
+fig, ax = plt.subplots(1, 2, figsize=(14, 8))
+dldiff.plot(logy=False, lw=7, ax=ax[0])
+dldiff.plot(logy=True, lw=7, ax=ax[1])
+ax[0].set_ylim(0)
+ax[0].set_title(
+    "Nombre de décès lissé sur 7 jours\naprès N jours"
+    "\ndepuis le début de l'épidémie")

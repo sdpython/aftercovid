@@ -126,11 +126,11 @@ dfcoef
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
     fig, ax = plt.subplots(2, 3, figsize=(14, 6))
-    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0])
-    dfcoef[["beta"]].plot(ax=ax[0, 1])
+    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
+    dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0"]].plot(ax=ax[0, 2])
-    df.plot(ax=ax[1, 1])
+    df.plot(ax=ax[1, 1], logy=True)
     fig.suptitle('Estimation de R0 tout au long de la simulation', fontsize=12)
 
 #################################
@@ -190,7 +190,7 @@ with warnings.catch_warnings():
         ax[1, 2].set_ylim(0, 5)
         dfcoef.pivot('k', 'delay', 'loss').plot(
             ax=ax[1, 0], logy=True, legend=False).set_title('loss')
-    df.plot(ax=ax[1, 1])
+    df.plot(ax=ax[1, 1], logy=True)
     fig.suptitle('Estimation de R0 tout au long de la simulation '
                  'avec différentes tailles de fenêtre', fontsize=12)
 
@@ -219,10 +219,7 @@ for k in range(0, X.shape[0] - 9, 2):
     loss = m.score(Xt, yt)
     print(
         "k={} iter={} loss={:1.3f} coef={}".format(
-            k,
-            m.iter_,
-            loss,
-            m.model_._val_p))
+            k, m.iter_, loss, m.model_._val_p))
     obs = dict(k=k, loss=loss, it=m.iter_, R0=m.model_.R0())
     obs.update({k: v for k, v in zip(
         m.model_.param_names, m.model_._val_p)})
@@ -239,9 +236,9 @@ dfeps = pandas.DataFrame({_[0]: x for _, x in zip(model.Q, Xeps.T)})
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
     fig, ax = plt.subplots(2, 3, figsize=(14, 6))
-    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0])
-    dfcoef[["beta"]].plot(ax=ax[0, 1])
-    dfcoef[["loss"]].plot(ax=ax[1, 0])
+    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
+    dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
+    dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0"]].plot(ax=ax[0, 2])
     dfeps.plot(ax=ax[1, 1])
     fig.suptitle(
