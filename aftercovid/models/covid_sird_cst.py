@@ -69,7 +69,8 @@ class CovidSIRDc(BaseSIR):
         print(model.to_dot())
 
     See :ref:`l-base-model-sir` to get the methods
-    common to SIRx models.
+    common to SIRx models. This model is not really working
+    better than :class:`CovidSIRD <aftercovid.covid_sird.CovidSIRD>`.
     """
 
     P0 = [
