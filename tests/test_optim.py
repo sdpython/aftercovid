@@ -57,7 +57,8 @@ class TestOptim(unittest.TestCase):
     def test_sgd_optimizer_raise(self):
         coef = numpy.array([0.5, 0.6, 0.7])
 
-        X = numpy.random.randn(10, 3)
+        rs = numpy.random.RandomState(seed=0)
+        X = rs.randn(10, 3)
         y = X @ coef
 
         ls = fct_loss(coef, X, y)
