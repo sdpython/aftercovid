@@ -3,20 +3,20 @@ Unit tests for ``_sympy_helper``.
 """
 import unittest
 from aftercovid.models._sympy_helper import enumerate_traverse, SympyNode
-from aftercovid.models.covid_sir import CovidSIR
+from aftercovid.models.covid_sird import CovidSIRD
 
 
 class TestSympyHelper(unittest.TestCase):
 
     def test_traverse(self):
-        model = CovidSIR()
+        model = CovidSIRD()
         exp = model._eq['S']
         nodes = list(enumerate_traverse(exp))
         self.assertEqual(len(nodes), 8)
         self.assertIsInstance(nodes[0], dict)
 
     def test_node(self):
-        model = CovidSIR()
+        model = CovidSIRD()
         exp = model._eq['S']
         node = SympyNode(exp)
         nodes = list(node)
@@ -25,7 +25,7 @@ class TestSympyHelper(unittest.TestCase):
         self.assertEqual(len(st), 8)
 
     def test_parent(self):
-        model = CovidSIR()
+        model = CovidSIRD()
         exp = model._eq['S']
         node = SympyNode(exp)
         n = node.children[0]

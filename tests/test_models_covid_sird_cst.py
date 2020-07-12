@@ -1,18 +1,18 @@
 """
-Unit tests for ``CovidSIRC``.
+Unit tests for ``CovidSIRDc``.
 """
 import io
 from contextlib import redirect_stdout
 import unittest
 import numpy
 from numpy.testing import assert_almost_equal
-from aftercovid.models import CovidSIRC
+from aftercovid.models import CovidSIRDc
 
 
-class TestModelsCovidSirCst(unittest.TestCase):
+class TestModelsCovidSIRDcst(unittest.TestCase):
 
     def test_covid_sir(self):
-        model = CovidSIRC()
+        model = CovidSIRDc()
         rst = model.to_rst()
         self.assertIn('\\frac', rst)
         self.assertIn('I', rst)
@@ -38,7 +38,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
         self.assertIn("{equation}", ht)
 
     def test_covid_sir_eval(self):
-        model = CovidSIRC()
+        model = CovidSIRDc()
         cst = model.cst_param
         self.assertEqual(cst, {'N': 10000.0, 'beta': 0.5,
                                'mu': 0.07142857142857142,
@@ -49,7 +49,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
         self.assertEqual(len(ev), 4)
 
     def test_covid_sir_loop(self):
-        model = CovidSIRC()
+        model = CovidSIRDc()
         sim = list(model.iterate())
         self.assertEqual(len(sim), 10)
         self.assertGreater(sim[-1]['S'], 9500)
@@ -58,7 +58,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
         self.assertEqual(r0, 4.2)
 
     def test_predict(self):
-        model = CovidSIRC()
+        model = CovidSIRDc()
         sim = list(model.iterate(derivatives=True))
         self.assertIsInstance(sim, list)
         X = model.iterate2array(derivatives=False)
@@ -83,7 +83,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
             model.predict(X2)
 
     def test_prefit(self):
-        model = CovidSIRC()
+        model = CovidSIRDc()
         losses = model._losses_sympy()
         self.assertIsInstance(losses, list)
         self.assertEqual(len(losses), 4)
@@ -94,7 +94,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
             self.assertEqual(len(row), 5)
 
     def test_fit(self):
-        model = CovidSIRC()
+        model = CovidSIRDc()
         X, y = model.iterate2array(derivatives=True)
         with self.assertRaises(TypeError):
             model.fit(X, {})
@@ -128,7 +128,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
         self.assertGreater(loss, 0)
 
     def test_noise(self):
-        model = CovidSIRC()
+        model = CovidSIRDc()
         X, y = model.iterate2array(derivatives=True)
         X2 = model.add_noise(X)
         diff = numpy.abs(X - X2).max()
@@ -139,7 +139,7 @@ class TestModelsCovidSirCst(unittest.TestCase):
         self.assertGreater(diff, 1)
 
     def test_eval_diff(self):
-        model = CovidSIRC()
+        model = CovidSIRDc()
         df1 = model.eval_diff()
         df2 = model._eval_diff_sympy()
         self.assertEqual(df1, df2)

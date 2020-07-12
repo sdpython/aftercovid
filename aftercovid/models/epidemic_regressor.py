@@ -4,8 +4,8 @@ Implementation of a model for epidemics propagation.
 """
 import numpy
 from sklearn.base import BaseEstimator, RegressorMixin
-from .covid_sir import CovidSIR
-from .covid_sir_cst import CovidSIRC
+from .covid_sird import CovidSIRD
+from .covid_sird_cst import CovidSIRDc
 
 
 class EpidemicRegressor(BaseEstimator, RegressorMixin):
@@ -14,9 +14,9 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
     Trains a model on observed data from an epidemic.
 
     :param model: model to train, `'SIR'` refers to
-        `CovidSIR <aftercovid.models.CovidSIR>`,
-        `SIRC` refers to `CovidSIRC
-        <aftercovid.models.CovidSIRC>`
+        `CovidSIRD <aftercovid.models.CovidSIRD>`,
+        `SIRDc` refers to `CovidSIRDc
+        <aftercovid.models.CovidSIRDc>`
     :param t: implicit feature
     :param max_iter: number of iteration
     :param learning_rate_init: see :class:`SGDOptimizer
@@ -74,18 +74,18 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         self.early_th = early_th
         self.verbose = verbose
         if min_threshold == 'auto':
-            if model.upper() == 'SIR':
+            if model.upper() in ('SIR', 'SIRD'):
                 min_threshold = 0.0001
-            elif model.upper() == 'SIRC':
+            elif model.upper() in ('SIRC', 'SIRDC'):
                 pmin = dict(beta=0.001, nu=0.0001, mu=0.0001,
                             cR=0., cS=0.)
-                min_threshold = numpy.array([pmin[k[0]] for k in CovidSIRC.P0])
+                min_threshold = numpy.array([pmin[k[0]] for k in CovidSIRDc.P0])
         if max_threshold == 'auto':
-            if model.upper() == 'SIR':
+            if model.upper() in ('SIR', 'SIRD'):
                 max_threshold = 1.
-            elif model.upper() == 'SIRC':
+            elif model.upper() in ('SIRC', 'SIRDC'):
                 pmax = dict(beta=1., nu=0.5, mu=0.5, cR=1e4, cS=1e4)
-                max_threshold = numpy.array([pmax[k[0]] for k in CovidSIRC.P0])
+                max_threshold = numpy.array([pmax[k[0]] for k in CovidSIRDc.P0])
         self.min_threshold = min_threshold
         self.max_threshold = max_threshold
         self._get_model()
@@ -94,10 +94,10 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             self.coef_ = init
 
     def _get_model(self):
-        if self.model.lower() == 'sir':
-            return CovidSIR()
-        if self.model.lower() == 'sirc':
-            return CovidSIRC()
+        if self.model.lower() in ('sir', 'sird'):
+            return CovidSIRD()
+        if self.model.lower() in ('sirc', 'sirdc'):
+            return CovidSIRDc()
         raise ValueError(
             "Unknown model name '{}'.".format(self.model))
 

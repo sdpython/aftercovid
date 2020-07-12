@@ -5,6 +5,21 @@ Lectures
 .. contents::
     :local:
 
+Dashboards
+++++++++++
+
+* `COVID-19 Daily Epidemic Forecasting
+  <https://renkulab.shinyapps.io/COVID-19-Epidemic-Forecasting/>`_
+  (`code <https://github.com/jscire/Swiss_covid_Re/tree/master/scripts>`_)
+* `COVID-19 - France
+  <https://dashboard.covid19.data.gouv.fr/vue-d-ensemble?location=FRA>`_
+
+Articles de journaux
+++++++++++++++++++++
+
+* `Données épidémiologiques: la pénurie cachée
+  <https://www.mediapart.fr/journal/france/110720/donnees-epidemiologiques-la-penurie-cachee>`_
+
 Données publiques
 +++++++++++++++++
 

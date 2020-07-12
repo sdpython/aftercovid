@@ -1,9 +1,9 @@
 # coding: utf-8
 """
-Estimation des paramètres d'un modèle SIR
-=========================================
+Estimation des paramètres d'un modèle SIRD
+==========================================
 
-On part d'un modèle :class:`CovidSIR <aftercovid.models.CovidSIR>`
+On part d'un modèle :class:`CovidSIRD <aftercovid.models.CovidSIRD>`
 qu'on utilise pour simuler des données. On regarde s'il est possible
 de réestimer les paramètres du modèle à partir des observations.
 
@@ -20,9 +20,9 @@ import numpy
 from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
 import matplotlib.pyplot as plt
 import pandas
-from aftercovid.models import EpidemicRegressor, CovidSIR
+from aftercovid.models import EpidemicRegressor, CovidSIRD
 
-model = CovidSIR()
+model = CovidSIRD()
 model
 
 
@@ -205,7 +205,7 @@ with warnings.catch_warnings():
 # L'idée est de voir si l'estimation se comporte
 # aussi bien sur des données bruitées.
 
-Xeps = CovidSIR.add_noise(X, epsilon=1.)
+Xeps = CovidSIRD.add_noise(X, epsilon=1.)
 yeps = numpy.vstack([Xeps[1:] - Xeps[:-1], y[-1:]])
 
 ###########################################

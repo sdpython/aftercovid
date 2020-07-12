@@ -4,10 +4,10 @@ Implementation of a model for epidemics propagation.
 """
 import numpy.random
 from ._base_sir import BaseSIR
-from .covid_sir import CovidSIR
+from .covid_sird import CovidSIRD
 
 
-class CovidSIRC(BaseSIR):
+class CovidSIRDc(BaseSIR):
     """
     Inspiration `Modelling some COVID-19 data
     <http://webpopix.org/covidix19.html>`_.
@@ -33,21 +33,21 @@ class CovidSIRC(BaseSIR):
         :showcode:
         :rst:
 
-        from aftercovid.models import CovidSIRC
+        from aftercovid.models import CovidSIRDc
 
-        model = CovidSIRC()
+        model = CovidSIRDc()
         print(model.to_rst())
 
     .. exref::
-        :title: SIR simulation and plotting
+        :title: SIRDC simulation and plotting
 
         .. plot::
 
             from pandas import DataFrame
             import matplotlib.pyplot as plt
-            from aftercovid.models import CovidSIRC
+            from aftercovid.models import CovidSIRDc
 
-            model = CovidSIRC()
+            model = CovidSIRDc()
             sims = list(model.iterate(60))
             df = DataFrame(sims)
             print(df.head())
@@ -64,8 +64,8 @@ class CovidSIRC(BaseSIR):
     .. gdot::
         :script:
 
-        from aftercovid.models import CovidSIRC
-        model = CovidSIRC()
+        from aftercovid.models import CovidSIRDc
+        model = CovidSIRDc()
         print(model.to_dot())
 
     See :ref:`l-base-model-sir` to get the methods
@@ -102,10 +102,10 @@ class CovidSIRC(BaseSIR):
     def __init__(self):
         BaseSIR.__init__(
             self,
-            p=CovidSIRC.P0.copy(),
-            q=CovidSIRC.Q0.copy(),
-            c=CovidSIRC.C0.copy(),
-            eq=CovidSIRC.eq.copy())
+            p=CovidSIRDc.P0.copy(),
+            q=CovidSIRDc.Q0.copy(),
+            c=CovidSIRDc.C0.copy(),
+            eq=CovidSIRDc.eq.copy())
 
     def R0(self, t=0):
         '''Returns R0 coefficient.'''
@@ -130,4 +130,4 @@ class CovidSIRC(BaseSIR):
         :param epsilon: amplitude
         :return: new X
         """
-        return CovidSIR.add_noise(X, epsilon=epsilon)
+        return CovidSIRD.add_noise(X, epsilon=epsilon)

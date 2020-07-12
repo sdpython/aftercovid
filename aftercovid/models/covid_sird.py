@@ -6,7 +6,7 @@ import numpy.random
 from ._base_sir import BaseSIR
 
 
-class CovidSIR(BaseSIR):
+class CovidSIRD(BaseSIR):
     """
     Inspiration `Modelling some COVID-19 data
     <http://webpopix.org/covidix19.html>`_.
@@ -15,9 +15,9 @@ class CovidSIR(BaseSIR):
         :showcode:
         :rst:
 
-        from aftercovid.models import CovidSIR
+        from aftercovid.models import CovidSIRD
 
-        model = CovidSIR()
+        model = CovidSIRD()
         print(model.to_rst())
 
     .. exref::
@@ -27,9 +27,9 @@ class CovidSIR(BaseSIR):
 
             from pandas import DataFrame
             import matplotlib.pyplot as plt
-            from aftercovid.models import CovidSIR
+            from aftercovid.models import CovidSIRD
 
-            model = CovidSIR()
+            model = CovidSIRD()
             sims = list(model.iterate(60))
             df = DataFrame(sims)
             print(df.head())
@@ -46,8 +46,8 @@ class CovidSIR(BaseSIR):
     .. gdot::
         :script:
 
-        from aftercovid.models import CovidSIR
-        model = CovidSIR()
+        from aftercovid.models import CovidSIRD
+        model = CovidSIRD()
         print(model.to_dot())
 
     See :ref:`l-base-model-sir` to get the methods
@@ -81,10 +81,10 @@ class CovidSIR(BaseSIR):
     def __init__(self):
         BaseSIR.__init__(
             self,
-            p=CovidSIR.P0.copy(),
-            q=CovidSIR.Q0.copy(),
-            c=CovidSIR.C0.copy(),
-            eq=CovidSIR.eq.copy())
+            p=CovidSIRD.P0.copy(),
+            q=CovidSIRD.Q0.copy(),
+            c=CovidSIRD.C0.copy(),
+            eq=CovidSIRD.eq.copy())
 
     def R0(self, t=0):
         '''Returns R0 coefficient.'''
