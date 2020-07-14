@@ -25,7 +25,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         '_p', '_q', '_c', '_eq', '_val_p', '_val_q', '_val_c',
         '_val_ind', '_val_len', '_syms']
 
-    def __init__(self, p, q, c=None, eq=None):
+    def __init__(self, p, q, c=None, eq=None, **kwargs):
         if not isinstance(p, list):
             raise TypeError("p must be a list of tuple.")
         if not isinstance(q, list):
@@ -56,6 +56,9 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
                         "Unable to parse '{}'.".format(v)) from e
         else:
             self._eq = None
+        if len(kwargs) != 0:
+            raise NotImplementedError(
+                "Not implemented.")
         self._init()
 
     def copy(self):
@@ -323,6 +326,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
             quants = set(_[0] for _ in self.Q)
             for k, v in sorted(self._eq.items()):
                 n2 = k
+                n = []
                 for dobj in enumerate_traverse(v):
                     term = dobj['e']
                     if not hasattr(term, 'name'):
@@ -336,6 +340,10 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
                         if hasattr(o, 'name') and o.name in quants:
                             sign = self.eqsign(n2, o.name)
                             yield (sign, o.name, n2, term.name)
+                            if o.name != n2:
+                                n.append((sign, o.name, n2, term.name))
+                if len(n) == 0:
+                    yield (0, '?', n2, '?')
 
     def to_dot(self, verbose=False, full=False):
         """
@@ -357,6 +365,11 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
                 if verbose else '    {n1} -> {n2} [label="{sg}{name}"];')
             for sg, a, b, name in set(self.enumerate_edges()):
                 if not full and (a == b or sg < 0):
+                    continue
+                if name == '?':
+                    rows.append(
+                        pattern.format(n1=a, n2=b, name=name,
+                                       v=numpy.nan, sg='0'))
                     continue
                 value = self[name]
                 stsg = '' if sg > 0 else '-'

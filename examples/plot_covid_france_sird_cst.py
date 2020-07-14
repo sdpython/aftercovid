@@ -200,8 +200,6 @@ dfcoef.describe()
 #####################################
 # Fin de la période.
 
-df['cacheR'] = (dfcoef['cR'] * dfcoef['N'] * 1e-5).fillna(method='bfill')
-df['cacheS'] = (dfcoef['cS'] * dfcoef['N'] * 1e-5).fillna(method='bfill')
 df.tail(n=10)
 
 #############################################
@@ -221,7 +219,7 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    dfcoef[["cS", "cR"]].plot(ax=ax[1, 2], logy=True)
+    dfcoef[["b"]].plot(ax=ax[1, 2], logy=True)
     ax[0, 2].set_ylim(0, 5)
     df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
@@ -241,7 +239,7 @@ with warnings.catch_warnings():
     dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     ax[0, 2].set_ylim(0, 5)
-    dfcoeflast[["cS", "cR"]].plot(ax=ax[1, 2], logy=True)
+    dfcoeflast[["b"]].plot(ax=ax[1, 2], logy=True)
     dflast.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()

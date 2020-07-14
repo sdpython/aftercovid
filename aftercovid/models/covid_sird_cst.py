@@ -17,17 +17,84 @@ class CovidSIRDc(BaseSIR):
     .. math::
 
         \\begin{array}{rcl}
-        S_{obs} &=& S + S_c \\\\
-        I_{obs} &=& I - I_c \\\\
-        R_{obs} &=& R - R_c \\\\
-        D_{obs} &=& D
+        S &=& S_{obs} (1 + a)\\\\
+        I &=& I_{obs} (1 + b)\\\\
+        R &=& R_{obs} (1 + c)\\\\
+        D &=& D_{obs}
         \\end{array}
 
-    Where :math:`S_c`, :math:`I_c`, :math:`R_c` are
+    Where :math:`S`, :math:`I`, :math:`R` are
     hidden, only :math:`S_{obs}`, :math:`I_{obs}`,
     :math:`R_{obs}` are observed.
-    As :math:`S + I + R + D = N = S_{obs} + I_{obs} + R_{obs} + D_{obs}`,
-    we get :math:`S_c = I_c + R_c`.
+    As :math:`S + I + R + D = N = S_{obs} + I_{obs} + R_{obs} + D_{obs}`.
+    Let's see where it goes. First gradient:
+
+    .. math::
+
+        \\begin{array}{ll}
+        &\\frac{dR}{dt} = \\frac{dR_{obs}}{dt} (1 + c) =
+        I \\mu = \\mu(1+b) I_{obs} \\\\
+        \\Longrightarrow &\\frac{dR_{obs}}{dt} =
+        \\frac{\\mu(1+b)}{1+c} I_{obs}
+        \\end{array}
+
+    Second gradient:
+
+    .. math::
+
+        \\begin{array}{ll}
+        &\\frac{dD_{obs}}{dt} = \\frac{dD}{dt} =
+        I \\nu = \\nu(1+b) I_{obs} \\\\
+        \\Longrightarrow & \\frac{dD_{obs}}{dt} = \\nu (1+b) I_{obs}
+        \\end{array}
+
+    Third gradient:
+
+    .. math::
+
+        \\begin{array}{ll}
+        &\\frac{dS}{dt} = \\frac{dS_{obs}}{dt} (1 + a) =
+        -\\beta\\frac{IS}{N} =
+        -\\beta\\frac{I_{obs}(1+b)S_{obs}(1+a)}{N} \\\\
+        \\Longrightarrow &\\frac{dS_{obs}}{dt} =
+        -\\beta\\frac{I_{obs}(1+b)S_{obs}}{N}
+        \\end{array}
+
+    To work well, the system verifies the following equality:
+
+    .. math::
+
+        a \\frac{dS_{obs}}{dt} + b \\frac{dI_{obs}}{dt} +
+        c \\frac{dR_{obs}}{dt} = \\frac{dS_{obs}}{dt} + \\frac{dI_{obs}}{dt} +
+        \\frac{dR_{obs}}{dt} + \\frac{dD_{obs}}{dt} = 0
+
+    Then:
+
+    .. math::
+
+        \\Longrightarrow \\frac{dI_{obs}}{dt} =
+        \\beta\\frac{I_{obs}(1+b)S_{obs}}{N} - \\nu (1+b) I_{obs} -
+        \\frac{\\mu(1+b)}{1+c} I_{obs} =
+        \\frac{\\mu(1+b)c}{b(1+c)} I_{obs} +
+        \\beta\\frac{I_{obs}a(1+b)S_{obs}}{Nb}
+
+    And:
+
+    .. math::
+
+        \\begin{array}{lll}
+        V_1(a,b,c)  &= (1+b)\\left(\\begin{array}{cc}
+        \\frac{\\beta}{N} &,& -\\nu - \\frac{\\mu}{1+c}
+        \\end{array}\\right) \\\\
+        V_2(a,b,c) &=  (1+b)\\left(\\begin{array}{cc}
+        \\frac{\\beta a}{Nb} &,& \\frac{\\mu c}{b(1+c)}
+        \\end{array}\\right) \\\\
+        X &= (I_{obs} S_{obs}, I_{obs}) \\\\
+        \\Longrightarrow  &\\forall X, \\; V_1(a,b,c) X = V_1(a,b,c) X
+        \\end{array}
+
+    And we get :math:`a=b` and
+    :math:`c = \\frac{b(\\nu + \\mu)}{\\mu - b\\nu}`.
 
     .. runpython::
         :showcode:
@@ -39,7 +106,7 @@ class CovidSIRDc(BaseSIR):
         print(model.to_rst())
 
     .. exref::
-        :title: SIRDC simulation and plotting
+        :title: SIRDc simulation and plotting
 
         .. plot::
 
@@ -55,7 +122,7 @@ class CovidSIRDc(BaseSIR):
             ax.set_xlabel("jours")
             ax.set_ylabel("population")
             r0 = model.R0()
-            ax.set_title("Simulation SIR\\nR0=%f" % r0)
+            ax.set_title("Simulation SIRDc\\nR0=%f" % r0)
 
             plt.show()
 
@@ -77,8 +144,7 @@ class CovidSIRDc(BaseSIR):
         ('beta', 0.5, 'taux de transmission dans la population'),
         ('mu', 1 / 14., '1/. : durée moyenne jusque la guérison'),
         ('nu', 1 / 21., '1/. : durée moyenne jusqu\'au décès'),
-        ('cS', 1e-2, 'personnes non infectées et cachées'),
-        ('cR', 1e-2, 'personnes guéries et cachées'),
+        ('b', 1e-5, 'paramètres gérant les informations cachées'),
     ]
 
     Q0 = [
@@ -92,13 +158,14 @@ class CovidSIRDc(BaseSIR):
         ('N', 10000., 'population'),
     ]
 
+    # c = b (nu + mu) / (mu - b * nu)
+    # (1 + b) / (1 + c) = 1 - nu * b / mu
     eq = {
-        'S': '- beta / N * (S - cS * N * 1e-5) * (I + (cS - cR) * N * 1e-5)',
-        'I': ('beta / N * (S - cS * N * 1e-5) * (I + (cS - cR) * N * 1e-5)'
-              '- mu * I '
-              '- nu * (I + (cS - cR) * N * 1e-5)'),
-        'R': 'mu * I',
-        'D': 'nu * (I + (cS - cR) * N * 1e-5)'}
+        'S': '-beta * (1 + b) * I * S / N',
+        'I': ('beta * (1 + b) * I * S / N'
+              '- nu * (1 + b) * I - (mu - nu * b) * I'),
+        'R': '(mu - nu * b) * I',
+        'D': 'nu * (1 + b) * I'}
 
     def __init__(self):
         BaseSIR.__init__(
@@ -120,8 +187,7 @@ class CovidSIRDc(BaseSIR):
         self['beta'] = numpy.random.randn(1) * 0.1 + 0.5
         self['mu'] = numpy.random.randn(1) * 0.1 + 1. / 14
         self['nu'] = numpy.random.randn(1) * 0.1 + 1. / 21
-        self['cR'] = numpy.random.rand() * 1e-4
-        self['cS'] = numpy.random.rand() * 1e-4
+        self['b'] = numpy.random.rand() * 1e-5
 
     @staticmethod
     def add_noise(X, epsilon=1.):

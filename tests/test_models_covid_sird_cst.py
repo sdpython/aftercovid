@@ -23,7 +23,7 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         par = model.get()
         self.assertEqual(par['I'], 5.)
         dot = model.to_dot(verbose=True)
-        self.assertIn("I -> R", dot)
+        self.assertIn("? -> R", dot)
         self.assertNotIn("I -> I", dot)
         self.assertIn('beta', dot)
         self.assertNotIn('-beta', dot)
@@ -43,9 +43,9 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         self.assertEqual(cst, {'N': 10000.0, 'beta': 0.5,
                                'mu': 0.07142857142857142,
                                'nu': 0.047619047619047616,
-                               'cR': 0.01, 'cS': 0.01})
+                               'b': 1e-5})
         ev = model.eval_diff()
-        self.assertEqual(-4.9949995, ev['S'])
+        self.assertEqual(-4.99504995, ev['S'])
         self.assertEqual(len(ev), 4)
 
     def test_covid_sir_loop(self):
@@ -91,7 +91,7 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         self.assertIsInstance(grads, list)
         for row in grads:
             self.assertIsInstance(row, list)
-            self.assertEqual(len(row), 5)
+            self.assertEqual(len(row), 4)
 
     def test_fit(self):
         model = CovidSIRDc()
@@ -107,11 +107,11 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         with self.assertRaises(ValueError):
             model.fit(X2, y, learning_rate_init=0.01)
         exp = numpy.array([model['beta'], model['nu'], model['mu'],
-                           model['cS'], model['cR']])
+                           model['b']])
         model.fit(X, y, verbose=False, max_iter=10,
                   learning_rate_init=0.01)
         coef = numpy.array([model['beta'], model['nu'], model['mu'],
-                            model['cS'], model['cR']])
+                            model['b']])
         err = numpy.linalg.norm(exp - coef)
         self.assertLess(err, 1e-5)
         model['nu'] = model['mu'] = model['beta'] = 0.1
@@ -121,7 +121,7 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         out = buf.getvalue()
         self.assertIn('20/20', out)
         coef = numpy.array([model['beta'], model['nu'], model['mu'],
-                            model['cS'], model['cR']])
+                            model['b']])
         err = numpy.linalg.norm(exp - coef)
         self.assertLess(err, 1)
         loss = model.score(X, y)

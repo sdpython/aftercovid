@@ -37,7 +37,7 @@ class CovidSIRD(BaseSIR):
             ax.set_xlabel("jours")
             ax.set_ylabel("population")
             r0 = model.R0()
-            ax.set_title("Simulation SIR\\nR0=%f" % r0)
+            ax.set_title("Simulation SIRD\\nR0=%f" % r0)
 
             plt.show()
 
