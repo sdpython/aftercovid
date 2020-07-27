@@ -84,7 +84,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             if model.upper() in ('SIR', 'SIRD'):
                 max_threshold = 1.
             elif model.upper() in ('SIRC', 'SIRDC'):
-                pmax = dict(beta=1., nu=0.5, mu=0.5, b=0.)
+                pmax = dict(beta=1., nu=0.5, mu=0.5, b=0.5)
                 max_threshold = numpy.array(
                     [pmax[k[0]] for k in CovidSIRDc.P0])
         self.min_threshold = min_threshold

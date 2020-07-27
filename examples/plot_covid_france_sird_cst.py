@@ -22,6 +22,8 @@ mais sur une courte période.
 Récupération des données
 ++++++++++++++++++++++++
 """
+from aftercovid.preprocess import (
+    ts_normalise_negative_values, ts_moving_average)
 from aftercovid.models import CovidSIRDc, EpidemicRegressor
 import numpy
 import warnings
@@ -81,12 +83,37 @@ df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 #########################################
 # On lisse car les séries sont très agitées
 # et empêchent les modèles de bien converger.
+# On enlève les valeurs aberrantes comme les incréments
+# négatifs avec les fonctions
+# :func:`ts_normalise_negative_values
+# <aftercovid.preprocess.ts_normalise_negative_values>` et
+# :func:`ts_normalise_negative_values
+# <aftercovid.preprocess.ts_moving_average>`.
 
-df = df.rolling(7, center=True).mean()
+
+def preprocess_diffdf(df):
+    total = df.drop('confirmed', axis=1).sum(axis=1)
+    total = list(total)[0]
+    diff = df.diff()
+    diff['deaths'] = ts_normalise_negative_values(diff['deaths'], extreme=2)
+    diff['recovered'] = ts_normalise_negative_values(
+        diff['recovered'], extreme=2)
+    diff['confirmed'] = ts_normalise_negative_values(
+        diff['confirmed'], extreme=2)
+    mov = ts_moving_average(diff, n=7, center=True)
+    df2 = mov.cumsum()
+    df2['infected'] = df2['confirmed'] - (df2['deaths'] + df2['recovered'])
+    df2['safe'] = total - df2.drop(['confirmed', 'safe'], axis=1).sum(axis=1)
+    return mov, df2
+
+
+dfdiff, df = preprocess_diffdf(df)
+
+
 fig, ax = plt.subplots(1, 3, figsize=(12, 3))
-df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
-df[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
-df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+dfdiff.plot(logy=True, title="Données COVID lissées", ax=ax[0])
+dfdiff[['recovered', 'confirmed']].diff().plot(title="Différences", ax=ax[1])
+dfdiff[['deaths']].diff().plot(title="Différences", ax=ax[2])
 
 ############################################
 # .. _l-sliding-window-sir:
@@ -131,7 +158,7 @@ def find_best_model(Xt, yt, lrs, th, verbose=0, init=None):
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore", RuntimeWarning)
                 m = EpidemicRegressor(
-                    'SIRC', learning_rate_init=lr, max_iter=500,
+                    'SIRDC', learning_rate_init=lr, max_iter=500,
                     early_th=1, verbose=verbose, init=init_m)
                 try:
                     m.fit(Xt, yt)

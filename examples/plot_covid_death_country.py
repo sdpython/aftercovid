@@ -14,6 +14,7 @@ Récupération des données
 ++++++++++++++++++++++++
 """
 
+from aftercovid.preprocess import normalise_negative_values
 import matplotlib.pyplot as plt
 import pandas
 
@@ -72,9 +73,9 @@ tf.tail()
 
 
 #########################################
-# On lisse sur quelques jours.
+# On lisse sur une semaine.
 
-tdroll = tf.rolling(3, center=False, win_type='triang').mean()
+tdroll = tf.rolling(7, center=True, win_type='triang').mean()
 tdroll.tail()
 
 ##################################
@@ -82,8 +83,10 @@ tdroll.tail()
 
 
 fig, ax = plt.subplots(1, 2, figsize=(14, 6))
-tdroll.plot(logy=False, lw=3, title="Nombre de décès COVID lissé", ax=ax[0])
-tdroll.plot(logy=True, lw=3, title="Nombre de décès COVID lissé", ax=ax[1])
+tdroll.plot(logy=False, lw=3, ax=ax[0],
+            title="Nombre de décès COVID lissé sur une semaine")
+tdroll.plot(logy=True, lw=3, ax=ax[1],
+            title="Nombre de décès COVID lissé sur une semaine")
 
 
 ################################
@@ -135,33 +138,55 @@ ax[0].set_title(
     "Nombre de décès après N jours\ndepuis le début de l'épidémie")
 
 ##########################################
-# Le fléchissement indique que la propagation n'est plus logarithmique.
+# Le fléchissement indique que la propagation n'est plus logarithmique
+# après la fin du confinement.
 #
 # Séries différentielles
 # ++++++++++++++++++++++
 #
 # C'est surtout celle-ci qu'on regarde pour contrôler
-# l'évolution de l'épidémie.
+# l'évolution de l'épidémie. Certaines valeurs
+# sont négatives laissant penser que la façon
+# de reporter les décès a évolué au cours du temps.
+# C'est problématique lorsqu'on souhaite caler un modèle.
 
 
-tfdiff = tf.diff().rolling(3, center=False, win_type='triang').mean()
+neg = tf.diff()
+neg[neg['Spain'] < 0]
+
+#############################################
+# Et pour la France.
+
+neg[neg['France'] < 0]
+
+#############################################
+# On continue néanmoins mais en corrigeant ces séries
+# qu'il n'y ait plus aucune valeur négative.
+
+
+tfdiff = normalise_negative_values(tf.diff()).rolling(
+    7, center=False, win_type='triang').mean()
 
 ########################################
 
 fig, ax = plt.subplots(1, 2, figsize=(14, 6))
-tfdiff.plot(logy=False, lw=3,
-            title="Nombre de décès COVID par jour lissé", ax=ax[0])
+tfdiff.plot(
+    logy=False, lw=3, ax=ax[0],
+    title="Nombre de décès COVID par jour lissé par semaine")
 ax[0].set_ylim(0)
-tfdiff.plot(logy=True, lw=3,
-            title="Nombre de décès COVID par jour lissé", ax=ax[1])
+tfdiff.plot(
+    logy=True, lw=3, ax=ax[1],
+    title="Nombre de décès COVID par jour lissé par semaine")
 
 #############################################
 # Les mêmes chiffres en recalant les séries
 # au jour du 20ième décès.
 
 
-dldiff = dl.diff()
+dldiff = normalise_negative_values(dl.diff()).rolling(
+    7, center=False, win_type='triang').mean()
 
+print(",".join(map(str, dl.diff()['Spain'])))
 
 ################################
 
@@ -171,17 +196,20 @@ dldiff.plot(logy=False, lw=3, ax=ax[0])
 dldiff.plot(logy=True, lw=3, ax=ax[1])
 ax[0].set_ylim(0)
 ax[0].set_title(
-    "Nombre de décès lissé sur 3 jours\npar jour après N jours"
+    "Nombre de décès lissé sur 7 jours\npar jour après N jours"
     "\ndepuis le début de l'épidémie")
-
 
 ################################
 
+tfdiff = normalise_negative_values(tf.diff(), extreme=2).rolling(
+    7, center=False, win_type='triang').mean()
+
 
 fig, ax = plt.subplots(1, 2, figsize=(14, 8))
-dldiff.plot(logy=False, lw=7, ax=ax[0])
-dldiff.plot(logy=True, lw=7, ax=ax[1])
+tfdiff.plot(logy=False, lw=3, ax=ax[0])
+tfdiff.plot(logy=True, lw=3, ax=ax[1])
 ax[0].set_ylim(0)
 ax[0].set_title(
-    "Nombre de décès lissé sur 7 jours\naprès N jours"
-    "\ndepuis le début de l'épidémie")
+    "Nombre de décès lissé sur 7 jours")
+
+plt.show()
