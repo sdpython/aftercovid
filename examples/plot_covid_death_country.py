@@ -14,7 +14,7 @@ Récupération des données
 ++++++++++++++++++++++++
 """
 
-from aftercovid.preprocess import normalise_negative_values
+from aftercovid.preprocess import ts_normalise_negative_values
 import matplotlib.pyplot as plt
 import pandas
 
@@ -164,7 +164,7 @@ neg[neg['France'] < 0]
 # qu'il n'y ait plus aucune valeur négative.
 
 
-tfdiff = normalise_negative_values(tf.diff()).rolling(
+tfdiff = ts_normalise_negative_values(tf.diff()).rolling(
     7, center=False, win_type='triang').mean()
 
 ########################################
@@ -183,7 +183,7 @@ tfdiff.plot(
 # au jour du 20ième décès.
 
 
-dldiff = normalise_negative_values(dl.diff()).rolling(
+dldiff = ts_normalise_negative_values(dl.diff()).rolling(
     7, center=False, win_type='triang').mean()
 
 print(",".join(map(str, dl.diff()['Spain'])))
@@ -201,7 +201,7 @@ ax[0].set_title(
 
 ################################
 
-tfdiff = normalise_negative_values(tf.diff(), extreme=2).rolling(
+tfdiff = ts_normalise_negative_values(tf.diff(), extreme=2).rolling(
     7, center=False, win_type='triang').mean()
 
 
