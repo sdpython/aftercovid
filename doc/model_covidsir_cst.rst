@@ -1,7 +1,7 @@
 
 
-CovidSIRC
-=========
+CovidSIRDc
+==========
 
-.. autoclass:: aftercovid.models.CovidSIRC
+.. autoclass:: aftercovid.models.CovidSIRDc
     :members:
