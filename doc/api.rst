@@ -16,6 +16,14 @@ Base classes
     model_base_sir
     optim
 
+Preprocessing
++++++++++++++
+
+.. toctree::
+    :maxdepth: 1
+
+    preprocess
+
 Models
 ++++++
 

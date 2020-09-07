@@ -87,7 +87,7 @@ df[['deaths']].diff().plot(title="Différences", ax=ax[2])
 # négatifs avec les fonctions
 # :func:`ts_normalise_negative_values
 # <aftercovid.preprocess.ts_normalise_negative_values>` et
-# :func:`ts_normalise_negative_values
+# :func:`ts_moving_average
 # <aftercovid.preprocess.ts_moving_average>`.
 
 
