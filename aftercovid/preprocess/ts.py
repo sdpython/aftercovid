@@ -25,6 +25,7 @@ def ts_moving_average(series, n=7, center=True):
         as_df = True
     else:
         as_df = False
+        cls = None
 
     if center and n % 2 != 1:
         raise ValueError("If center is True, n should be odd.")

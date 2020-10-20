@@ -20,6 +20,9 @@ class TestPreprocess(unittest.TestCase):
         assert_almost_equal(ts, res)
         res = ts_moving_average(ts, n=7, center=True)
         assert_almost_equal(ts, res)
+        data = pandas.DataFrame(ts)
+        res = ts_moving_average(data, n=7, center=True)
+        assert_almost_equal(ts, res.values.ravel())
 
     def test_ts_moving_average_0(self):
         ts_ = numpy.array([1] * 10, dtype=numpy.float64)

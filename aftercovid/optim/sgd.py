@@ -106,7 +106,8 @@ class BaseOptimizer:
             for irow in irows:
                 grad = fct_grad(self.coef, X[irow, :], y[irow], irow)
                 if isinstance(verbose, int) and verbose >= 10:
-                    self._display_progress(0, max_iter, loss, grad, 'grad')
+                    self._display_progress(  # pragma: no cover
+                        0, max_iter, loss, grad, 'grad')
                 if numpy.isnan(grad).sum() > 0:
                     raise RuntimeError(  # pragma: no cover
                         "The gradient has nan values.")
@@ -134,17 +135,17 @@ class BaseOptimizer:
         if len(losses) < 5 or early_th is None:
             return False
         if numpy.isnan(losses[-5]):
-            if numpy.isnan(losses[-1]):
-                if verbose:  # pragma: no cover
+            if numpy.isnan(losses[-1]):  # pragma: no cover
+                if verbose:
                     self._display_progress(it + 1, max_iter, losses[-1],
                                            losses=losses[-5:])
                 return True
-            return False
+            return False  # pragma: no cover
         if numpy.isnan(losses[-1]):
             if verbose:  # pragma: no cover
                 self._display_progress(it + 1, max_iter, losses[-1],
                                        losses=losses[-5:])
-            return True
+            return True  # pragma: no cover
         if abs(losses[-1] - losses[-5]) <= early_th:
             if verbose:  # pragma: no cover
                 self._display_progress(it + 1, max_iter, losses[-1],
@@ -154,7 +155,7 @@ class BaseOptimizer:
 
     def _display_progress(self, it, max_iter, loss, losses=None):
         'Displays training progress.'
-        if losses is None:
+        if losses is None:  # pragma: no cover
             print('{}/{}: loss: {:1.4g}'.format(it, max_iter, loss))
         else:
             print('{}/{}: loss: {:1.4g} losses: {}'.format(
