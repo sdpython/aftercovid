@@ -15,6 +15,7 @@ et on cherche à estimer un modèle
 Récupération des données
 ++++++++++++++++++++++++
 """
+import matplotlib.gridspec as gridspec
 from aftercovid.preprocess import (
     ts_normalise_negative_values, ts_moving_average)
 from aftercovid.models import CovidSIRD, EpidemicRegressor
@@ -50,7 +51,7 @@ def extract_data(kind='deaths', country='France'):
 
 
 def extract_whole_data(kind=['deaths', 'confirmed', 'recovered'],
-                       country='France'):
+                       country='France', delay=21):
     total = population[country]
     dfs = []
     for k in kind:
@@ -58,13 +59,15 @@ def extract_whole_data(kind=['deaths', 'confirmed', 'recovered'],
         dfs.append(df)
     conc = pandas.concat(dfs, axis=1)
     infected = conc['confirmed'] - (conc['deaths'] + conc['recovered'])
-    conf30 = infected[:-28]
+    conf30 = infected[:-delay]
     recovered = conc['recovered'].values.copy()
-    recovered[28:] += conf30
+    recovered[delay:] += conf30
     delta_conf = conc['confirmed'].values[1:] - conc['confirmed'].values[:-1]
     infected = conc['confirmed'].values * 0
     infected[:] = conc['confirmed'] - (conc['deaths'] + recovered)
-    infected[1:] = numpy.maximum(10, numpy.maximum(infected[1:], delta_conf))
+    infected[1:] = numpy.maximum(1, numpy.maximum(infected[1:], delta_conf))
+    infected[20:] = numpy.maximum(10, infected[20:])
+    infected[60:] = numpy.maximum(100, infected[60:])
     conc['recovered'] = recovered
     conc['infected'] = infected
     conc['safe'] = total - conc.drop('confirmed', axis=1).sum(axis=1)
@@ -86,11 +89,23 @@ df.tail()
 #########################################
 # Graphes.
 
-fig, ax = plt.subplots(1, 3, figsize=(14, 3))
-df.plot(logy=True, title="Données COVID", ax=ax[0])
+
+fig = plt.figure(tight_layout=True, figsize=(12, 10))
+gs = gridspec.GridSpec(2, 2)
+axs = []
+ax = fig.add_subplot(gs[0, :])
+df.plot(logy=True, title="Données COVID", ax=ax)
+axs.append(ax)
+ax = fig.add_subplot(gs[1, 0])
 df[['recovered', 'confirmed', 'infected']].diff().plot(
-    title="Différences", ax=ax[1])
-df[['deaths']].diff().plot(title="Différences", ax=ax[2])
+    title="Différences", ax=ax)
+axs.append(ax)
+ax = fig.add_subplot(gs[1, 1])
+df[['deaths']].diff().plot(title="Différences", ax=ax)
+axs.append(ax)
+for a in axs:
+    for tick in a.get_xticklabels():
+        tick.set_rotation(30)
 
 #########################################
 # On lisse car les séries sont très agitées
@@ -114,29 +129,28 @@ def preprocess_diffdf(df):
         diff['confirmed'], extreme=2)
     mov = ts_moving_average(diff, n=7, center=True)
     df2 = mov.cumsum()
-
-    infected = df2['confirmed'] - (df2['deaths'] + df2['recovered'])
-    conf30 = infected[:-28]
-    recovered = df2['recovered'].values.copy()
-    recovered[28:] += conf30
-    delta_conf = df2['confirmed'].values[1:] - df2['confirmed'].values[:-1]
-    infected = df2['confirmed'].values * 0
-    infected[:] = df2['confirmed'] - (df2['deaths'] + recovered)
-    infected[1:] = numpy.maximum(10, numpy.maximum(infected[1:], delta_conf))
-
-    df2['recovered'] = recovered
-    df2['infected'] = infected
     df2['safe'] = total - df2.drop(['confirmed', 'safe'], axis=1).sum(axis=1)
     return mov, df2
 
 
 dfdiff, df = preprocess_diffdf(df)
 
-fig, ax = plt.subplots(1, 3, figsize=(12, 3))
-df.plot(logy=True, title="Données COVID lissées", ax=ax[0])
-dfdiff[['recovered', 'confirmed', 'infected']].plot(
-    title="Différences", ax=ax[1])
-dfdiff[['deaths']].plot(title="Différences", ax=ax[2])
+fig = plt.figure(tight_layout=True, figsize=(12, 10))
+gs = gridspec.GridSpec(2, 2)
+axs = []
+ax = fig.add_subplot(gs[0, :])
+df.plot(logy=True, title="Données COVID", ax=ax)
+axs.append(ax)
+ax = fig.add_subplot(gs[1, 0])
+df[['recovered', 'confirmed', 'infected']].diff().plot(
+    title="Différences", ax=ax)
+axs.append(ax)
+ax = fig.add_subplot(gs[1, 1])
+df[['deaths']].diff().plot(title="Différences", ax=ax)
+axs.append(ax)
+for a in axs:
+    for tick in a.get_xticklabels():
+        tick.set_rotation(30)
 
 
 ################################################
