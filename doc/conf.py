@@ -111,6 +111,7 @@ epkg_dictionary = {
     'C': 'https://en.wikipedia.org/wiki/C_(programming_language)',
     'C++': 'https://en.wikipedia.org/wiki/C%2B%2B',
     'COVID': 'https://en.wikipedia.org/wiki/Coronavirus_disease_2019',
+    'CSSE Johns Hopkins': 'https://github.com/CSSEGISandData/COVID-19',
     'cython': 'https://cython.org/',
     'DOT': 'https://www.graphviz.org/doc/info/lang.html',
     'pyepydemic': 'https://pyepydemic.readthedocs.io/en/latest/index.html',

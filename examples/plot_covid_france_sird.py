@@ -8,6 +8,15 @@ Estimation des paramètres d'un modèle SIRD pour la France
 On récupère les données réelles pour un pays
 et on cherche à estimer un modèle
 :class:`CovidSIRD <aftercovid.models.CovidSIRD>`.
+Il y a deux problèmes avec les données. Le premier est
+que le nombre de cas positifs est largement sous-estimé.
+La principale raison durant le premier confinement fut le
+manque de tests, limité à 5000 pendant cette période.
+La seconde raison est que les personnes asymptomatiques
+ne le savent pas et ne se font pas toujours tester.
+Le délai d'attente des résultats des tests,
+les longues queues devant les laboratoires ont peut-être
+aussi joué puisqu'aux mois d'août, septembre.
 
 .. contents::
     :local:
@@ -16,125 +25,26 @@ Récupération des données
 ++++++++++++++++++++++++
 """
 import matplotlib.gridspec as gridspec
-from aftercovid.preprocess import (
-    ts_normalise_negative_values, ts_moving_average)
-from aftercovid.models import CovidSIRD, EpidemicRegressor
+from aftercovid.data import extract_hopkins_data, preprocess_hopkins_data
+from aftercovid.models import CovidSIRD, rolling_estimation
 import numpy
 import warnings
 import matplotlib.pyplot as plt
 from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
-import pandas
 
 
-population = {
-    'Belgium': 11.5e6,
-    'France': 67e6,
-    'Germany': 83e6,
-    'Spain': 47e6,
-    'Italy': 60e6,
-    'UK': 67e6,
-}
-
-
-def extract_data(kind='deaths', country='France'):
-    url = (
-        "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/"
-        "master/csse_covid_19_data/"
-        "csse_covid_19_time_series/time_series_covid19_%s_global.csv" %
-        kind)
-    df = pandas.read_csv(url)
-    eur = df[df['Country/Region'].isin([country])
-             & df['Province/State'].isna()]
-    tf = eur.T.iloc[4:]
-    tf.columns = [kind]
-    return tf
-
-
-def extract_whole_data(kind=['deaths', 'confirmed', 'recovered'],
-                       country='France', delay=21):
-    total = population[country]
-    dfs = []
-    for k in kind:
-        df = extract_data(k, country)
-        dfs.append(df)
-    conc = pandas.concat(dfs, axis=1)
-    infected = conc['confirmed'] - (conc['deaths'] + conc['recovered'])
-    conf30 = infected[:-delay]
-    recovered = conc['recovered'].values.copy()
-    recovered[delay:] += conf30
-    delta_conf = conc['confirmed'].values[1:] - conc['confirmed'].values[:-1]
-    infected = conc['confirmed'].values * 0
-    infected[:] = conc['confirmed'] - (conc['deaths'] + recovered)
-    infected[1:] = numpy.maximum(1, numpy.maximum(infected[1:], delta_conf))
-    infected[20:] = numpy.maximum(10, infected[20:])
-    infected[60:] = numpy.maximum(100, infected[60:])
-    conc['recovered'] = recovered
-    conc['infected'] = infected
-    conc['safe'] = total - conc.drop('confirmed', axis=1).sum(axis=1)
-    return conc
-
-
-df = extract_whole_data()
+data = extract_hopkins_data()
+diff, df = preprocess_hopkins_data(data)
 df.tail()
 
-################################
-# Les données telles quelles ne sont pas tout-à-fait exploitables.
-# Il faut calculer le nombre de personnes contaminantes ou tout
-# du moins avoir une estimation pas trop éloignée de la réalité.
-# Les gens classés comme *recovered* ou *guéries* sont probablement
-# celles qui sont passées par l'hôpital, pas toutes les personnes
-# guéries qui ont été déclarées positives. On suppose pour simplifier
-# qu'après un mois, l'issue est connue.
+#####################################
+# Séries différenciées.
 
-#########################################
+diff.tail()
+
+
+########################################
 # Graphes.
-
-
-fig = plt.figure(tight_layout=True, figsize=(12, 10))
-gs = gridspec.GridSpec(2, 2)
-axs = []
-ax = fig.add_subplot(gs[0, :])
-df.plot(logy=True, title="Données COVID", ax=ax)
-axs.append(ax)
-ax = fig.add_subplot(gs[1, 0])
-df[['recovered', 'confirmed', 'infected']].diff().plot(
-    title="Différences", ax=ax)
-axs.append(ax)
-ax = fig.add_subplot(gs[1, 1])
-df[['deaths']].diff().plot(title="Différences", ax=ax)
-axs.append(ax)
-for a in axs:
-    for tick in a.get_xticklabels():
-        tick.set_rotation(30)
-
-#########################################
-# On lisse car les séries sont très agitées
-# et empêchent les modèles de bien converger.
-# On enlève les valeurs aberrantes comme les incréments
-# négatifs avec les fonctions
-# :func:`ts_normalise_negative_values
-# <aftercovid.preprocess.ts_normalise_negative_values>` et
-# :func:`ts_moving_average
-# <aftercovid.preprocess.ts_moving_average>`.
-
-
-def preprocess_diffdf(df):
-    total = df.drop('confirmed', axis=1).sum(axis=1)
-    total = list(total)[0]
-    diff = df.diff()
-    diff['deaths'] = ts_normalise_negative_values(diff['deaths'], extreme=2)
-    diff['recovered'] = ts_normalise_negative_values(
-        diff['recovered'], extreme=2)
-    diff['confirmed'] = ts_normalise_negative_values(
-        diff['confirmed'], extreme=2)
-    mov = ts_moving_average(diff, n=7, center=True)
-    df2 = mov.cumsum()
-    df2['safe'] = total - df2.drop(['confirmed', 'safe'], axis=1).sum(axis=1)
-    return mov, df2
-
-
-dfdiff, df = preprocess_diffdf(df)
-
 fig = plt.figure(tight_layout=True, figsize=(12, 10))
 gs = gridspec.GridSpec(2, 2)
 axs = []
@@ -161,8 +71,13 @@ for a in axs:
 # est très compromise.
 
 ############################################
+# _l-example-rolling-estimation:
+#
 # Estimation d'un modèle
 # ++++++++++++++++++++++
+#
+# Sur 21 jours.
+# ^^^^^^^^^^^^^
 
 model = CovidSIRD()
 print(model.quantity_names)
@@ -179,70 +94,8 @@ dates = df.index[:-1]
 # Estimation.
 
 
-def find_best_model(Xt, yt, lrs, th, verbose=0, init=None):
-    best_est, best_loss, best_lr = None, None, None
-    m = None
-    for ilr, lr in enumerate(lrs):
-        if verbose:
-            print("--- TRY {}/{}: {}".format(ilr + 1, len(lrs), lr))
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", RuntimeWarning)
-            m = EpidemicRegressor(
-                'SIRD', learning_rate_init=lr, max_iter=500,
-                early_th=1, verbose=verbose, init=m)
-            try:
-                m.fit(Xt, yt)
-            except RuntimeError as e:
-                if verbose:
-                    print('ERROR: {}'.format(e))
-                continue
-            loss = m.score(Xt, yt)
-            if numpy.isnan(loss):
-                continue
-        if best_est is None or best_loss > loss:
-            best_est = m
-            best_loss = loss
-            best_lr = lr
-        if best_loss < th:
-            return best_est, best_loss, best_lr
-    return best_est, best_loss, best_lr
-
-
-def estimation(X, y, delay):
-    coefs = []
-    m = None
-    for k in range(0, X.shape[0] - delay + 1, 7):
-        end = min(k + delay, X.shape[0])
-        Xt, yt = X[k:end], y[k:end]
-        if any(numpy.isnan(Xt.ravel())) or any(numpy.isnan(yt.ravel())):
-            continue
-        m, loss, lr = find_best_model(
-            Xt, yt, [1e8, 1e6, 1e4, 1e2, 1,
-                     1e-2, 1e-4, 1e-6], 10,
-            init=m)
-        if m is None:
-            print("k={} loss=nan".format(k))
-            find_best_model(
-                Xt, yt, [1e8, 1e6, 1e4, 1e2, 1,
-                         1e-2, 1e-4, 1e-6], 10,
-                init=m, verbose=True)
-            continue
-        loss = m.score(Xt, yt)
-        print("k={} iter={} loss={:1.3f} coef={} R0={} lr={}".format(
-            k, m.iter_, loss, m.model_._val_p, m.model_.R0(), lr))
-        obs = dict(k=k, loss=loss, it=m.iter_,
-                   R0=m.model_.R0(), lr=lr, date=dates[end - 1])
-        obs.update({k: v for k, v in zip(
-            m.model_.param_names, m.model_._val_p)})
-        coefs.append(obs)
-
-    dfcoef = pandas.DataFrame(coefs)
-    dfcoef = dfcoef.set_index("date")
-    return dfcoef
-
-
 # 3 semaines car les séries sont cycliques
-dfcoef = estimation(X, y, 21)
+dfcoef = rolling_estimation(X, y, delay=21, dates=dates, verbose=1)
 dfcoef.head(n=10)
 
 #############################################
@@ -279,7 +132,7 @@ fig.suptitle('Estimation de R0 tout au long de la période\n'
 plt.show()
 
 #############################################
-# Graphe sur le dernier mois.
+# Graphe sur les dernières valeurs.
 
 dfcoeflast = dfcoef.iloc[-30:, :]
 dflast = df.iloc[-30:, :]
@@ -302,8 +155,11 @@ plt.show()
 #
 # On fait varier le paramètre *delay* pour voir comment
 # le modèle réagit. Sur 7 jours d'abord.
+#
+# Sur 7 jours.
+# ^^^^^^^^^^^^^
 
-dfcoef = estimation(X, y, 7)
+dfcoef = rolling_estimation(X, y, delay=7, verbose=1)
 dfcoef.tail()
 
 #######################################
@@ -327,8 +183,9 @@ plt.show()
 
 #######################################
 # Sur 14 jours.
+# ^^^^^^^^^^^^^
 
-dfcoef = estimation(X, y, 14)
+dfcoef = rolling_estimation(X, y, delay=14, verbose=1)
 dfcoef.tail()
 
 #######################################
@@ -351,8 +208,9 @@ plt.show()
 
 ##############################################
 # Sur 4 semaines.
+# ^^^^^^^^^^^^^^^
 
-dfcoef = estimation(X, y, 28)
+dfcoef = rolling_estimation(X, y, delay=28, verbose=1)
 dfcoef.tail()
 
 #########################################

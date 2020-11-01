@@ -7,6 +7,14 @@ API
 .. contents::
     :local:
 
+Data
+++++
+
+.. toctree::
+    :maxdepth: 1
+
+    data
+
 Base classes
 ++++++++++++
 
@@ -32,6 +40,7 @@ Models
 
     model_covidsir
     model_covidsir_cst
+    model_optim
 
 scikti-learn API
 ++++++++++++++++

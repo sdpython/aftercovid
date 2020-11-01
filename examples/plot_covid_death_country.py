@@ -12,6 +12,8 @@ au nombreux cas asymptomatiques.
 
 Récupération des données
 ++++++++++++++++++++++++
+
+Les décès.
 """
 
 from aftercovid.preprocess import ts_normalise_negative_values
@@ -25,10 +27,13 @@ df = pandas.read_csv(url)
 df.head()
 
 #######################################
-#
+# Les cas positifs.
 
-df.tail()
-
+url = ("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/"
+       "master/csse_covid_19_data/"
+       "csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
+dfpos = pandas.read_csv(url)
+dfpos.head()
 
 #################################
 #  Tous les pays
@@ -43,6 +48,8 @@ print(" --- ".join(sorted(set(df['Country/Region']))))
 keep = ['France', 'Belgium', 'Italy', 'United Kingdom',
         'US', 'Spain', 'Germany']
 eur = df[df['Country/Region'].isin(keep) & df['Province/State'].isna()]
+eurpos = dfpos[dfpos['Country/Region'].isin(keep)
+               & dfpos['Province/State'].isna()]
 eur
 
 #######################################
@@ -53,46 +60,78 @@ tf = eur.T.iloc[4:]
 tf.columns = cols
 tf.tail()
 
+#######################################
+# Les cas positifs.
+
+colspos = list(eurpos['Country/Region'])
+tfpos = eurpos.T.iloc[4:]
+tfpos.columns = colspos
+tfpos.tail()
+
 
 ########################################
 # Nombre de décès par pays
 # ++++++++++++++++++++++++
 
-fig, ax = plt.subplots(1, 2, figsize=(14, 6))
+fig, ax = plt.subplots(1, 3, figsize=(14, 6))
 tf.plot(logy=False, lw=3, title="Nombre de décès COVID", ax=ax[0])
 tf.plot(logy=True, lw=3, title="Nombre de décès COVID", ax=ax[1])
+tf.tail(n=60).plot(logy=True, lw=3, title="Nombre de décès COVID", ax=ax[2])
 
 
-#########################################
-#
+########################################
+# Cas positifs par pays
+# +++++++++++++++++++++
 
-cols = list(eur['Country/Region'])
-tf = eur.T.iloc[4:]
-tf.columns = cols
-tf.tail()
-
+fig, ax = plt.subplots(1, 3, figsize=(14, 6))
+tfpos.plot(logy=False, lw=3, title="Nombre de cas positifs COVID", ax=ax[0])
+tfpos.plot(logy=True, lw=3, title="Nombre de cas positifs COVID", ax=ax[1])
+tfpos.tail(
+    n=60).plot(
+        logy=True,
+        lw=3,
+        title="Nombre de cas positifs COVID",
+    ax=ax[2])
 
 #########################################
 # On lisse sur une semaine.
 
-tdroll = tf.rolling(7, center=True, win_type='triang').mean()
+tdroll = tf.rolling(7, center=False).mean()
 tdroll.tail()
 
 ##################################
 # Séries lissées.
 
 
-fig, ax = plt.subplots(1, 2, figsize=(14, 6))
+fig, ax = plt.subplots(1, 3, figsize=(14, 6))
 tdroll.plot(logy=False, lw=3, ax=ax[0],
             title="Nombre de décès COVID lissé sur une semaine")
 tdroll.plot(logy=True, lw=3, ax=ax[1],
             title="Nombre de décès COVID lissé sur une semaine")
+tdroll.tail(60).plot(logy=True, lw=3, ax=ax[2],
+                     title="Nombre de décès COVID lissé sur une semaine")
+
+########################################
+#
+
+tdposroll = tfpos.rolling(7, center=False).mean()
+tdposroll.plot(logy=False, lw=3, ax=ax[0],
+               title="Nombre de cas positifs COVID lissé sur une semaine")
+tdposroll.plot(logy=True, lw=3, ax=ax[1],
+               title="Nombre de cas positifs COVID lissé sur une semaine")
+tdposroll.tail(60).plot(
+    logy=True,
+    lw=3,
+    ax=ax[2],
+    title="Nombre de cas positifs COVID lissé sur une semaine")
 
 
 ################################
 # Séries décalées
 # +++++++++++++++
 #
+# On ne s'intéresse qu'aux séries de décès. Les séries des
+# cas positifs sont plutôt des estimateurs imparfaits.
 # On compare les séries en prenant comme point de
 # départ la date qui correspond au 20ième décès.
 
@@ -131,9 +170,10 @@ dl.tail()
 # Graphes.
 
 
-fig, ax = plt.subplots(1, 2, figsize=(14, 8))
+fig, ax = plt.subplots(1, 3, figsize=(14, 8))
 dl.plot(logy=False, lw=3, ax=ax[0])
 dl.plot(logy=True, lw=3, ax=ax[1])
+dl.tail(60).plot(logy=True, lw=3, ax=ax[2])
 ax[0].set_title(
     "Nombre de décès après N jours\ndepuis le début de l'épidémie")
 
@@ -169,13 +209,16 @@ tfdiff = ts_normalise_negative_values(tf.diff()).rolling(
 
 ########################################
 
-fig, ax = plt.subplots(1, 2, figsize=(14, 6))
+fig, ax = plt.subplots(1, 3, figsize=(14, 6))
 tfdiff.plot(
     logy=False, lw=3, ax=ax[0],
     title="Nombre de décès COVID par jour lissé par semaine")
 ax[0].set_ylim(0)
 tfdiff.plot(
     logy=True, lw=3, ax=ax[1],
+    title="Nombre de décès COVID par jour lissé par semaine")
+tfdiff.tail(60).plot(
+    logy=True, lw=3, ax=ax[2],
     title="Nombre de décès COVID par jour lissé par semaine")
 
 #############################################
@@ -191,9 +234,10 @@ print(",".join(map(str, dl.diff()['Spain'])))
 ################################
 
 
-fig, ax = plt.subplots(1, 2, figsize=(14, 8))
+fig, ax = plt.subplots(1, 3, figsize=(14, 8))
 dldiff.plot(logy=False, lw=3, ax=ax[0])
 dldiff.plot(logy=True, lw=3, ax=ax[1])
+dldiff.tail(60).plot(logy=True, lw=3, ax=ax[2])
 ax[0].set_ylim(0)
 ax[0].set_title(
     "Nombre de décès lissé sur 7 jours\npar jour après N jours"
@@ -205,9 +249,10 @@ tfdiff = ts_normalise_negative_values(tf.diff(), extreme=2).rolling(
     7, center=False, win_type='triang').mean()
 
 
-fig, ax = plt.subplots(1, 2, figsize=(14, 8))
+fig, ax = plt.subplots(1, 3, figsize=(14, 8))
 tfdiff.plot(logy=False, lw=3, ax=ax[0])
 tfdiff.plot(logy=True, lw=3, ax=ax[1])
+tfdiff.tail(60).plot(logy=True, lw=3, ax=ax[2])
 ax[0].set_ylim(0)
 ax[0].set_title(
     "Nombre de décès lissé sur 7 jours")
