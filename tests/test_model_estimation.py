@@ -53,8 +53,9 @@ class TestModelEstimation(unittest.TestCase):
         self.assertIn("k=6 iter=100", pr)
         self.assertIn("model='SIRDc'", str(mo))
         self.assertIn('EpidemicRegressor', str(mo))
-        self.assertEqual(['k', 'loss', 'it', 'R0', 'lr', 'beta', 'mu', 'nu', 'b'],
-                         list(roll.columns))
+        self.assertEqual(
+            ['k', 'loss', 'it', 'R0', 'lr', 'beta', 'mu', 'nu', 'b'],
+            list(roll.columns))
         self.assertEqual(roll.shape, (6, 9))
 
 
