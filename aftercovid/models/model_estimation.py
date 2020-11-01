@@ -35,7 +35,7 @@ def find_best_model(Xt, yt, lrs, stop_loss, verbose=0,
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
             m = EpidemicRegressor(
-                'SIRD', learning_rate_init=lr, max_iter=max_iter,
+                model_name, learning_rate_init=lr, max_iter=max_iter,
                 early_th=stop_loss, verbose=verbose, init=m)
             try:
                 m.fit(Xt, yt)
@@ -83,35 +83,11 @@ def rolling_estimation(X, y,
     coefs = []
     m = None
     kdates = (
-        list(
-            range(
-                0,
-                X.shape[0] -
-                delay +
-                1 -
-                28,
-                7)) +
-        list(
-            range(
-                X.shape[0] -
-                delay +
-                1 -
-                28,
-                X.shape[0] -
-                delay +
-                1 -
-                7,
-                2)) +
-        list(
-            range(
-                X.shape[0] -
-                delay +
-                1 -
-                7,
-                X.shape[0] -
-                delay +
-                1,
-                1)))
+        list(range(0, X.shape[0] - delay + 1 - 28, 7)) +
+        list(range(X.shape[0] - delay + 1 - 28,
+                   X.shape[0] - delay + 1 - 7, 2)) +
+        list(range(X.shape[0] - delay + 1 - 7,
+                   X.shape[0] - delay + 1, 1)))
     kdates = [d for d in kdates if d > 0]
     for k in kdates:
         end = min(k + delay, X.shape[0])
