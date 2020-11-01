@@ -95,7 +95,8 @@ dates = df.index[:-1]
 
 
 # 3 semaines car les séries sont cycliques
-dfcoef = rolling_estimation(X, y, delay=21, dates=dates, verbose=1)
+dfcoef, model = rolling_estimation(
+    X, y, delay=21, dates=dates, verbose=1)
 dfcoef.head(n=10)
 
 #############################################
@@ -159,7 +160,7 @@ plt.show()
 # Sur 7 jours.
 # ^^^^^^^^^^^^^
 
-dfcoef = rolling_estimation(X, y, delay=7, verbose=1)
+dfcoef, model = rolling_estimation(X, y, delay=7, verbose=1)
 dfcoef.tail()
 
 #######################################
@@ -185,7 +186,7 @@ plt.show()
 # Sur 14 jours.
 # ^^^^^^^^^^^^^
 
-dfcoef = rolling_estimation(X, y, delay=14, verbose=1)
+dfcoef, model = rolling_estimation(X, y, delay=14, verbose=1)
 dfcoef.tail()
 
 #######################################
@@ -210,7 +211,7 @@ plt.show()
 # Sur 4 semaines.
 # ^^^^^^^^^^^^^^^
 
-dfcoef = rolling_estimation(X, y, delay=28, verbose=1)
+dfcoef, model = rolling_estimation(X, y, delay=28, verbose=1)
 dfcoef.tail()
 
 #########################################

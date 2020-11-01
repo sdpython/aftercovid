@@ -86,8 +86,8 @@ dates = df.index[:-1]
 
 
 # 3 semaines car les séries sont cycliques
-dfcoef = rolling_estimation(X, y, delay=21, dates=dates, verbose=1,
-                            model_name='SIRDc')
+dfcoef, model = rolling_estimation(
+    X, y, delay=21, dates=dates, verbose=1, model_name='SIRDc')
 dfcoef.head(n=10)
 
 #####################################
