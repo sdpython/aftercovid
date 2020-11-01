@@ -54,6 +54,7 @@ Modélisation, statistiques, modelling, statistics à propos about :epkg:`COVID`
     api
     auto_examples/index
     dev
+    changes
 
 Sources available on
 `github/aftercovid <https://github.com/sdpython/aftercovid>`_.
