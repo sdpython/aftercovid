@@ -163,7 +163,7 @@ plt.show()
 
 predictions = model.simulate(X[-30:], 21)
 dfp = pandas.DataFrame(
-    predictions[9], columns='S Ipred R Dpred'.split()).set_index(
+    predictions[9], columns='Spred Ipred Rpred Dpred'.split()).set_index(
         pandas.to_datetime(dates[-21:]))
 dfp.tail()
 
