@@ -162,10 +162,10 @@ plt.show()
 # <aftercovid.models.EpidemicRegessor.simulate>`.
 
 predictions = model.simulate(X[-30:], 21)
-df = pandas.DataFrame(
+dfp = pandas.DataFrame(
     predictions[9], columns='S Ipred R Dpred'.split()).set_index(
         pandas.to_datetime(dates[-21:]))
-df.tail()
+dfp.tail()
 
 ############################################
 # On représente les prédictions.
