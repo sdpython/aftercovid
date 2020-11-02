@@ -174,35 +174,35 @@ df.tail()
 
 fig, ax = plt.subplots(2, 3, figsize=(14, 6))
 
-df = pandas.DataFrame(
+dfp = pandas.DataFrame(
     predictions[9], columns='S Ipred R Dpred'.split()).set_index(
         pandas.to_datetime(dates[-21:]))
-df[["Ipred"]].plot(ax=ax[0, 0])
-df[["Dpred"]].plot(ax=ax[1, 0])
-df = pandas.DataFrame(X[-21:], columns='S Itrue R Dtrue'.split()
-                      ).set_index(pandas.to_datetime(dates[-21:]))
-df[["Itrue"]].plot(ax=ax[0, 0])
-df[["Dtrue"]].plot(ax=ax[1, 0])
+dfp[["Ipred"]].plot(ax=ax[0, 0])
+dfp[["Dpred"]].plot(ax=ax[1, 0])
+dfp = pandas.DataFrame(X[-21:], columns='S Itrue R Dtrue'.split()
+                       ).set_index(pandas.to_datetime(dates[-21:]))
+dfp[["Itrue"]].plot(ax=ax[0, 0])
+dfp[["Dtrue"]].plot(ax=ax[1, 0])
 ax[0, 0].set_title("Prediction à partir de %s" % dates[-21])
 
 dt = pandas.to_datetime(dates[-7])
 dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
-df = pandas.DataFrame(
+dfp = pandas.DataFrame(
     predictions[-7], columns='S Ipred R Dpred'.split()).set_index(dates2)
-df[["Ipred"]].plot(ax=ax[0, 1])
-df[["Dpred"]].plot(ax=ax[1, 1])
-df = pandas.DataFrame(X[-7:], columns='S Itrue R Dtrue'.split()
-                      ).set_index(pandas.to_datetime(dates[-7:]))
-df[["Itrue"]].plot(ax=ax[0, 1])
-df[["Dtrue"]].plot(ax=ax[1, 1])
+dfp[["Ipred"]].plot(ax=ax[0, 1])
+dfp[["Dpred"]].plot(ax=ax[1, 1])
+dfp = pandas.DataFrame(X[-7:], columns='S Itrue R Dtrue'.split()
+                       ).set_index(pandas.to_datetime(dates[-7:]))
+dfp[["Itrue"]].plot(ax=ax[0, 1])
+dfp[["Dtrue"]].plot(ax=ax[1, 1])
 ax[0, 1].set_title("Prediction à partir de %s" % dates[-7])
 
 dt = pandas.to_datetime(dates[-1])
 dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
-df = pandas.DataFrame(
+dfp = pandas.DataFrame(
     predictions[-7], columns='S Ipred R Dpred'.split()).set_index(dates2)
-df[["Ipred"]].plot(ax=ax[0, 2])
-df[["Dpred"]].plot(ax=ax[1, 2])
+dfp[["Ipred"]].plot(ax=ax[0, 2])
+dfp[["Dpred"]].plot(ax=ax[1, 2])
 ax[0, 1].set_title("Prediction à partir de %s" % dates[-1])
 plt.show()
 
