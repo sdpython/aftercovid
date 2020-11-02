@@ -140,6 +140,36 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             raise RuntimeError("Model was not trained.")
         return self.model_.predict(X)
 
+    def simulate(self, X, n=7):
+        """
+        Predicts and simulates the epidemics.
+        Every row of *X* is a starting point,
+        the function then simulates the epidemics for the next
+        *n* days for every starting point.
+
+        :param X: data
+        :param n: number of days
+        :return: quantities, matrix of shape
+            *(X.shape[0], n, number of parameters)*
+        """
+        if not hasattr(self, "model_"):
+            raise RuntimeError(  # noqa
+                "Model was not trained.")
+        clq = self.model_.quantity_names
+        if len(clq) != X.shape[1]:
+            raise RuntimeError(
+                "Unapexected shape for X ({}), expecting {} columns."
+                "".format(X.shape, len(clq)))
+        res = None
+        for i in range(X.shape[0]):
+            for k, v in zip(clq, X[i]):
+                self.model_[k] = v
+            pred = self.model_.iterate2array(n=n, derivatives=False)
+            if res is None:
+                res = numpy.zeros((X.shape[0], ) + pred.shape)
+            res[i, :, :] = pred
+        return res
+
     def predict_many(self, X, n=7):
         """
         Predicts the derivatives and the series
@@ -147,7 +177,8 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
 
         :param X: series
         :param n: number of days
-        :return: derivates and series
+        :return: derivates and series, return shape is
+            *(X.shape[0], number of parameters, n)*
         """
         if not hasattr(self, 'model_'):
             raise RuntimeError("Model was not trained.")  # pragma: no cover

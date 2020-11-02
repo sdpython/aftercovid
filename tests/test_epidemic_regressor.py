@@ -66,6 +66,18 @@ class TestEpidemicRegressor(unittest.TestCase):
         loss = epi.score(X, y)
         self.assertGreater(loss, 0)
 
+    def test_fit_sirc_simulate(self):
+        model = CovidSIRDc()
+        X, y = model.iterate2array(derivatives=True)
+        epi = EpidemicRegressor('sirc', max_iter=10)
+        epi.fit(X, y)
+        sim = epi.simulate(X[4:6])
+        self.assertEqual(sim.shape, (2, 7, 4))
+        self.assertEqual(X[4].tolist(), sim[0, 0].tolist())
+        self.assertEqual(X[5].tolist(), sim[1, 0].tolist())
+        sim = epi.simulate(numpy.array([[10000., 0, 0, 0]]))
+        self.assertEqual(sim[0].tolist(), sim[-1].tolist())
+
     def test_clone(self):
         model = CovidSIRD()
         model['beta'] = 0.4

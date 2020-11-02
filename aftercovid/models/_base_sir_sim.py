@@ -68,7 +68,8 @@ class BaseSIRSimulation:
         :param n: number of iterations
         :param t: first *t*
         :param derivatives: returns the derivative as well
-        :return: iterator on dictionaries
+        :return: quantities or (quantities, derivatives)
+            if *derivatives* is True
         """
         clq = self.quantity_names
         pos = {n: i for i, n in enumerate(clq)}

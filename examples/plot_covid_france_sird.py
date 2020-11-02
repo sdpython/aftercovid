@@ -24,13 +24,15 @@ aussi joué puisqu'aux mois d'août, septembre.
 Récupération des données
 ++++++++++++++++++++++++
 """
-import matplotlib.gridspec as gridspec
-from aftercovid.data import extract_hopkins_data, preprocess_hopkins_data
-from aftercovid.models import CovidSIRD, rolling_estimation
-import numpy
+from datetime import timedelta
 import warnings
+import numpy
+import pandas
+import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
+from aftercovid.data import extract_hopkins_data, preprocess_hopkins_data
+from aftercovid.models import CovidSIRD, rolling_estimation
 
 
 data = extract_hopkins_data()
@@ -71,7 +73,7 @@ for a in axs:
 # est très compromise.
 
 ############################################
-# _l-example-rolling-estimation:
+# .. _l-example-rolling-estimation:
 #
 # Estimation d'un modèle
 # ++++++++++++++++++++++
@@ -149,6 +151,64 @@ with warnings.catch_warnings():
 ax[0, 2].set_ylim(0, 5)
 fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()
+
+#################################################
+# Prédictions
+# +++++++++++
+#
+# Ce ne sont pas seulement des prédictions
+# mais des prédictions en boucle à partir d'un état
+# initial. On utilise la méthode :meth:`simulate
+# <aftercovid.models.EpidemicRegessor.simulate>`.
+
+predictions = model.simulate(X[-30:], 21)
+df = pandas.DataFrame(
+    predictions[9], columns='S Ipred R Dpred'.split()).set_index(
+        pandas.to_datetime(dates[-21:]))
+df.tail()
+
+############################################
+# On représente les prédictions.
+# *Ipred* est la valeur prédite, *Itrue*
+# est la valeur connue. Idem pour *Dpred* et *Dtrue*.
+
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+
+df = pandas.DataFrame(
+    predictions[9], columns='S Ipred R Dpred'.split()).set_index(
+        pandas.to_datetime(dates[-21:]))
+df[["Ipred"]].plot(ax=ax[0, 0])
+df[["Dpred"]].plot(ax=ax[1, 0])
+df = pandas.DataFrame(X[-21:], columns='S Itrue R Dtrue'.split()
+                      ).set_index(pandas.to_datetime(dates[-21:]))
+df[["Itrue"]].plot(ax=ax[0, 0])
+df[["Dtrue"]].plot(ax=ax[1, 0])
+ax[0, 0].set_title("Prediction à partir de %s" % dates[-21])
+
+dt = pandas.to_datetime(dates[-7])
+dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
+df = pandas.DataFrame(
+    predictions[-7], columns='S Ipred R Dpred'.split()).set_index(dates2)
+df[["Ipred"]].plot(ax=ax[0, 1])
+df[["Dpred"]].plot(ax=ax[1, 1])
+df = pandas.DataFrame(X[-7:], columns='S Itrue R Dtrue'.split()
+                      ).set_index(pandas.to_datetime(dates[-7:]))
+df[["Itrue"]].plot(ax=ax[0, 1])
+df[["Dtrue"]].plot(ax=ax[1, 1])
+ax[0, 1].set_title("Prediction à partir de %s" % dates[-7])
+
+dt = pandas.to_datetime(dates[-1])
+dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
+df = pandas.DataFrame(
+    predictions[-7], columns='S Ipred R Dpred'.split()).set_index(dates2)
+df[["Ipred"]].plot(ax=ax[0, 2])
+df[["Dpred"]].plot(ax=ax[1, 2])
+ax[0, 1].set_title("Prediction à partir de %s" % dates[-1])
+plt.show()
+
+#################################################
+# Ces prédictions varient beaucoup car une petite imprécision
+# sur l'estimation a beaucoup d'impact à moyen terme.
 
 #################################################
 # Taille fenêtre glissante
