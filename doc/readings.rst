@@ -8,6 +8,7 @@ Lectures
 Dashboards
 ++++++++++
 
+* `covidtracker <https://covidtracker.fr/>`_
 * `COVID-19 Daily Epidemic Forecasting
   <https://renkulab.shinyapps.io/COVID-19-Epidemic-Forecasting/>`_
   (`code <https://github.com/jscire/Swiss_covid_Re/tree/master/scripts>`_)

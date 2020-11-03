@@ -2,6 +2,11 @@
 Changes
 =======
 
+0.1.3
++++++
+
+* Add data about temperatures
+
 0.1.2
 +++++
 

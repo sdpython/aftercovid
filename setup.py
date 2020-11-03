@@ -14,7 +14,7 @@ if here == "":
 packages = find_packages(where=here)
 package_dir = {k: os.path.join(here, k.replace(".", "/")) for k in packages}
 package_data = {
-    "aftercovid.data": ["*.bmp"],
+    "aftercovid.data": ["*.bmp", "*.xslx"],
 }
 
 try:

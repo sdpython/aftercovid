@@ -93,3 +93,11 @@ time for a couple of functions or simply:
 
     import aftercovid
     aftercovid.check()
+
+
+Changes
++++++++
+
+See `Changes <https://github.com/sdpython/aftercovid/
+blob/master/doc/changes.rst>`_.
+
