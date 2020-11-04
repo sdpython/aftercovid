@@ -1,6 +1,7 @@
 cython
 fire
 numpy
+openpyxl
 pandas
 scikit-image
 scikit-learn
