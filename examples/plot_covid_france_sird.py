@@ -102,19 +102,19 @@ dfcoef, model = rolling_estimation(
 dfcoef.head(n=10)
 
 #############################################
-# Fin de la période.
-
-dfcoef.tail(n=10)
-
-#############################################
 # Statistiques.
 
 dfcoef.describe()
 
 #############################################
-# Fin de la période.
+# Fin de la période pour la série originale.
 
 df.tail(n=10)
+
+#############################################
+# Fin de la période pour l'esimtation.
+
+dfcoef.tail(n=10)
 
 #############################################
 # Graphe.
@@ -220,7 +220,7 @@ plt.show()
 # Sur 7 jours.
 # ^^^^^^^^^^^^^
 
-dfcoef, model = rolling_estimation(X, y, delay=7, verbose=1)
+dfcoef, model = rolling_estimation(X, y, delay=7, verbose=1, dates=dates)
 dfcoef.tail()
 
 #######################################
@@ -246,7 +246,7 @@ plt.show()
 # Sur 14 jours.
 # ^^^^^^^^^^^^^
 
-dfcoef, model = rolling_estimation(X, y, delay=14, verbose=1)
+dfcoef, model = rolling_estimation(X, y, delay=14, verbose=1, dates=dates)
 dfcoef.tail()
 
 #######################################
@@ -271,7 +271,7 @@ plt.show()
 # Sur 4 semaines.
 # ^^^^^^^^^^^^^^^
 
-dfcoef, model = rolling_estimation(X, y, delay=28, verbose=1)
+dfcoef, model = rolling_estimation(X, y, delay=28, verbose=1, dates=dates)
 dfcoef.tail()
 
 #########################################

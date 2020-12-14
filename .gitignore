@@ -13,3 +13,4 @@ aftercovid/tutorial/dot_cython.cpp
 aftercovid/tutorial/dot_blas_lapack.cpp
 aftercovid/tutorial/experiment_cython.cpp
 aftercovid/tutorial/dot_cython_omp.cpp
+tests/t.xlsx

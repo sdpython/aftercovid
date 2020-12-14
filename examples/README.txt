@@ -1,2 +1,5 @@
 Exemples
 ========
+
+.. contents::
+    :local:

@@ -210,6 +210,8 @@ Modules
 Code
 ++++
 
+* `EpiEstim <https://github.com/mrc-ide/EpiEstim>`_ (R), estimation du R
+* :epkg:`epyestim` (python), estimation du R
 * `Bayesian inference and forecast of COVID-19
   <https://github.com/Priesemann-Group/covid19_inference_forecast>`_
 * `A Spatiotemporal Epidemic Model to Quantify The Effects of Testing, Contact Tracing and Containment
