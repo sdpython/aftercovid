@@ -10,6 +10,12 @@ def load_temperatures(country='France'):
     """
     Loads a dataframe containing temperatures.
     :param name: picture name
+
+    Source:
+
+    * `temperature_france.xlsx`:
+      `meteociel <https://www.meteociel.fr/climatologie/obs_villes.php?
+      code2=75107005&mois=11&annee=2020>`_
     """
     this = os.path.abspath(os.path.dirname(__file__))
     filename = os.path.join(this, "temperature_2020_%s.xlsx" % country.lower())
