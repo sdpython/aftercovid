@@ -8,7 +8,7 @@ from aftercovid.data import (
     data_france_departments)
 
 
-class TestDataHopkins(unittest.TestCase):
+class TestDataInsee(unittest.TestCase):
 
     def test_data_covid_france_departments_hospitals(self):
         cache = "temp_hosp"
