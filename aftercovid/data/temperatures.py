@@ -31,11 +31,13 @@ def load_temperatures(country='France'):
         return val
 
     def _process(df, month):
-        if len(df.columns) != 5:
+        columns = [_ for _ in df.columns if 'Unnamed' not in _]
+        if len(columns) != 5:
             raise ValueError(  # pragma: no cover
                 "Unexpected number of columns %r for month %r." % (
                     df.columns, month))
 
+        df = df[columns]
         df.columns = ["day", "tmax", "tmin", "rain", "sun"]
         df['day'] = df['day'].apply(lambda c: to_float(c, -1, int))
         df['tmax'] = df['tmax'].apply(lambda c: to_float(c, 0))
@@ -45,7 +47,8 @@ def load_temperatures(country='France'):
     dfs = []
     for month in range(1, 13):
         sheet = "%02d" % month
-        df = pandas.read_excel(filename, sheet_name=sheet, header=1)
+        df = pandas.read_excel(
+            filename, sheet_name=sheet, header=1, engine="openpyxl")
         if df.shape[0] == 0:
             continue
         df = _process(df, month)
