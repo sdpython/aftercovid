@@ -29,12 +29,12 @@ class TestDataInsee(unittest.TestCase):
         self.assertEqual(
             list(
                 df.columns), [
-                'dep', 'jour', 'P', 'T', 'cl_age90', 'pop.x', 'pop.y'])
+                'dep', 'jour', 'P', 'T', 'cl_age90', 'pop'])
         df = data_covid_france_departments_tests(cache)
         self.assertEqual(
             list(
                 df.columns), [
-                'dep', 'jour', 'P', 'T', 'cl_age90', 'pop.x', 'pop.y'])
+                'dep', 'jour', 'P', 'T', 'cl_age90', 'pop'])
 
     def test_data_france_departments(self):
         cache = "temp_dep"
