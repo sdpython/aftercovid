@@ -9,7 +9,7 @@ de Cori est utilisée avec la formule proposée dans :epkg:`covidtracker` :
 
 .. math::
 
-    R = \\frac{\\sum_{i=t-13}^{t-7}C_i}{\\sum_{i=t-6}^{t}C_i}
+    R = \\frac{\\sum_{i=t-6}^{t}C_i}{\\sum_{i=t-13}^{t-7}C_i}
 
 Où :math:`C_i` est le nombre de cas positifs du jour *i*.
 Cette méthode est implémentée dans le package R
