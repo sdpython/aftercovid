@@ -112,7 +112,7 @@ dfcoef.describe()
 df.tail(n=10)
 
 #############################################
-# Fin de la période pour l'esimtation.
+# Fin de la période pour l'estimation.
 
 dfcoef.tail(n=10)
 

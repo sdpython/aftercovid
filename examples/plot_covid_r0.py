@@ -92,7 +92,7 @@ for i in range(0, 180):
     ld = last_day - Timedelta(days=i)
     obs.append({'jour': ld, 'R': compute_r(france, last_day=ld)})
 
-gr = DataFrame(obs)
+gr = DataFrame(obs).sort_values("jour")
 gr.tail()
 
 ###################################
@@ -112,7 +112,7 @@ for d in set(deps.dep):
     r = compute_r(deps[deps.dep == d])
     obs.append({'dep': d, 'R': r})
 
-depdf = DataFrame(obs)
+depdf = DataFrame(obs).sort_values("dep")
 depdf.tail()
 
 ##############################################
