@@ -83,6 +83,10 @@ X = data[:-1]
 y = data[1:] - data[:-1]
 dates = df.index[:-1]
 
+X = X[-150:]
+y = y[-150:]
+dates = dates[-150:]
+
 #########################################
 # Estimation.
 

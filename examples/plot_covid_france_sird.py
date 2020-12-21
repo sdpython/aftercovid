@@ -150,6 +150,83 @@ with warnings.catch_warnings():
     dflast.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
 ax[0, 2].set_ylim(0, 5)
 fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
+
+#################################
+# Sur 21 jours mais seulement les 5 derniers mois
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+model = CovidSIRD()
+print(model.quantity_names)
+
+cols = ['safe', 'infected', 'recovered', 'deaths']
+data = df[cols].values.astype(numpy.float32)
+print(data[:5])
+
+X = data[:-1]
+y = data[1:] - data[:-1]
+dates = df.index[:-1]
+
+X = X[-150:]
+y = y[-150:]
+dates = dates[-150:]
+
+#########################################
+# Estimation.
+
+# 3 semaines car les séries sont cycliques
+dfcoef, model = rolling_estimation(
+    X, y, delay=21, dates=dates, verbose=1)
+dfcoef.head(n=10)
+
+#############################################
+# Statistiques.
+
+dfcoef.describe()
+
+#############################################
+# Fin de la période pour la série originale.
+
+df.tail(n=10)
+
+#############################################
+# Fin de la période pour l'estimation.
+
+dfcoef.tail(n=10)
+
+#############################################
+# Graphe.
+
+dfcoef['R0=1'] = 1
+
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
+    dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
+    dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
+    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
+    df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+ax[0, 2].set_ylim(0, 5)
+fig.suptitle('Estimation de R0 tout au long de la période\n'
+             'Estimation sur 3 semaines', fontsize=12)
+plt.show()
+
+#############################################
+# Graphe sur les dernières valeurs.
+
+dfcoeflast = dfcoef.iloc[-30:, :]
+dflast = df.iloc[-30:, :]
+
+fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    dfcoeflast[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
+    dfcoeflast[["beta"]].plot(ax=ax[0, 1], logy=True)
+    dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
+    dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
+    dflast.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+ax[0, 2].set_ylim(0, 5)
+fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()
 
 #################################################
@@ -179,8 +256,9 @@ dfp = pandas.DataFrame(
         pandas.to_datetime(dates[-21:]))
 dfp[["Ipred"]].plot(ax=ax[0, 0])
 dfp[["Dpred"]].plot(ax=ax[1, 0])
-dfp = pandas.DataFrame(X[-21:], columns='S Itrue R Dtrue'.split()
-                       ).set_index(pandas.to_datetime(dates[-21:]))
+dfp = pandas.DataFrame(
+    X[-21:], columns='S Itrue R Dtrue'.split()).set_index(
+        pandas.to_datetime(dates[-21:]))
 dfp[["Itrue"]].plot(ax=ax[0, 0])
 dfp[["Dtrue"]].plot(ax=ax[1, 0])
 ax[0, 0].set_title("Prediction à partir de %s" % dates[-21])
@@ -191,8 +269,9 @@ dfp = pandas.DataFrame(
     predictions[-7], columns='S Ipred R Dpred'.split()).set_index(dates2)
 dfp[["Ipred"]].plot(ax=ax[0, 1])
 dfp[["Dpred"]].plot(ax=ax[1, 1])
-dfp = pandas.DataFrame(X[-7:], columns='S Itrue R Dtrue'.split()
-                       ).set_index(pandas.to_datetime(dates[-7:]))
+dfp = pandas.DataFrame(
+    X[-7:], columns='S Itrue R Dtrue'.split()).set_index(
+        pandas.to_datetime(dates[-7:]))
 dfp[["Itrue"]].plot(ax=ax[0, 1])
 dfp[["Dtrue"]].plot(ax=ax[1, 1])
 ax[0, 1].set_title("Prediction à partir de %s" % dates[-7])
@@ -200,15 +279,24 @@ ax[0, 1].set_title("Prediction à partir de %s" % dates[-7])
 dt = pandas.to_datetime(dates[-1])
 dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
 dfp = pandas.DataFrame(
-    predictions[-7], columns='S Ipred R Dpred'.split()).set_index(dates2)
+    predictions[-1], columns='S Ipred R Dpred'.split()).set_index(dates2)
 dfp[["Ipred"]].plot(ax=ax[0, 2])
 dfp[["Dpred"]].plot(ax=ax[1, 2])
 ax[0, 1].set_title("Prediction à partir de %s" % dates[-1])
-plt.show()
 
 #################################################
 # Ces prédictions varient beaucoup car une petite imprécision
 # sur l'estimation a beaucoup d'impact à moyen terme.
+
+predictions = model.simulate(X[-1:], 98)
+fig, ax = plt.subplots(1, 2, figsize=(14, 6))
+dt = pandas.to_datetime(dates[-1])
+dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(98)])
+dfp = pandas.DataFrame(
+    predictions[-1], columns='S Ipred R Dpred'.split()).set_index(dates2)
+dfp[["Ipred"]].plot(ax=ax[0])
+dfp[["Dpred"]].plot(ax=ax[1])
+ax[1].set_title("Prediction à partir de %s" % dates[-1])
 
 #################################################
 # Taille fenêtre glissante
