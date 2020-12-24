@@ -128,7 +128,7 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
 ax[0, 2].set_ylim(0, 5)
 fig.suptitle('Estimation de R0 tout au long de la période\n'
              'Estimation sur 3 semaines', fontsize=12)
@@ -205,7 +205,7 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
 ax[0, 2].set_ylim(0, 5)
 fig.suptitle('Estimation de R0 tout au long de la période\n'
              'Estimation sur 3 semaines', fontsize=12)
@@ -324,7 +324,7 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
 ax[0, 2].set_ylim(0, 5)
 fig.suptitle('Estimation de R0 tout au long de la période\n'
              'Estimation sur 1 semaine', fontsize=12)
@@ -349,7 +349,7 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
 ax[0, 2].set_ylim(0, 5)
 fig.suptitle('Estimation de R0 tout au long de la période\n'
              'Estimation sur 2 semaines', fontsize=12)
@@ -374,7 +374,7 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
 ax[0, 2].set_ylim(0, 5)
 fig.suptitle('Estimation de R0 tout au long de la période\n'
              'Estimation sur 4 semaines', fontsize=12)

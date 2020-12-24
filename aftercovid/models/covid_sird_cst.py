@@ -60,13 +60,19 @@ class CovidSIRDc(BaseSIR):
         -\\beta\\frac{I_{obs}(1+b)S_{obs}}{N}
         \\end{array}
 
-    To work well, the system verifies the following equality:
+    :math:`S + I + R + D = N = S_{obs} + I_{obs} + R_{obs} + D_{obs}`
+    implies that the derivatives verify the following equality:
 
     .. math::
 
-        a \\frac{dS_{obs}}{dt} + b \\frac{dI_{obs}}{dt} +
-        c \\frac{dR_{obs}}{dt} = \\frac{dS_{obs}}{dt} + \\frac{dI_{obs}}{dt} +
-        \\frac{dR_{obs}}{dt} + \\frac{dD_{obs}}{dt} = 0
+        \\begin{array}{ll}
+        & a \\frac{dS_{obs}}{dt} + b \\frac{dI_{obs}}{dt} +
+        c \\frac{dR_{obs}}{dt}  + \\frac{dD_{obs}}{dt} =
+        \\frac{dS_{obs}}{dt} + \\frac{dI_{obs}}{dt} +
+        \\frac{dR_{obs}}{dt} + \\frac{dD_{obs}}{dt} = 0 \\\\
+        \\Longrightarrow & (1 - a) \\frac{dS_{obs}}{dt} + (1 - b) \\frac{dI_{obs}}{dt} +
+        (1 - c) \\frac{dR_{obs}}{dt} = 0
+        \\end{array}
 
     Then:
 

@@ -130,7 +130,7 @@ with warnings.catch_warnings():
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
     dfcoef[["b"]].plot(ax=ax[1, 2], logy=True)
     ax[0, 2].set_ylim(0, 5)
-    df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
 plt.show()
 
