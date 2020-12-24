@@ -70,7 +70,8 @@ class CovidSIRDc(BaseSIR):
         c \\frac{dR_{obs}}{dt}  + \\frac{dD_{obs}}{dt} =
         \\frac{dS_{obs}}{dt} + \\frac{dI_{obs}}{dt} +
         \\frac{dR_{obs}}{dt} + \\frac{dD_{obs}}{dt} = 0 \\\\
-        \\Longrightarrow & (1 - a) \\frac{dS_{obs}}{dt} + (1 - b) \\frac{dI_{obs}}{dt} +
+        \\Longrightarrow & (1 - a) \\frac{dS_{obs}}{dt}
+        + (1 - b) \\frac{dI_{obs}}{dt} +
         (1 - c) \\frac{dR_{obs}}{dt} = 0
         \\end{array}
 
