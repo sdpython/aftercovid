@@ -23,7 +23,7 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         par = model.get()
         self.assertEqual(par['I'], 5.)
         dot = model.to_dot(verbose=True)
-        self.assertIn("? -> R", dot)
+        self.assertIn("I -> R", dot)
         self.assertNotIn("I -> I", dot)
         self.assertIn('beta', dot)
         self.assertNotIn('-beta', dot)
@@ -43,7 +43,8 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         self.assertEqual(cst, {'N': 10000.0, 'beta': 0.5,
                                'mu': 0.07142857142857142,
                                'nu': 0.047619047619047616,
-                               'b': 1e-5})
+                               'a': -1.5025135094805093e-08,
+                               'b': 1e-5, 'c': 1e-5})
         ev = model.eval_diff()
         self.assertEqual(-4.99504995, ev['S'])
         self.assertEqual(len(ev), 4)
@@ -91,7 +92,7 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         self.assertIsInstance(grads, list)
         for row in grads:
             self.assertIsInstance(row, list)
-            self.assertEqual(len(row), 4)
+            self.assertEqual(len(row), 6)
 
     def test_fit(self):
         model = CovidSIRDc()
@@ -126,6 +127,8 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         self.assertLess(err, 1)
         loss = model.score(X, y)
         self.assertGreater(loss, 0)
+        loss = model.score_l1(X, y)
+        self.assertGreater(loss, 0)
 
     def test_noise(self):
         model = CovidSIRDc()
@@ -143,6 +146,17 @@ class TestModelsCovidSIRDcst(unittest.TestCase):
         df1 = model.eval_diff()
         df2 = model._eval_diff_sympy()
         self.assertEqual(df1, df2)
+
+    def test_correctness(self):
+        model = CovidSIRDc()
+        cor = model.correctness()
+        self.assertEqual(cor[0], -5.0101099597102863e-09)
+        update = model.update_abc(update=True)
+        self.assertIsInstance(update, dict)
+        cor = model.correctness()
+        self.assertEqual(cor[0], -5.0101099597102863e-09)
+        cor = model.correctness(numpy.array([[1., 0., 0., 0.]]))
+        self.assertLess(abs(cor[0] + 1.50251351e-08), 1e-5)
 
 
 if __name__ == '__main__':

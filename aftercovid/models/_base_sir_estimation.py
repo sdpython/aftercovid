@@ -172,7 +172,8 @@ class BaseSIREstimation:
 
     def score(self, X, y, t=0):
         """
-        Scores the predictions.
+        Scores the predictions. Returns L2 norm
+        divided by the number of rows.
 
         :param X: known values for every quantity at time *t*,
             every column is mapped to the list returned by
@@ -185,6 +186,23 @@ class BaseSIREstimation:
         pred = self.predict(X, t=t)
         delta = (pred - y) ** 2
         return numpy.sum(delta) / X.shape[0]
+
+    def score_l1(self, X, y, t=0):
+        """
+        Scores the predictions. Returns L1 norm
+        divided by the number of rows and the population.
+
+        :param X: known values for every quantity at time *t*,
+            every column is mapped to the list returned by
+            :meth:`quantity_names <aftercovid.models._base_sir.quantity_names>`
+        :param y: expected values
+        :param t: implicit feature
+        :return: predictive derivative
+        """
+        self._check_fit_predict(X, y)
+        pred = self.predict(X, t=t)
+        delta = numpy.abs(pred - y)
+        return numpy.sum(delta) / (X.shape[0] * self['N'])
 
     def _fit(self, X, y, t, max_iter,
              learning_rate_init, lr_schedule,

@@ -207,7 +207,11 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         """
         Returns all values as a vector.
 
-        :param
+        :param t: time *t*
+        :param out: alternative output array in which to place the
+            result. It must have the same shape as the expected output.
+        :param derivative: returns the derivatives instead of the values
+        :return: values or derivatives
         """
         if derivative:
             if out is None:

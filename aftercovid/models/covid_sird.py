@@ -87,8 +87,32 @@ class CovidSIRD(BaseSIR):
             eq=CovidSIRD.eq.copy())
 
     def R0(self, t=0):
-        '''Returns R0 coefficient.'''
+        '''
+        Returns R0 coefficient.
+
+        :param t: unused
+
+        This coefficients tells how many people one
+        contagious infects in average.
+        Let's consider the contagious population :math:`I_t`.
+        A time *t+1*, there are :math:`\\beta I_t` new cases
+        and :math:`(\\nu + \\mu)I_t` disappear. So at time
+        *t+2*, there :math:`\\beta I_t(1 - \\nu - \\mu)`
+        new cases, at time *t+d+1*, it is
+        :math:`\\beta I_t(1 - \\nu - \\mu)^d`.
+        We finally find that:
+        :math:`R_0=\\beta \\sum_d (1 - \\nu - \\mu)^d` and
+        :math:`R_0=\\frac{\\beta}{\\nu + \\mu}`.
+        '''
         return self['beta'] / (self['nu'] + self['mu'])
+
+    def correctness(self, X=None):
+        """
+        Unused.
+        """
+        if X is None:
+            X = self.vect().reshape((1, -1))
+        return numpy.zeros(X.shape)
 
     def rnd(self):
         '''
