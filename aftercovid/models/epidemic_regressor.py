@@ -77,14 +77,16 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             if model.upper() in ('SIR', 'SIRD'):
                 min_threshold = 0.0001
             elif model.upper() in ('SIRC', 'SIRDC'):
-                pmin = dict(beta=0.001, nu=0.0001, mu=0.0001, b=0.)
+                pmin = dict(beta=0.001, nu=0.0001, mu=0.0001,
+                            a=-1., b=0., c=0.)
                 min_threshold = numpy.array(
                     [pmin[k[0]] for k in CovidSIRDc.P0])
         if max_threshold == 'auto':
             if model.upper() in ('SIR', 'SIRD'):
                 max_threshold = 1.
             elif model.upper() in ('SIRC', 'SIRDC'):
-                pmax = dict(beta=1., nu=0.5, mu=0.5, b=0.5)
+                pmax = dict(beta=1., nu=0.5, mu=0.5,
+                            a=0., b=4., c=4.)
                 max_threshold = numpy.array(
                     [pmax[k[0]] for k in CovidSIRDc.P0])
         self.min_threshold = min_threshold
@@ -191,11 +193,21 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             curv[:, :, i] = X
         return deri, curv
 
-    def score(self, X, y):
+    def score(self, X, y, norm=None):
         """
-        Predicts the derivatives.
+        Scores the prediction of the derivatives.
+
+        :param X: data
+        :param y: expected derivatives
+        :param norm: norm to return the norm used to optimize (L2)
+            or 'L1' to return the L1 norm
+        :return: score
         """
         if not hasattr(self, 'model_'):
             raise RuntimeError(  # pragma: no cover
                 "Model was not trained.")
-        return self.model_.score(X, y)
+        if norm is None:
+            return self.model_.score(X, y)
+        if norm.lower() == 'l1':
+            return self.model_.score_l1(X, y)
+        raise ValueError("Unexpected norm %r." % norm)

@@ -68,6 +68,9 @@ class TestModelsCovidSir(unittest.TestCase):
         self.assertEqual(model['N'], 100000)
         ht = model._repr_html_()
         self.assertIn("{equation}", ht)
+        res = model.correctness()
+        self.assertEqual(res.min(), res.max())
+        self.assertEqual(res.min(), 0.)
 
     def test_covid_sir_eval(self):
         model = CovidSIRD()

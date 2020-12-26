@@ -3,6 +3,7 @@
 Implementation of a model for epidemics propagation.
 """
 import numpy.random
+from sklearn.linear_model import ElasticNet
 from ._base_sir import BaseSIR
 from .covid_sird import CovidSIRD
 
@@ -24,84 +25,60 @@ class CovidSIRDc(BaseSIR):
         \\end{array}
 
     Where :math:`S`, :math:`I`, :math:`R` are
-    hidden, only :math:`S_{obs}`, :math:`I_{obs}`,
     :math:`R_{obs}` are observed.
-    As :math:`S + I + R + D = N = S_{obs} + I_{obs} + R_{obs} + D_{obs}`.
-    Let's see where it goes. First gradient:
+    hidden, only :math:`S_{obs}`, :math:`I_{obs}`,
+    The following equality should be verified:
+    :math:`S + I + R + D = N = S_{obs} + I_{obs} + R_{obs} + D_{obs}`.
+    We also get from the previous equations:
 
     .. math::
 
-        \\begin{array}{ll}
-        &\\frac{dR}{dt} = \\frac{dR_{obs}}{dt} (1 + c) =
-        I \\mu = \\mu(1+b) I_{obs} \\\\
-        \\Longrightarrow &\\frac{dR_{obs}}{dt} =
-        \\frac{\\mu(1+b)}{1+c} I_{obs}
+        \\begin{array}{rcl}
+        dS &=& dS_{obs} (1 + a) = - \\beta \\frac{IS}{N} =
+        - \\beta \\frac{I_{obs}S_{obs}}{N}(1+a)(1+b) \\\\
+        \\Longrightarrow dS_{obs} &=& - \\beta \\frac{I_{obs}S_{obs}}{N}(1+b)
         \\end{array}
 
-    Second gradient:
+    And also:
 
     .. math::
 
-        \\begin{array}{ll}
-        &\\frac{dD_{obs}}{dt} = \\frac{dD}{dt} =
-        I \\nu = \\nu(1+b) I_{obs} \\\\
-        \\Longrightarrow & \\frac{dD_{obs}}{dt} = \\nu (1+b) I_{obs}
+        \\begin{array}{rcl}
+        dD &=& dD_{obs} = \\nu I = \\nu I_{obs} (1+b)
         \\end{array}
 
-    Third gradient:
+    And as well:
 
     .. math::
 
-        \\begin{array}{ll}
-        &\\frac{dS}{dt} = \\frac{dS_{obs}}{dt} (1 + a) =
-        -\\beta\\frac{IS}{N} =
-        -\\beta\\frac{I_{obs}(1+b)S_{obs}(1+a)}{N} \\\\
-        \\Longrightarrow &\\frac{dS_{obs}}{dt} =
-        -\\beta\\frac{I_{obs}(1+b)S_{obs}}{N}
+        \\begin{array}{rcl}
+        dR &=& dR_{obs} (1 + c) = \\mu I = \\mu (1 + b) I_{obs}  \\\\
+        \\Longrightarrow dR_{obs} &=& - \\nu I_{obs} \\frac{1+b}{1+c}
         \\end{array}
 
-    :math:`S + I + R + D = N = S_{obs} + I_{obs} + R_{obs} + D_{obs}`
-    implies that the derivatives verify the following equality:
+    And finally:
 
     .. math::
 
-        \\begin{array}{ll}
-        & a \\frac{dS_{obs}}{dt} + b \\frac{dI_{obs}}{dt} +
-        c \\frac{dR_{obs}}{dt}  + \\frac{dD_{obs}}{dt} =
-        \\frac{dS_{obs}}{dt} + \\frac{dI_{obs}}{dt} +
-        \\frac{dR_{obs}}{dt} + \\frac{dD_{obs}}{dt} = 0 \\\\
-        \\Longrightarrow & (1 - a) \\frac{dS_{obs}}{dt}
-        + (1 - b) \\frac{dI_{obs}}{dt} +
-        (1 - c) \\frac{dR_{obs}}{dt} = 0
+        \\begin{array}{rcl}
+        dI &=& dI_{obs} (1 + b) = -dR - dS - dD =
+        - \\mu \\frac{1 + b}{1+ c} I_{obs} - \\nu (1+b) I_{obs} -
+        - \\beta I_{obs}\\frac{S_{obs}}{N} (1 + a)(1 + b)
+        \\\\
+        \\Longrightarrow dI_{obs} &=& - \\nu I_{obs} - \\mu I_{obs}
+        - \\beta I_{obs}\\frac{S_{obs}}{N} (1 + a)
         \\end{array}
 
-    Then:
+    This model should still verify:
 
     .. math::
 
-        \\Longrightarrow \\frac{dI_{obs}}{dt} =
-        \\beta\\frac{I_{obs}(1+b)S_{obs}}{N} - \\nu (1+b) I_{obs} -
-        \\frac{\\mu(1+b)}{1+c} I_{obs} =
-        \\frac{\\mu(1+b)c}{b(1+c)} I_{obs} +
-        \\beta\\frac{I_{obs}a(1+b)S_{obs}}{Nb}
-
-    And:
-
-    .. math::
-
-        \\begin{array}{lll}
-        V_1(a,b,c)  &= (1+b)\\left(\\begin{array}{cc}
-        \\frac{\\beta}{N} &,& -\\nu - \\frac{\\mu}{1+c}
-        \\end{array}\\right) \\\\
-        V_2(a,b,c) &=  (1+b)\\left(\\begin{array}{cc}
-        \\frac{\\beta a}{Nb} &,& \\frac{\\mu c}{b(1+c)}
-        \\end{array}\\right) \\\\
-        X &= (I_{obs} S_{obs}, I_{obs}) \\\\
-        \\Longrightarrow  &\\forall X, \\; V_1(a,b,c) X = V_1(a,b,c) X
+        \\begin{array}{rcl}
+        S_{obs} + I_{obs} + R_{obs} + D_{obs} &=& N = S + I + R + D \\\\
+        &=& S_{obs}(1+a) + I_{obs}(1+b) + R_{obs}(1+c) + D_{obs}
         \\end{array}
 
-    And we get :math:`a=b` and
-    :math:`c = \\frac{b(\\nu + \\mu)}{\\mu - b\\nu}`.
+    That gives :math:`a S_{obs} + b I_{obs} + c R_{obs} = 0`.
 
     .. runpython::
         :showcode:
@@ -151,7 +128,10 @@ class CovidSIRDc(BaseSIR):
         ('beta', 0.5, 'taux de transmission dans la population'),
         ('mu', 1 / 14., '1/. : durée moyenne jusque la guérison'),
         ('nu', 1 / 21., '1/. : durée moyenne jusqu\'au décès'),
-        ('b', 1e-5, 'paramètres gérant les informations cachées'),
+        ('a', -1.5025135094805093e-08,
+         'paramètre gérant les informations cachées (S)'),
+        ('b', 1e-5, 'paramètre gérant les informations cachées (I)'),
+        ('c', 1e-5, 'paramètre gérant les informations cachées (R)'),
     ]
 
     Q0 = [
@@ -169,9 +149,9 @@ class CovidSIRDc(BaseSIR):
     # (1 + b) / (1 + c) = 1 - nu * b / mu
     eq = {
         'S': '-beta * (1 + b) * I * S / N',
-        'I': ('beta * (1 + b) * I * S / N'
-              '- nu * (1 + b) * I - (mu - nu * b) * I'),
-        'R': '(mu - nu * b) * I',
+        'I': ('beta * (1 + a) * I * S / N'
+              '- nu * I - mu * I'),
+        'R': 'mu * (1 + b) * I / (1 + c)',
         'D': 'nu * (1 + b) * I'}
 
     def __init__(self):
@@ -183,8 +163,49 @@ class CovidSIRDc(BaseSIR):
             eq=CovidSIRDc.eq.copy())
 
     def R0(self, t=0):
-        '''Returns R0 coefficient.'''
+        '''Returns R0 coefficient.
+        See :meth:`CovidSIRD.R0 <aftercovid.models.CovidSIRD.R0>`'''
         return self['beta'] / (self['nu'] + self['mu'])
+
+    def correctness(self, X=None):
+        '''
+        Returns :math:`a S_{obs} + b I_{obs} + c R_{obs} = 0`.
+
+        :param X: None to use inner quantities
+        :return: a number
+        '''
+        if X is None:
+            X = self.vect().reshape((1, -1))
+        return (X[:, 0] * self['a'] + X[:, 1] * self['b'] +
+                X[:, 2] * self['c']) / self['N']
+
+    def update_abc(self, X=None, update=True, alpha=1.0, l1_ratio=0.5):
+        '''
+        Updates coefficients *a*, *b*, *c* so that method
+        :meth:`correctness <aftercovid.models.CovidSIRDc.correctness>`
+        returns 0. It uses `ElasticNet
+        <https://scikit-learn.org/stable/modules/generated/
+        sklearn.linear_model.ElasticNet.html>`_.
+
+        :param X: None to use inner quantities
+        :param update: True to update to the coefficients
+            or False to just return the results
+        :param alpha: see ElasticNet
+        :param l1_ratio: see ElasticNet
+        :return: dictionary
+        '''
+        if X is None:
+            X = self.vect().reshape((1, -1))
+        X = X / self['N']
+        cst = - self.correctness(X)
+        model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False)
+        model.fit(X, cst)
+        coef = model.coef_
+        res = dict(a=self['a'] + coef[0], b=self['b'] + coef[1],
+                   c=self['c'] + coef[2])
+        if update:
+            self.update(**res)
+        return res
 
     def rnd(self):
         '''
@@ -194,7 +215,9 @@ class CovidSIRDc(BaseSIR):
         self['beta'] = numpy.random.randn(1) * 0.1 + 0.5
         self['mu'] = numpy.random.randn(1) * 0.1 + 1. / 14
         self['nu'] = numpy.random.randn(1) * 0.1 + 1. / 21
+        self['a'] = numpy.random.rand() * 1e-5
         self['b'] = numpy.random.rand() * 1e-5
+        self['c'] = numpy.random.rand() * 1e-5
 
     @staticmethod
     def add_noise(X, epsilon=1.):

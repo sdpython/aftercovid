@@ -49,6 +49,10 @@ class TestEpidemicRegressor(unittest.TestCase):
         epi.fit(X, y)
         loss = epi.score(X, y)
         self.assertGreater(loss, 0)
+        l1 = epi.score(X, y, 'l1')
+        self.assertGreater(l1, 0)
+        with self.assertRaises(ValueError):
+            epi.score(X, y, 'l2')
         pars = epi.coef_
         self.assertIsInstance(pars, dict)
         epi2 = EpidemicRegressor(max_iter=10, init=epi)

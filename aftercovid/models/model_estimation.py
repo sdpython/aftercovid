@@ -106,11 +106,16 @@ def rolling_estimation(X, y,
                 init=m, verbose=True)
             continue
         loss = m.score(Xt, yt)
+        loss_l1 = m.score(Xt, yt, 'l1')
         if verbose:
-            print("k={} iter={} loss={:1.3f} coef={} R0={} lr={}".format(
-                k, m.iter_, loss, m.model_._val_p, m.model_.R0(), lr))
-        obs = dict(k=k, loss=loss, it=m.iter_,
+            print("k={} iter={} loss={:1.3f} l1={:1.3g} coef={} R0={} "
+                  "lr={} cn={}".format(
+                      k, m.iter_, loss, loss_l1,
+                      m.model_._val_p, m.model_.R0(), lr,
+                      m.model_.correctness().sum()))
+        obs = dict(k=k, loss=loss, loss_l1=loss_l1, it=m.iter_,
                    R0=m.model_.R0(), lr=lr,
+                   correctness=m.model_.correctness().sum(),
                    date=k if dates is None else dates[end - 1])
         obs.update({k: v for k, v in zip(
             m.model_.param_names, m.model_._val_p)})

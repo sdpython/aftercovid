@@ -83,9 +83,10 @@ X = data[:-1]
 y = data[1:] - data[:-1]
 dates = df.index[:-1]
 
-X = X[-150:]
-y = y[-150:]
-dates = dates[-150:]
+Nlast = 150
+X = X[-Nlast:]
+y = y[-Nlast:]
+dates = dates[-Nlast:]
 
 #########################################
 # Estimation.
@@ -120,17 +121,19 @@ df.describe()
 # Graphe.
 
 dfcoef['R0=1'] = 1
+dfcoef['a_'] = -dfcoef['a']
+dfcoef['cn'] = -dfcoef['correctness']
 
-fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+fig, ax = plt.subplots(2, 3, figsize=(14, 6), sharex=True)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
-    dfcoef[["loss"]].plot(ax=ax[1, 0], logy=True)
+    dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    dfcoef[["b"]].plot(ax=ax[1, 2], logy=True)
+    dfcoef[["a_", "b", "c", "cn"]].plot(ax=ax[1, 2])
     ax[0, 2].set_ylim(0, 5)
-    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    df.iloc[-Nlast:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
 plt.show()
 
@@ -140,15 +143,15 @@ plt.show()
 dfcoeflast = dfcoef.iloc[-30:, :]
 dflast = df.iloc[-30:, :]
 
-fig, ax = plt.subplots(2, 3, figsize=(14, 6))
+fig, ax = plt.subplots(2, 3, figsize=(14, 6), sharex=True)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
     dfcoeflast[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoeflast[["beta"]].plot(ax=ax[0, 1], logy=True)
-    dfcoeflast[["loss"]].plot(ax=ax[1, 0], logy=True)
+    dfcoeflast[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     ax[0, 2].set_ylim(0, 5)
-    dfcoeflast[["b"]].plot(ax=ax[1, 2], logy=True)
+    dfcoeflast[["a_", "b", "c", "cn"]].plot(ax=ax[1, 2])
     dflast.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()
