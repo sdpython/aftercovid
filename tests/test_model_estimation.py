@@ -30,9 +30,10 @@ class TestModelEstimation(unittest.TestCase):
         self.assertIn("k=6 iter=100", pr)
         self.assertIn('EpidemicRegressor', str(mo))
         self.assertIn("model='SIRD'", str(mo))
-        self.assertEqual(['k', 'loss', 'it', 'R0', 'lr', 'beta', 'mu', 'nu'],
+        self.assertEqual(['k', 'loss', 'loss_l1', 'it', 'R0', 'lr',
+                          'correctness', 'beta', 'mu', 'nu'],
                          list(roll.columns))
-        self.assertEqual(roll.shape, (6, 8))
+        self.assertEqual(roll.shape, (6, 10))
 
     def test_model_estimation_sirdc(self):
         this = os.path.dirname(__file__)
@@ -53,10 +54,11 @@ class TestModelEstimation(unittest.TestCase):
         self.assertIn("k=6 iter=100", pr)
         self.assertIn("model='SIRDc'", str(mo))
         self.assertIn('EpidemicRegressor', str(mo))
-        self.assertEqual(
-            ['k', 'loss', 'it', 'R0', 'lr', 'beta', 'mu', 'nu', 'b'],
-            list(roll.columns))
-        self.assertEqual(roll.shape, (6, 9))
+        self.assertEqual(['k', 'loss', 'loss_l1', 'it', 'R0', 'lr',
+                          'correctness', 'beta', 'mu', 'nu',
+                          'a', 'b', 'c'],
+                         list(roll.columns))
+        self.assertEqual(roll.shape, (6, 13))
 
 
 if __name__ == '__main__':
