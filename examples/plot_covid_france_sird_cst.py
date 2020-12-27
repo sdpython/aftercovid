@@ -100,8 +100,8 @@ dfcoef.head(n=10)
 #####################################
 # Saving the results.
 
-df.to_csv("plot_covid_france_sird_cst.data.csv", index=False)
-dfcoef.to_csv("plot_covid_france_sird_cst.model.csv", index=False)
+df.to_csv("plot_covid_france_sird_cst.data.csv", index=True)
+dfcoef.to_csv("plot_covid_france_sird_cst.model.csv", index=True)
 
 #####################################
 # Fin de la période.
@@ -140,6 +140,9 @@ with warnings.catch_warnings():
     dfcoef[["a_", "b", "c", "cn"]].plot(ax=ax[1, 2])
     ax[0, 2].set_ylim(0, 5)
     df.iloc[-Nlast:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
     fig.suptitle('Estimation de R0 tout au long de la période', fontsize=12)
 plt.show()
 
@@ -159,6 +162,9 @@ with warnings.catch_warnings():
     ax[0, 2].set_ylim(0, 5)
     dfcoeflast[["a_", "b", "c", "cn"]].plot(ax=ax[1, 2])
     dflast.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
     fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()
 

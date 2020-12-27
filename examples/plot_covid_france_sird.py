@@ -103,8 +103,8 @@ dfcoef.head(n=10)
 #####################################
 # Saving the results.
 
-df.to_csv("plot_covid_france_sird.data.csv", index=False)
-dfcoef.to_csv("plot_covid_france_sird.model.csv", index=False)
+df.to_csv("plot_covid_france_sird.data.csv", index=True)
+dfcoef.to_csv("plot_covid_france_sird.model.csv", index=True)
 
 #############################################
 # Statistiques.
@@ -133,10 +133,13 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-ax[0, 2].set_ylim(0, 5)
-fig.suptitle('Estimation de R0 tout au long de la période\n'
-             'Estimation sur 3 semaines', fontsize=12)
+    df.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
+    ax[0, 2].set_ylim(0, 5)
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 3 semaines', fontsize=12)
 plt.show()
 
 #############################################
@@ -153,8 +156,11 @@ with warnings.catch_warnings():
     dfcoeflast[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     dflast.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-ax[0, 2].set_ylim(0, 5)
-fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
+    ax[0, 2].set_ylim(0, 5)
+    fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 
 #################################
 # Sur 21 jours mais seulement les 5 derniers mois
@@ -171,9 +177,10 @@ X = data[:-1]
 y = data[1:] - data[:-1]
 dates = df.index[:-1]
 
-X = X[-150:]
-y = y[-150:]
-dates = dates[-150:]
+Nlast = 150
+X = X[-Nlast:]
+y = y[-Nlast:]
+dates = dates[-Nlast:]
 
 #########################################
 # Estimation.
@@ -210,10 +217,13 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-ax[0, 2].set_ylim(0, 5)
-fig.suptitle('Estimation de R0 tout au long de la période\n'
-             'Estimation sur 3 semaines', fontsize=12)
+    df[-Nlast:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
+    ax[0, 2].set_ylim(0, 5)
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 3 semaines', fontsize=12)
 plt.show()
 
 #############################################
@@ -230,8 +240,11 @@ with warnings.catch_warnings():
     dfcoeflast[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoeflast[["R0", "R0=1"]].plot(ax=ax[0, 2])
     dflast.drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-ax[0, 2].set_ylim(0, 5)
-fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
+    ax[0, 2].set_ylim(0, 5)
+    fig.suptitle('Estimation de R0 sur la fin de la période', fontsize=12)
 plt.show()
 
 #################################################
@@ -329,10 +342,13 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-ax[0, 2].set_ylim(0, 5)
-fig.suptitle('Estimation de R0 tout au long de la période\n'
-             'Estimation sur 1 semaine', fontsize=12)
+    df[-Nlast:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
+    ax[0, 2].set_ylim(0, 5)
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 1 semaine', fontsize=12)
 plt.show()
 
 #######################################
@@ -354,10 +370,13 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-ax[0, 2].set_ylim(0, 5)
-fig.suptitle('Estimation de R0 tout au long de la période\n'
-             'Estimation sur 2 semaines', fontsize=12)
+    df[-Nlast:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
+    ax[0, 2].set_ylim(0, 5)
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 2 semaines', fontsize=12)
 plt.show()
 
 ##############################################
@@ -379,8 +398,11 @@ with warnings.catch_warnings():
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
     dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df[-150:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-ax[0, 2].set_ylim(0, 5)
-fig.suptitle('Estimation de R0 tout au long de la période\n'
-             'Estimation sur 4 semaines', fontsize=12)
+    df[-Nlast:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
+    for i in range(ax.shape[1]):
+        for tick in ax[1, i].get_xticklabels():
+            tick.set_rotation(30)
+    ax[0, 2].set_ylim(0, 5)
+    fig.suptitle('Estimation de R0 tout au long de la période\n'
+                 'Estimation sur 4 semaines', fontsize=12)
 plt.show()
