@@ -98,6 +98,12 @@ dfcoef, model = rolling_estimation(
 dfcoef.head(n=10)
 
 #####################################
+# Saving the results.
+
+df.to_csv("plot_covid_france_sird_cst.data.csv", index=False)
+dfcoef.to_csv("plot_covid_france_sird_cst.model.csv", index=False)
+
+#####################################
 # Fin de la période.
 
 dfcoef.tail(n=10)

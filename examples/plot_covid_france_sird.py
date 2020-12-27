@@ -93,13 +93,18 @@ y = data[1:] - data[:-1]
 dates = df.index[:-1]
 
 #########################################
-# Estimation.
+# Estimation sur
+# 3 semaines car les séries sont cycliques.
 
-
-# 3 semaines car les séries sont cycliques
 dfcoef, model = rolling_estimation(
     X, y, delay=21, dates=dates, verbose=1)
 dfcoef.head(n=10)
+
+#####################################
+# Saving the results.
+
+df.to_csv("plot_covid_france_sird.data.csv", index=False)
+dfcoef.to_csv("plot_covid_france_sird.model.csv", index=False)
 
 #############################################
 # Statistiques.
