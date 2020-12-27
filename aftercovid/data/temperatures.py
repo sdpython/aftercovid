@@ -50,7 +50,7 @@ def load_temperatures(country='France'):
         df = pandas.read_excel(
             filename, sheet_name=sheet, header=1, engine="openpyxl")
         if df.shape[0] == 0:
-            continue
+            continue  # pragma: no cover
         df = _process(df, month)
         df['month'] = month
         df['year'] = 2020

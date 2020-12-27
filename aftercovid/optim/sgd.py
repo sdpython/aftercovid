@@ -158,8 +158,9 @@ class BaseOptimizer:
         if losses is None:  # pragma: no cover
             print('{}/{}: loss: {:1.4g}'.format(it, max_iter, loss))
         else:
-            print('{}/{}: loss: {:1.4g} losses: {}'.format(
-                it, max_iter, loss, losses))
+            print(  # pragma: no cover
+                '{}/{}: loss: {:1.4g} losses: {}'.format(
+                    it, max_iter, loss, losses))
 
 
 class SGDOptimizer(BaseOptimizer):

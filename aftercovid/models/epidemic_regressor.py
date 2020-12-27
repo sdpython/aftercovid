@@ -155,11 +155,11 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             *(X.shape[0], n, number of parameters)*
         """
         if not hasattr(self, "model_"):
-            raise RuntimeError(  # noqa
+            raise RuntimeError(  # pragma: no cover
                 "Model was not trained.")
         clq = self.model_.quantity_names
         if len(clq) != X.shape[1]:
-            raise RuntimeError(
+            raise RuntimeError(  # pragma: no cover
                 "Unapexected shape for X ({}), expecting {} columns."
                 "".format(X.shape, len(clq)))
         res = None

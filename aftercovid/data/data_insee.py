@@ -66,7 +66,7 @@ def data_covid_france_departments_tests(
     def trylen(v):
         try:
             return len(v)
-        except TypeError as e:
+        except TypeError as e:  # pragma: no cover
             raise TypeError("Issue with '{}'".format(v)) from e
     url = ("https://www.data.gouv.fr/fr/datasets/r/"
            "406c6a23-e283-4300-9484-54e78c8ae675")

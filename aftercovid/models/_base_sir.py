@@ -57,7 +57,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         else:
             self._eq = None
         if len(kwargs) != 0:
-            raise NotImplementedError(
+            raise NotImplementedError(  # pragma: no cover
                 "Not implemented.")
         self._init()
 
