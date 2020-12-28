@@ -103,6 +103,8 @@ dfcoef.head(n=10)
 #####################################
 # Saving the results.
 
+df.index = to_datetime(df.index)
+dfcoef.index = to_datetime(dfcoef.index)
 df.to_csv("plot_covid_france_sird.data.csv", index=True)
 dfcoef.to_csv("plot_covid_france_sird.model.csv", index=True)
 
@@ -193,6 +195,7 @@ dfcoef.head(n=10)
 #############################################
 # Statistiques.
 
+dfcoef.index = to_datetime(dfcoef.index)
 dfcoef.describe()
 
 #############################################
@@ -327,6 +330,7 @@ ax[1].set_title("Prediction à partir de %s" % dates[-1])
 # ^^^^^^^^^^^^^
 
 dfcoef, model = rolling_estimation(X, y, delay=7, verbose=1, dates=dates)
+dfcoef.index = to_datetime(dfcoef.index)
 dfcoef.tail()
 
 #######################################
@@ -356,6 +360,7 @@ plt.show()
 # ^^^^^^^^^^^^^
 
 dfcoef, model = rolling_estimation(X, y, delay=14, verbose=1, dates=dates)
+dfcoef.index = to_datetime(dfcoef.index)
 dfcoef.tail()
 
 #######################################
@@ -384,6 +389,7 @@ plt.show()
 # ^^^^^^^^^^^^^^^
 
 dfcoef, model = rolling_estimation(X, y, delay=28, verbose=1, dates=dates)
+dfcoef.index = to_datetime(dfcoef.index)
 dfcoef.tail()
 
 #########################################

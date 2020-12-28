@@ -100,6 +100,8 @@ dfcoef.head(n=10)
 #####################################
 # Saving the results.
 
+df.index = to_datetime(df.index)
+dfcoef.index = to_datetime(dfcoef.index)
 df.to_csv("plot_covid_france_sird_cst.data.csv", index=True)
 dfcoef.to_csv("plot_covid_france_sird_cst.model.csv", index=True)
 
