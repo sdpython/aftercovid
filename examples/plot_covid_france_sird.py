@@ -28,6 +28,7 @@ from datetime import timedelta
 import warnings
 import numpy
 import pandas
+from pandas import to_datetime
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
