@@ -6,10 +6,12 @@ from aftercovid.data import (
     data_covid_france_departments_hospitals,
     data_covid_france_departments_tests,
     data_france_departments)
+from pyquickhelper.pycode import skipif_appveyor
 
 
 class TestDataInsee(unittest.TestCase):
 
+    @skipif_appveyor("connectivity issue")
     def test_data_covid_france_departments_hospitals(self):
         cache = "temp_hosp"
         df = data_covid_france_departments_hospitals(cache, metropole=True)
@@ -23,6 +25,7 @@ class TestDataInsee(unittest.TestCase):
                 df.columns), [
                 'dep', 'sexe', 'jour', 'hosp', 'rea', 'rad', 'dc'])
 
+    @skipif_appveyor("connectivity issue")
     def test_data_covid_france_departments_tests(self):
         cache = "temp_tests"
         df = data_covid_france_departments_tests(cache, metropole=True)
@@ -36,6 +39,7 @@ class TestDataInsee(unittest.TestCase):
                 df.columns), [
                 'dep', 'jour', 'P', 'T', 'cl_age90', 'pop'])
 
+    @skipif_appveyor("connectivity issue")
     def test_data_france_departments(self):
         cache = "temp_dep"
         df = data_france_departments(cache, metropole=True)
