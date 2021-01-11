@@ -1,5 +1,6 @@
 codecov
 coverage
+descartes
 flake8
 geopandas
 jedi
@@ -11,7 +12,7 @@ pillow
 py-spy
 pandas
 pyinstrument
-pyquickhelper>=1.9.3359
+pyquickhelper>=1.10
 pytest
 pytest-cov
 sphinx
