@@ -2,6 +2,7 @@
 """
 Loads data from :epkg:`INSEE`.
 """
+import os
 from pandas import to_datetime
 from .pandas_cache import read_csv_cache, geo_read_csv_cache
 
@@ -19,7 +20,9 @@ def data_france_departments(cache='dep_france', metropole=False):
     """
     url = ("https://www.data.gouv.fr/en/datasets/r/"
            "ed02b655-4307-4db4-b1ca-7939145dc20f")
-    df = geo_read_csv_cache(cache, url)
+    backup = os.path.join(os.path.dirname(__file__),
+                          "data_france_dep.geojson")
+    df = geo_read_csv_cache(cache, url, backup=backup)
     if 'id' in df.columns:
         df = df.drop('id', axis=1)
     if metropole:

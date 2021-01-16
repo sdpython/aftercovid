@@ -6,7 +6,8 @@ from aftercovid.data import (
     data_covid_france_departments_hospitals,
     data_covid_france_departments_tests,
     data_france_departments)
-from pyquickhelper.pycode import skipif_appveyor
+from pyquickhelper.pycode import skipif_appveyor, ignore_warnings
+from pandas.errors import DtypeWarning
 
 
 class TestDataInsee(unittest.TestCase):
@@ -26,6 +27,7 @@ class TestDataInsee(unittest.TestCase):
                 'dep', 'sexe', 'jour', 'hosp', 'rea', 'rad', 'dc'])
 
     @skipif_appveyor("connectivity issue")
+    @ignore_warnings(DtypeWarning)
     def test_data_covid_france_departments_tests(self):
         cache = "temp_tests"
         df = data_covid_france_departments_tests(cache, metropole=True)
@@ -43,23 +45,17 @@ class TestDataInsee(unittest.TestCase):
     def test_data_france_departments(self):
         cache = "temp_dep"
         df = data_france_departments(cache, metropole=True)
-        self.assertEqual(list(sorted(df.columns)),
-                         list(sorted(['code_depart',
-                                      'departement',
-                                      'code_region',
-                                      'region',
-                                      'code_ancien',
-                                      'ancienne_re',
-                                      'geometry'])))
+        self.assertEqual(
+            list(sorted(df.columns)),
+            list(sorted(['code_depart', 'departement', 'code_region',
+                         'region', 'code_ancien', 'ancienne_re',
+                         'geometry'])))
         df = data_france_departments(cache)
-        self.assertEqual(list(sorted(df.columns)),
-                         list(sorted(['code_depart',
-                                      'departement',
-                                      'code_region',
-                                      'region',
-                                      'code_ancien',
-                                      'ancienne_re',
-                                      'geometry'])))
+        self.assertEqual(
+            list(sorted(df.columns)),
+            list(sorted(['code_depart', 'departement', 'code_region',
+                         'region', 'code_ancien', 'ancienne_re',
+                         'geometry'])))
 
 
 if __name__ == '__main__':
