@@ -3,6 +3,7 @@
 
 import os
 import sys
+from datetime import datetime
 sys.path.insert(
     0,
     os.path.abspath(
@@ -10,6 +11,12 @@ sys.path.insert(
             os.path.dirname(__file__),
             '..')))
 from aftercovid import __version__  # noqa
+
+
+def snow():
+    now = datetime.now()
+    return "%02d-%02d-%04d" % (now.day, now.month, now.year)
+
 
 extensions = [
     'nbsphinx',
@@ -39,7 +46,7 @@ html_logo = '_static/logo.png'
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'aftercovid'
-copyright = '2020, Xavier Dupré, ...'
+copyright = 'Xavier Dupré - ' + snow()
 author = 'Xavier Dupré'
 version = __version__
 release = __version__
