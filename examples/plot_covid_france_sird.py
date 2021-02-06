@@ -321,14 +321,11 @@ dfp[["Dpred"]].plot(ax=ax[1])
 ax[1].set_title("Prediction à partir de %s" % dates[-1])
 
 #################################################
-# Taille fenêtre glissante
-# ++++++++++++++++++++++++
+# Taille fenêtre glissante sur 7 jours
+# ++++++++++++++++++++++++++++++++++++
 #
 # On fait varier le paramètre *delay* pour voir comment
 # le modèle réagit. Sur 7 jours d'abord.
-#
-# Sur 7 jours.
-# ^^^^^^^^^^^^^
 
 dfcoef, model = rolling_estimation(X, y, delay=7, verbose=1, dates=dates)
 dfcoef.index = to_datetime(dfcoef.index)
@@ -354,62 +351,4 @@ with warnings.catch_warnings():
     ax[0, 2].set_ylim(0, 5)
     fig.suptitle('Estimation de R0 tout au long de la période\n'
                  'Estimation sur 1 semaine', fontsize=12)
-plt.show()
-
-#######################################
-# Sur 14 jours.
-# ^^^^^^^^^^^^^
-
-dfcoef, model = rolling_estimation(X, y, delay=14, verbose=1, dates=dates)
-dfcoef.index = to_datetime(dfcoef.index)
-dfcoef.tail()
-
-#######################################
-# Graphe.
-
-dfcoef['R0=1'] = 1
-
-fig, ax = plt.subplots(2, 3, figsize=(14, 6))
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
-    dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
-    dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
-    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df[-Nlast:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-    for i in range(ax.shape[1]):
-        for tick in ax[1, i].get_xticklabels():
-            tick.set_rotation(30)
-    ax[0, 2].set_ylim(0, 5)
-    fig.suptitle('Estimation de R0 tout au long de la période\n'
-                 'Estimation sur 2 semaines', fontsize=12)
-plt.show()
-
-##############################################
-# Sur 4 semaines.
-# ^^^^^^^^^^^^^^^
-
-dfcoef, model = rolling_estimation(X, y, delay=28, verbose=1, dates=dates)
-dfcoef.index = to_datetime(dfcoef.index)
-dfcoef.tail()
-
-#########################################
-# Graphe.
-
-dfcoef['R0=1'] = 1
-
-fig, ax = plt.subplots(2, 3, figsize=(14, 6))
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
-    dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
-    dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
-    dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
-    dfcoef[["R0", "R0=1"]].plot(ax=ax[0, 2])
-    df[-Nlast:].drop('safe', axis=1).plot(ax=ax[1, 1], logy=True)
-    for i in range(ax.shape[1]):
-        for tick in ax[1, i].get_xticklabels():
-            tick.set_rotation(30)
-    ax[0, 2].set_ylim(0, 5)
-    fig.suptitle('Estimation de R0 tout au long de la période\n'
-                 'Estimation sur 4 semaines', fontsize=12)
 plt.show()
