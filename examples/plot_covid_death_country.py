@@ -110,7 +110,9 @@ tfpos.tail(
 
 fig, ax = plt.subplots(1, 3, figsize=(14, 6))
 dtfpos = tfpos.diff()
-dtfpos.plot(logy=False, lw=3, title="Nombre de cas positifs COVID\npar jour", ax=ax[0])
+dtfpos.plot(
+    logy=False, lw=3, title="Nombre de cas positifs COVID\npar jour",
+    ax=ax[0])
 dtfpos.plot(logy=True, lw=3, ax=ax[1])
 tfpos.tail(
     n=60).plot(
