@@ -75,8 +75,19 @@ tfpos.tail()
 
 fig, ax = plt.subplots(1, 3, figsize=(14, 6))
 tf.plot(logy=False, lw=3, title="Nombre de décès COVID", ax=ax[0])
-tf.plot(logy=True, lw=3, title="Nombre de décès COVID", ax=ax[1])
-tf.tail(n=60).plot(logy=True, lw=3, title="Nombre de décès COVID", ax=ax[2])
+tf.plot(logy=True, lw=3, ax=ax[1])
+tf.tail(n=60).plot(logy=True, lw=3, ax=ax[2])
+
+
+########################################
+# Nombre de décès par pays par jour
+# +++++++++++++++++++++++++++++++++
+
+fig, ax = plt.subplots(1, 3, figsize=(14, 6))
+dtf = tfpos.diff()
+dtf.plot(logy=False, lw=3, title="Nombre de décès COVID\npar jour", ax=ax[0])
+dtf.plot(logy=True, lw=3, ax=ax[1])
+dtf.tail(n=60).plot(logy=True, lw=3, ax=ax[2])
 
 
 ########################################
@@ -85,7 +96,22 @@ tf.tail(n=60).plot(logy=True, lw=3, title="Nombre de décès COVID", ax=ax[2])
 
 fig, ax = plt.subplots(1, 3, figsize=(14, 6))
 tfpos.plot(logy=False, lw=3, title="Nombre de cas positifs COVID", ax=ax[0])
-tfpos.plot(logy=True, lw=3, title="Nombre de cas positifs COVID", ax=ax[1])
+tfpos.plot(logy=True, lw=3, ax=ax[1])
+tfpos.tail(
+    n=60).plot(
+        logy=True,
+        lw=3,
+        title="Nombre de cas positifs COVID",
+    ax=ax[2])
+
+########################################
+# Cas positifs par pays par jour
+# ++++++++++++++++++++++++++++++
+
+fig, ax = plt.subplots(1, 3, figsize=(14, 6))
+dtfpos = tfpos.diff()
+dtfpos.plot(logy=False, lw=3, title="Nombre de cas positifs COVID\npar jour", ax=ax[0])
+dtfpos.plot(logy=True, lw=3, ax=ax[1])
 tfpos.tail(
     n=60).plot(
         logy=True,
