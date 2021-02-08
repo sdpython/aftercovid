@@ -226,3 +226,10 @@ Tools
 
 * `Analytics can identify infected patients
   <https://covidanalytics.io/infection_calculator>`_
+
+2021
+++++
+
+* `Le COVID 19, les gènes et le comportement <http://variances.eu/?p=5671>`_,
+  cet article relie le taux de mortalité par pays avec certaines caractéristiques
+  de la population, groupe sanguin, obésité, âge moyen, enzyme ACE, ACE II.
