@@ -267,5 +267,6 @@ class SGDOptimizer(BaseOptimizer):
             print('{}/{}: {}: {:1.4g} lr={:1.3g}'.format(
                 it, max_iter, msg, loss, self.learning_rate))
         else:
-            print('{}/{}: {}: {:1.4g} lr={:1.3g} {}es: {}'.format(
-                it, max_iter, msg, loss, self.learning_rate, msg, losses))
+            print(  # pragma: no cover
+                '{}/{}: {}: {:1.4g} lr={:1.3g} {}es: {}'.format(
+                    it, max_iter, msg, loss, self.learning_rate, msg, losses))

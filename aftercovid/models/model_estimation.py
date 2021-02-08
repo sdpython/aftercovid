@@ -46,7 +46,7 @@ def find_best_model(Xt, yt, lrs, stop_loss, verbose=0,
                 continue
             loss = m.score(Xt, yt)
             if numpy.isnan(loss):
-                continue
+                continue  # pragma: no cover
         if best_est is None or best_loss > loss:
             best_est = m
             best_loss = loss

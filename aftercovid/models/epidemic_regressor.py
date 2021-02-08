@@ -13,8 +13,8 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
     Follows :epkg:`scikit-learn` API.
     Trains a model on observed data from an epidemic.
 
-    :param model: model to train, `'SIR'` refers to
-        `CovidSIRD <aftercovid.models.CovidSIRD>`,
+    :param model: model to train, `'SIR'` or `'SIRD'`
+        refers to `CovidSIRD <aftercovid.models.CovidSIRD>`,
         `SIRDc` refers to `CovidSIRDc
         <aftercovid.models.CovidSIRDc>`
     :param t: implicit feature
@@ -58,7 +58,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
                 if hasattr(init, 'coef_'):
                     init = init.coef_.copy()
                 else:
-                    init = None
+                    init = None  # pragma: no cover
             elif not isinstance(init, dict):
                 raise TypeError(
                     "init must be a dictionary not {}.".format(type(init)))

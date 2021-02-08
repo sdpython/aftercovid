@@ -48,7 +48,7 @@ def geo_read_csv_cache(cache, url, backup=None, **kwargs):
         df = geopandas.read_file(url, **kwargs)
     except HTTPError as e:
         if backup is None:
-            raise e
+            raise e  # pragma: no cover
         # use a backup in case the connection failed.
         df = geopandas.read_file(backup, **kwargs)
     with open(ext, 'w', encoding='utf-8') as f:
