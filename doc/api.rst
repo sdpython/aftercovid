@@ -40,6 +40,7 @@ Models
 
     model_covidsir
     model_covidsir_cst
+    model_covidsir_mixture
     model_optim
 
 scikti-learn API

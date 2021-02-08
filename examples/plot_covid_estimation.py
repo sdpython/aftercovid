@@ -51,7 +51,7 @@ df.tail()
 ######################################
 # Visualisation
 
-df.plot(title="Simulation SIR")
+df.plot(title="Simulation SIRD")
 
 
 ###########################################
@@ -63,7 +63,7 @@ df.plot(title="Simulation SIR")
 # l'API de :epkg:`scikit-learn`.
 
 
-m = EpidemicRegressor('SIR', verbose=True, learning_rate_init=1e-3,
+m = EpidemicRegressor('SIRD', verbose=True, learning_rate_init=1e-3,
                       max_iter=10, early_th=1)
 m.fit(X, y)
 pprint(m.model_.P)
@@ -83,7 +83,7 @@ def find_best_model(Xt, yt, lrs, th):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
             m = EpidemicRegressor(
-                'SIR',
+                'SIRD',
                 learning_rate_init=lr,
                 max_iter=500,
                 early_th=1)
@@ -99,7 +99,7 @@ def find_best_model(Xt, yt, lrs, th):
     return best_est, best_loss
 
 ###############################################
-# On estime les coefficients du modèle tous les 5 jours
+# On estime les coefficients du modèle tous les 2 jours
 # sur les 10 derniers jours.
 
 

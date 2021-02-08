@@ -21,7 +21,7 @@ class CovidSIRD(BaseSIR):
         print(model.to_rst())
 
     .. exref::
-        :title: SIR simulation and plotting
+        :title: SIRD simulation and plotting
 
         .. plot::
 
