@@ -42,6 +42,7 @@ class TestModelsCovidSirMixture(unittest.TestCase):
         res = model.correctness()
         self.assertEqual(res.min(), res.max())
         self.assertEqual(res.min(), 0.)
+        model.rnd()
 
     def test_covid_sir_eval(self):
         model = CovidSIRDMixture()
