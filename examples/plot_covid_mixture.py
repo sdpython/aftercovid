@@ -47,15 +47,14 @@ pprint(model.Q)
 # On part d'un point de départ un peu plus conséquent
 # car l'estimation n'est pas très fiable au départ de l'épidémie
 # comme le montre l'exemple :ref:`l-estim-sird-theory`.
-model.update['S'] = 9100
-model.update['I1'] = 80
-model.update['I2'] = 20
+model.update(S=9100, I1=80, I2=20)
+pprint(model.Q)
 
 
 ###################################
 # Simulation
 
-X, y = model.iterate2array(50, derivatives=True)
+X, y = model.iterate2array(70, derivatives=True)
 data = {_[0]: x for _, x in zip(model.Q, X.T)}
 data.update({('d' + _[0]): c for _, c in zip(model.Q, y.T)})
 df = pandas.DataFrame(data)
@@ -91,7 +90,7 @@ y2[:, 3] = y[:, 4]
 X, y = X2, y2
 
 m = EpidemicRegressor('SIRD', verbose=True, learning_rate_init=1e-3,
-                      max_iter=10, early_th=1)
+                      max_iter=15, early_th=1)
 m.fit(X, y)
 pprint(m.model_.P)
 
@@ -131,7 +130,7 @@ def find_best_model(Xt, yt, lrs, th):
 
 
 coefs = []
-for k in range(0, X.shape[0] - 9, 2):
+for k in range(0, X.shape[0] - 9):
     end = min(k + 10, X.shape[0])
     Xt, yt = X[k:end], y[k:end]
     m, loss = find_best_model(Xt, yt, [1e-2, 1e-3], 10)
