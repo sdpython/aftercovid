@@ -43,6 +43,14 @@ pprint(model.P)
 # Point de départ
 pprint(model.Q)
 
+###################################
+# On part d'un point de départ un peu plus conséquent
+# car l'estimation n'est pas très fiable au départ de l'épidémie
+# comme le montre l'exemple :ref:`l-estim-sird-theory`.
+model.update['S'] = 9100
+model.update['I1'] = 80
+model.update['I2'] = 20
+
 
 ###################################
 # Simulation
@@ -56,7 +64,7 @@ df.tail()
 ######################################
 # Visualisation
 
-df.plot(title="Simulation SIRDMixture")
+df.drop('S', axis=1).plot(title="Simulation SIRDMixture")
 
 
 ###########################################

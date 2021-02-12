@@ -1,5 +1,7 @@
 # coding: utf-8
 """
+.. _l-estim-sird-theory:
+
 Estimation des paramètres d'un modèle SIRD
 ==========================================
 
