@@ -78,8 +78,8 @@ class CovidSIRDMixture(BaseSIR):
     ]
 
     eq = {
-        'S': '- beta1 * S / N * I1 - beta2 * S / N * I2',
-        'I1': 'beta1 * S / N * I1 - mu * I1 - nu * I1',
+        'S': '- beta1 * S / N * I1 - beta2 * S / N * I2 + beta1 * beta2 * S * I1 / N * I2 / N',
+        'I1': 'beta1 * S / N * I1 - mu * I1 - nu * I1 - beta1 * beta2 * S * I1 / N * I2 / N',
         'I2': 'beta2 * S / N * I2 - mu * I2 - nu * I2',
         'R': 'mu * (I1 + I2)',
         'D': 'nu * (I1 + I2)'

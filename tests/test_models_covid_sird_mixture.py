@@ -52,7 +52,7 @@ class TestModelsCovidSirMixture(unittest.TestCase):
                                'mu': 0.07142857142857142,
                                'nu': 0.047619047619047616})
         ev = model.eval_diff()
-        self.assertLess(abs(ev['S'] - (-5.3946)), 1e-5)
+        self.assertLess(abs(ev['S'] - (-5.3940405600000005)), 1e-5)
         self.assertEqual(len(ev), 5)
 
     def test_covid_sir_loop(self):
