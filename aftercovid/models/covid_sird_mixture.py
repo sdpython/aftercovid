@@ -11,7 +11,9 @@ class CovidSIRDMixture(BaseSIR):
     """
     The model extends model @see cl CovidSIRD and assumes
     there are two variants of the same virus.
-
+    The term `beta1 * beta2 * S * I1 / N * I2 / N` means
+    that for all people being in contact with both
+    virus, the second one wins as it is more contagious.
 
     .. runpython::
         :showcode:
@@ -78,8 +80,10 @@ class CovidSIRDMixture(BaseSIR):
     ]
 
     eq = {
-        'S': '- beta1 * S / N * I1 - beta2 * S / N * I2 + beta1 * beta2 * S * I1 / N * I2 / N',
-        'I1': 'beta1 * S / N * I1 - mu * I1 - nu * I1 - beta1 * beta2 * S * I1 / N * I2 / N',
+        'S': ('- beta1 * S / N * I1 - beta2 * S / N * I2 '
+              '+ beta1 * beta2 * S * I1 / N * I2 / N'),
+        'I1': ('beta1 * S / N * I1 - mu * I1 - nu * I1 '
+               '- beta1 * beta2 * S * I1 / N * I2 / N'),
         'I2': 'beta2 * S / N * I2 - mu * I2 - nu * I2',
         'R': 'mu * (I1 + I2)',
         'D': 'nu * (I1 + I2)'

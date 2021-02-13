@@ -54,7 +54,7 @@ pprint(model.Q)
 ###################################
 # Simulation
 
-X, y = model.iterate2array(80, derivatives=True)
+X, y = model.iterate2array(90, derivatives=True)
 data = {_[0]: x for _, x in zip(model.Q, X.T)}
 data.update({('d' + _[0]): c for _, c in zip(model.Q, y.T)})
 df = pandas.DataFrame(data)
