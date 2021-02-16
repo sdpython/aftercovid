@@ -14,6 +14,7 @@ Dashboards
   (`code <https://github.com/jscire/Swiss_covid_Re/tree/master/scripts>`_)
 * `COVID-19 - France
   <https://dashboard.covid19.data.gouv.fr/vue-d-ensemble?location=FRA>`_
+* `EndCoronavirus.org <https://www.endcoronavirus.org/>`_
 
 Articles de journaux
 ++++++++++++++++++++
