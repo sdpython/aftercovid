@@ -37,7 +37,7 @@ class CovidSIRDMixture(BaseSIR):
             sims = list(model.iterate(60))
             df = DataFrame(sims)
             print(df.head())
-            ax = df.plot(y=['S', 'I', 'R', 'D'], kind='line')
+            ax = df.plot(y=['S', 'I1', 'I2', 'R', 'D'], kind='line')
             ax.set_xlabel("jours")
             ax.set_ylabel("population")
             r0 = model.R0()
