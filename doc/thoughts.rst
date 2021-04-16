@@ -43,9 +43,9 @@ Et d'autres choses :
 * `Real-time forecasting of epidemic trajectories using computational dynamic ensembles
   <https://www.sciencedirect.com/science/article/pii/S1755436519301112>`_
 
-Je pense qu'on pourrait approcher cela par des petits SIR localisés qui 
-communiquent entre eux, SIR à l'intérieur et contamination non visqueuse, 
-contamination visqueuse entre mini SIR et là on peut prendre en 
+Je pense qu'on pourrait approcher cela par des petits SIR localisés qui
+communiquent entre eux, SIR à l'intérieur et contamination non visqueuse,
+contamination visqueuse entre mini SIR et là on peut prendre en
 compte la densité de la population.
 
 Deux ou trois petites digressions

@@ -19,9 +19,7 @@ INSEE
 
 .. autofunction:: aftercovid.data.data_france_departments
 
-
 Temperatures
 ++++++++++++
 
 .. autofunction:: aftercovid.data.temperatures
-

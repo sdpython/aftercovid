@@ -43,7 +43,7 @@ Données publiques
   <http://www.data.drees.sante.gouv.fr/ReportFolders/reportFolders.aspx?IF_ActivePath=P,432,433,707>`_
 * `SNCF - COVID-19 : évolution de la mobilité des français
   <https://presse.ouitalk.oui.sncf/covid-19-evolution-de-la-mobilite-des-francais-infographie/>`_
-* `PopulationPyramid.net 
+* `PopulationPyramid.net
   <https://www.populationpyramid.net/western-europe/2019/>`_,
   le même site sur les départements français serait une bonne idée
 
@@ -61,7 +61,7 @@ Lectures
 * `Inferring COVID-19 spreading rates and potential change points for case number forecasts
   <https://arxiv.org/abs/2004.01105>`_
 * `Des chercheurs revoient le seuil d’immunité collective à la baisse
-  <https://www.mediapart.fr/journal/france/220520/des-chercheurs-revoient-le-seuil-d-immunite-collective-la-baisse>`_  
+  <https://www.mediapart.fr/journal/france/220520/des-chercheurs-revoient-le-seuil-d-immunite-collective-la-baisse>`_
 * `Economic considerations for social distancing and behavioral based policies during an epidemic
   <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3659402/>`_
 
@@ -80,7 +80,7 @@ Une série d'articles intéressants...
   <https://medium.com/@tomaspueyo/coronavirus-learning-how-to-dance-b8420170203e>`_
 * `Coronavirus: How to Do Testing and Contact Tracing (Part 3)
   <https://medium.com/@tomaspueyo/coronavirus-learning-how-to-dance-b8420170203e>`_
-  
+
 Et la critique que France Culture faisait de l'auteur le 16 mars 2020
 sur son article
 `Coronavirus : Agissez Aujourd'hui
@@ -207,7 +207,7 @@ Modules
 * `Mathematics of Epidemics on Networks
   <https://github.com/springer-math/Mathematics-of-Epidemics-on-Networks>`_,
   c'est autant un livre qu'un module.
-  
+
 Code
 ++++
 
