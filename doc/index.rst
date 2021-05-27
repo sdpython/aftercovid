@@ -5,8 +5,8 @@ aftercovid: modelling, simulation, statistics around COVID
 .. image:: https://circleci.com/gh/sdpython/aftercovid/tree/master.svg?style=svg
     :target: https://circleci.com/gh/sdpython/aftercovid/tree/master
 
-.. image:: https://travis-ci.org/sdpython/aftercovid.svg?branch=master
-    :target: https://travis-ci.org/sdpython/aftercovid
+.. image:: https://travis-ci.com/sdpython/aftercovid.svg?branch=master
+    :target: https://travis-ci.com/sdpython/aftercovid
     :alt: Build status
 
 .. image:: https://ci.appveyor.com/api/projects/status/ffne8nhh96jdqo4p?svg=true
