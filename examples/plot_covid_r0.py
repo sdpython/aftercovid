@@ -142,8 +142,8 @@ with warnings.catch_warnings():
     ax = axs[0]
     cax = make_axes_locatable(ax).append_axes("right", size="5%", pad=0.1)
     locdep.plot(
-    column="R", ax=ax, edgecolor='black',
-    legend=True, cax=cax, cmap="OrRd")
+        column="R", ax=ax, edgecolor='black',
+        legend=True, cax=cax, cmap="OrRd")
     if (locdep.R < 1).sum() > 0:
         locdep[locdep.R < 1].geometry.boundary.plot(
             color=None, edgecolor='g', linewidth=2, ax=ax, label="R<1")
