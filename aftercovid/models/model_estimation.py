@@ -52,7 +52,7 @@ def find_best_model(Xt, yt, lrs, stop_loss, verbose=0,
             best_loss = loss
             best_lr = lr
         if best_loss < stop_loss:
-            return best_est, best_loss, best_lr
+            return best_est, best_loss, best_lr  # pragma: no cover
     return best_est, best_loss, best_lr
 
 
@@ -94,7 +94,7 @@ def rolling_estimation(X, y,
         end = min(k + delay, X.shape[0])
         Xt, yt = X[k:end], y[k:end]
         if any(numpy.isnan(Xt.ravel())) or any(numpy.isnan(yt.ravel())):
-            continue
+            continue  # pragma: no cover
         m, loss, lr = find_best_model(
             Xt, yt, lrs, stop_loss, init=m, model_name=model_name,
             max_iter=max_iter)

@@ -91,9 +91,9 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         def _def_(name, v):
             if v is not None:
                 return v
-            if name == 'N':
+            if name == 'N':  # pragma: no cover
                 return 10000.
-            return 0.
+            return 0.  # pragma: no cover
 
         self._val_p = numpy.array(
             [_def_(v[0], v[1]) for v in self._p], dtype=numpy.float64)
@@ -371,10 +371,10 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
                 if not full and (a == b or sg < 0):
                     continue
                 if name == '?':
-                    rows.append(
+                    rows.append(  # pragma: no cover
                         pattern.format(n1=a, n2=b, name=name,
                                        v=numpy.nan, sg='0'))
-                    continue
+                    continue  # pragma: no cover
                 value = self[name]
                 stsg = '' if sg > 0 else '-'
                 rows.append(

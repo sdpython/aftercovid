@@ -21,9 +21,9 @@ def read_csv_cache(cache, url, **kwargs):
     ext = "%s-%04d-%02d-%02d.csv" % (cache, now.year, now.month, now.day)
     if os.path.exists(ext):
         return pandas.read_csv(ext, **kwargs)
-    df = pandas.read_csv(url, **kwargs)
-    df.to_csv(ext, sep=kwargs.get('sep', ','), index=False)
-    return df
+    df = pandas.read_csv(url, **kwargs)  # pragma: no cover
+    df.to_csv(ext, sep=kwargs.get('sep', ','), index=False)  # pragma: no cover
+    return df  # pragma: no cover
 
 
 def geo_read_csv_cache(cache, url, backup=None, **kwargs):
@@ -44,13 +44,13 @@ def geo_read_csv_cache(cache, url, backup=None, **kwargs):
     if os.path.exists(ext):
         with open(ext, 'r', encoding='utf-8'):
             return geopandas.read_file(ext, **kwargs)
-    try:
-        df = geopandas.read_file(url, **kwargs)
-    except HTTPError as e:
+    try:  # pragma: no cover
+        df = geopandas.read_file(url, **kwargs)  # pragma: no cover
+    except HTTPError as e:  # pragma: no cover
         if backup is None:
-            raise e  # pragma: no cover
+            raise e
         # use a backup in case the connection failed.
         df = geopandas.read_file(backup, **kwargs)
-    with open(ext, 'w', encoding='utf-8') as f:
+    with open(ext, 'w', encoding='utf-8') as f:  # pragma: no cover
         f.write(df.to_json(), **kwargs)
-    return df
+    return df  # pragma: no cover
