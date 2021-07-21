@@ -131,28 +131,22 @@ locdep.tail()
 # Et on dessine. Les départements en vert sont ceux pour lequel
 # le R est > 1.
 
-
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=UserWarning)
     warnings.filterwarnings("ignore", category=MatplotlibDeprecationWarning)
     fig, axs = plt.subplots(
-        1, 2, figsize=(
-            16, 10), gridspec_kw={
-            'width_ratios': [
-                2, 1]})
+        1, 2, figsize=(16, 10),
+        gridspec_kw={'width_ratios': [2, 1]})
 
     # métropole
     ax = axs[0]
     cax = make_axes_locatable(ax).append_axes("right", size="5%", pad=0.1)
     locdep.plot(
-        column="R",
-        ax=ax,
-        edgecolor='black',
-        legend=True,
-        cax=cax,
-        cmap="OrRd")
-    locdep[locdep.R < 1].geometry.boundary.plot(
-        color=None, edgecolor='g', linewidth=2, ax=ax, label="R<1")
+    column="R", ax=ax, edgecolor='black',
+    legend=True, cax=cax, cmap="OrRd")
+    if (locdep.R < 1).sum() > 0:
+        locdep[locdep.R < 1].geometry.boundary.plot(
+            color=None, edgecolor='g', linewidth=2, ax=ax, label="R<1")
     ax.set_title("R par départments de la métropole\n%r" % deps.jour.max())
 
     for _, row in locdep.iterrows():
@@ -168,12 +162,8 @@ with warnings.catch_warnings():
     locdep2 = locdep[locdep.dep.isin(idf)]
     cax = make_axes_locatable(ax).append_axes("right", size="5%", pad=0.1)
     locdep2.plot(
-        column="R",
-        ax=ax,
-        edgecolor='black',
-        legend=True,
-        cax=cax,
-        cmap="OrRd")
+        column="R", ax=ax, edgecolor='black',
+        legend=True, cax=cax, cmap="OrRd")
     ax.set_title("R par départments de la métropole\n%r" % deps.jour.max())
 
     for _, row in locdep2.iterrows():

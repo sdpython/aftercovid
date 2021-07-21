@@ -15,3 +15,5 @@ aftercovid/tutorial/experiment_cython.cpp
 aftercovid/tutorial/dot_cython_omp.cpp
 tests/t.xlsx
 tests/temp*
+examples/*.csv
+examples/*.geojson

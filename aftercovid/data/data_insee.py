@@ -76,6 +76,14 @@ def data_covid_france_departments_tests(
     df = read_csv_cache(cache, url, sep=';')
     df['jour'] = to_datetime(df['jour'])
     df['dep'] = df.dep.astype(str)
+
+    def plus0(s):
+        if len(s) < 2:
+            return "0" * (2 - len(s)) + s
+        return s
+
+    df['dep'] = df['dep'].apply(plus0)
+
     if metropole:
         codes = [_ for _ in set(df.dep) if trylen(_) < 3]
         return df[df.dep.isin(codes)]
