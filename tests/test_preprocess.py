@@ -7,7 +7,8 @@ from numpy import nan as nnan
 from numpy.testing import assert_almost_equal
 import pandas
 from aftercovid.preprocess import (
-    ts_moving_average, ts_normalise_negative_values)
+    ts_moving_average, ts_normalise_negative_values,
+    ts_remove_decreasing_values)
 
 
 class TestPreprocess(unittest.TestCase):
@@ -175,6 +176,26 @@ class TestPreprocess(unittest.TestCase):
         norm = ts_normalise_negative_values(data['r'], extreme=2)
         self.assertFalse(any(norm < 0))
         self.assertFalse(any(numpy.isnan(norm)))
+
+    def test_ts_remove_decreasing_values(self):
+        values = numpy.array([0, 1, 10, 100, 1000, 901, 2000])
+        with self.assertRaises(NotImplementedError):
+            ts_remove_decreasing_values(values.astype(float))
+        new_values = ts_remove_decreasing_values(values)
+        assert_almost_equal(
+            values, numpy.array([0, 1, 10, 100, 1000, 901, 2000]))
+        assert_almost_equal(
+            new_values, numpy.array([0, 1, 8, 41, 881, 901, 2000]))
+
+        values = numpy.array([0, 1, 10, 950, 1000, 901, 2000])
+        new_values = ts_remove_decreasing_values(values)
+        assert_almost_equal(
+            new_values, numpy.array([0, 1, 7, 873, 881, 901, 2000]))
+
+        values = numpy.array([0, 1, 10, 950, 1000, 901, 890, 2000])
+        new_values = ts_remove_decreasing_values(values)
+        assert_almost_equal(
+            new_values, numpy.array([0, 1, 3, 865, 868, 888, 890, 2000]))
 
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@
 set current=%~dp0
 set root=%current%..
 cd %root%
-set pythonexe="c:\Python387_x64\python.exe"
+set pythonexe="c:\Python395_x64\python.exe"
 if not exist %pythonexe% set pythonexe=python
 
 @echo running 'python -m autopep8 --in-place --aggressive --aggressive -r'

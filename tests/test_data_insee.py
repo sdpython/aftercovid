@@ -13,6 +13,7 @@ from pandas.errors import DtypeWarning
 class TestDataInsee(unittest.TestCase):
 
     @skipif_appveyor("connectivity issue")
+    @ignore_warnings((DtypeWarning, DeprecationWarning))
     def test_data_covid_france_departments_hospitals(self):
         cache = "temp_hosp"
         df = data_covid_france_departments_hospitals(cache, metropole=True)
@@ -23,7 +24,7 @@ class TestDataInsee(unittest.TestCase):
         self.assertEqual(list(df.columns), exp_cols)
 
     @skipif_appveyor("connectivity issue")
-    @ignore_warnings(DtypeWarning)
+    @ignore_warnings((DtypeWarning, DeprecationWarning))
     def test_data_covid_france_departments_tests(self):
         cache = "temp_tests"
         df = data_covid_france_departments_tests(cache, metropole=True)
@@ -33,6 +34,7 @@ class TestDataInsee(unittest.TestCase):
         self.assertEqual(list(df.columns), exp_cols)
 
     @skipif_appveyor("connectivity issue")
+    @ignore_warnings((DtypeWarning, DeprecationWarning))
     def test_data_france_departments(self):
         cache = "temp_dep"
         df = data_france_departments(cache, metropole=True)
