@@ -3,7 +3,9 @@ Loads data from :epkg:`CSSE Johns Hopkins`.
 """
 import numpy
 import pandas
-from ..preprocess import ts_normalise_negative_values, ts_moving_average
+from ..preprocess import (
+    ts_normalise_negative_values, ts_moving_average,
+    ts_remove_decreasing_values)
 
 
 population = {
@@ -46,7 +48,7 @@ def download_hopkins_data(kind='deaths', country='France'):
 
 
 def extract_hopkins_data(kinds=('deaths', 'confirmed', 'recovered'),
-                         country='France', delay=21):
+                         country='France', delay=21, raw=False):
     """
     Downloads data from :epkg:`CSSE Johns Hopkins` and infers
     the number of current positive cases in a very simple way.
@@ -56,6 +58,7 @@ def extract_hopkins_data(kinds=('deaths', 'confirmed', 'recovered'),
     :param country: `'France'`, `'UK'`, ...
     :param delay: the function assumes after 21 days, a confirmed
         case moves is not positive anymore
+    :param raw: if True, returns the raw data as well
     :return: dataframe
 
     .. runpython::
@@ -70,7 +73,10 @@ def extract_hopkins_data(kinds=('deaths', 'confirmed', 'recovered'),
     for k in kinds:
         df = download_hopkins_data(k, country)
         dfs.append(df)
-    conc = pandas.concat(dfs, axis=1)
+    conc0 = pandas.concat(dfs, axis=1)
+    for c in conc0:
+        conc0[c] = ts_remove_decreasing_values(conc0[c].astype(numpy.int64))
+    conc = conc0.copy()
     infected = conc['confirmed'] - (conc['deaths'] + conc['recovered'])
     conf30 = infected[:-delay]
     recovered = conc['recovered'].values.copy()
@@ -84,6 +90,8 @@ def extract_hopkins_data(kinds=('deaths', 'confirmed', 'recovered'),
     conc['recovered'] = recovered
     conc['infected'] = infected
     conc['safe'] = total - conc.drop('confirmed', axis=1).sum(axis=1)
+    if raw:
+        return conc, conc0
     return conc
 
 

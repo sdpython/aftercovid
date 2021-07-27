@@ -4,6 +4,56 @@ Preprocesses timeseries about COVID.
 import numpy
 
 
+def ts_remove_decreasing_values(series):
+    """
+    Returns a series with no decreasing values
+    (only growing). Data are sometimes normalized and
+    show negative values but the past remains unchanged.
+    This functions decreases past values until the series
+    is growing.
+
+    :param series: series
+    :return: new series
+    """
+    def normalize(series, index):
+        origin = series[0]
+        diff = series[1:] - series[:-1]
+        delta = series[index - 1] - series[index]
+        h = int(float(delta) / index) + 1
+        delta += h
+        delta_ = delta + 1
+        while delta > 0 and delta < delta_:
+            delta_ = delta
+            pos = index - 2
+            while pos > 0 and delta > 0:
+                if diff[pos] > h:
+                    d = min(h, delta)
+                    diff[pos] -= d
+                    delta -= d
+                elif diff[pos] > 1:
+                    diff[pos] -= 1
+                    delta -= 1
+                pos -= 1
+        diff[index - 1] = h
+        series[1:] = origin + diff.cumsum()
+
+    if series.dtype in (numpy.int64, numpy.int32):
+        if hasattr(series, 'values'):
+            values = series.values.copy()
+        else:
+            values = series.copy()
+        points = []
+        for i in range(1, len(values)):
+            if values[i] < values[i - 1]:
+                points.append(i)
+        for p in reversed(points):
+            normalize(values, p)
+        return values
+
+    raise NotImplementedError(
+        "Not implemented for real types.")
+
+
 def ts_moving_average(series, n=7, center=True):
     """
     Computes the moving average of a differential series.
