@@ -3,7 +3,7 @@
     :target: https://circleci.com/gh/sdpython/aftercovid/tree/master
 
 .. image:: https://travis-ci.com/sdpython/aftercovid.svg?branch=master
-    :target: https://travis-ci.com/sdpython/aftercovid
+    :target: https://app.travis-ci.com/github/sdpython/aftercovid
     :alt: Build status
 
 .. image:: https://ci.appveyor.com/api/projects/status/ffne8nhh96jdqo4p?svg=true
