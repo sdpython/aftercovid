@@ -50,6 +50,13 @@ Données publiques
 Lectures
 ++++++++
 
+*Pasteur*
+
+* `EPIDÉMIOLOGIE DU SARS-COV-2 DANS UNE POPULATION VACCINÉE ET IMPLICATIONS POUR LE CONTRÔLE D’UN REBOND AUTOMNAL
+  <https://modelisation-covid19.pasteur.fr/evaluate-control-measures/impact-partially-vaccinated-population/>`_
+
+*Modèles*
+
 * `CODATA <https://www.collectif-codata.fr/note.pdf>`_
 * `Un panorama des recherches contre le COVID-19 dans le domaine des sciences et technologie de l'information
   <https://github.com/StephaneCanu/covid_AI_resources/blob/master/GDR_ISIS_Covid_IA_2.pdf>`_
@@ -60,7 +67,7 @@ Lectures
 * `AI v Covid-19 <http://people.idsia.ch/~juergen/ai-covid.html>`_ (catalogue d'articles)
 * `Inferring COVID-19 spreading rates and potential change points for case number forecasts
   <https://arxiv.org/abs/2004.01105>`_
-* `Des chercheurs revoient le seuil d’immunité collective à la baisse
+* `Des chercheurs revoient le seuil d'immunité collective à la baisse
   <https://www.mediapart.fr/journal/france/220520/des-chercheurs-revoient-le-seuil-d-immunite-collective-la-baisse>`_
 * `Economic considerations for social distancing and behavioral based policies during an epidemic
   <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3659402/>`_
