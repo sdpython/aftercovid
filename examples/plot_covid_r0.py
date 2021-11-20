@@ -151,7 +151,7 @@ with warnings.catch_warnings():
 
     for _, row in locdep.iterrows():
         p = row['geometry'].representative_point()
-        ax.annotate(s="%1.1f" % row['R'], xy=(p.x, p.y),
+        ax.annotate("%1.1f" % row['R'], xy=(p.x, p.y),
                     horizontalalignment='center', color="black", fontsize=8)
 
     ax.legend()
@@ -168,7 +168,7 @@ with warnings.catch_warnings():
 
     for _, row in locdep2.iterrows():
         p = row['geometry'].representative_point()
-        ax.annotate(s="%1.1f" % row['R'], xy=(p.x, p.y),
+        ax.annotate("%1.1f" % row['R'], xy=(p.x, p.y),
                     horizontalalignment='center', color="black", fontsize=8)
 
 plt.show()
