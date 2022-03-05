@@ -60,4 +60,5 @@ setup(name='aftercovid',
       package_dir=package_dir,
       package_data=package_data,
       setup_requires=requires,
-      install_requires=requires)
+      install_requires=requires,
+      keywords=['aftercovid', 'covid'])
