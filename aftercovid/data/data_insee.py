@@ -74,7 +74,7 @@ def data_covid_france_departments_tests(
             raise TypeError("Issue with '{}'".format(v)) from e
     url = ("https://www.data.gouv.fr/fr/datasets/r/"
            "674bddab-6d61-4e59-b0bd-0be535490db0")
-    df = read_csv_cache(cache, url, sep=';')
+    df = read_csv_cache(cache, url, sep=";", decimal=",")
     df['jour'] = to_datetime(df['jour'])
     df['dep'] = df.dep.astype(str)
 

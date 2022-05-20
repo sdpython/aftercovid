@@ -43,15 +43,32 @@ from aftercovid.data import (
     data_covid_france_departments_tests,
     data_france_departments)
 
+
+def valid(df):
+    "Checks that a dataframe is not empty."
+    if 0 in df.shape:
+        raise ValueError(
+            "One dataframe is empty with shape=%r." % (df.shape, ))
+    return df
+
+
 case = data_covid_france_departments_tests(metropole=True)
-case = case[case.cl_age90 == 0]
+case.tail()
+
+
+##########################################
+# Aggrégation par départements et par jour.
+
+case = valid(
+    case[case.cl_age90 != 0].groupby(['dep', 'jour'], as_index=False).sum()
+)
 case.tail()
 
 
 ##########################################
 # Quelques aggrégations, par département.
 
-deps = case.groupby(["dep", "jour"], as_index=False).sum()
+deps = valid(case.groupby(["dep", "jour"], as_index=False).sum())
 deps.tail(n=10)
 
 ###########################################
@@ -75,7 +92,6 @@ def compute_r(df, col_day='jour', col='P', last_day=None):
     w1 = df[(df[col_day] >= p1) & (df[col_day] <= p2)]
     w2 = df[(df[col_day] >= v1) & (df[col_day] <= v2)]
     return w2[col].sum() / w1[col].sum()
-
 
 compute_r(france)
 
@@ -109,7 +125,7 @@ gr.set_index('jour').plot(title="Evolution de R en Métropole")
 
 obs = []
 for d in set(deps.dep):
-    r = compute_r(deps[deps.dep == d])
+    r = compute_r(deps[deps.dep == d])    
     obs.append({'dep': d, 'R': r})
 
 depdf = DataFrame(obs).sort_values("dep")
