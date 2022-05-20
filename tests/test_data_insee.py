@@ -28,7 +28,8 @@ class TestDataInsee(unittest.TestCase):
     def test_data_covid_france_departments_tests(self):
         cache = "temp_tests"
         df = data_covid_france_departments_tests(cache, metropole=True)
-        exp_cols = ['dep', 'jour', 'P', 'T', 'cl_age90', 'pop']
+        exp_cols = ['dep', 'jour', 'cage10', 'cl_age90', 'pop',
+                    'P', 'T', 'Ti', 'Tp', 'Td']
         self.assertEqual(list(df.columns), exp_cols)
         df = data_covid_france_departments_tests(cache)
         self.assertEqual(list(df.columns), exp_cols)

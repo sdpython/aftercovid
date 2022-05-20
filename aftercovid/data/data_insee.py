@@ -58,9 +58,10 @@ def data_covid_france_departments_tests(
         metropole=False):
     """
     Retrieves data from
-    `Données relatives aux résultats des tests virologiques COVID-19 SI-DEP
+    `Données de laboratoires pour le dépistage
+    (A COMPTER DU 18/05/2022) - SI-DEP
     <https://www.data.gouv.fr/fr/datasets/
-    donnees-relatives-aux-resultats-des-tests-virologiques-covid-19/>`_.
+    donnees-de-laboratoires-pour-le-depistage-a-compter-du-18-05-2022-si-dep/>`_.
 
     :param cache: cache name
     :param metropole: only for the metropole
@@ -72,7 +73,7 @@ def data_covid_france_departments_tests(
         except TypeError as e:  # pragma: no cover
             raise TypeError("Issue with '{}'".format(v)) from e
     url = ("https://www.data.gouv.fr/fr/datasets/r/"
-           "406c6a23-e283-4300-9484-54e78c8ae675")
+           "674bddab-6d61-4e59-b0bd-0be535490db0")
     df = read_csv_cache(cache, url, sep=';')
     df['jour'] = to_datetime(df['jour'])
     df['dep'] = df.dep.astype(str)
