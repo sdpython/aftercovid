@@ -93,6 +93,7 @@ def compute_r(df, col_day='jour', col='P', last_day=None):
     w2 = df[(df[col_day] >= v1) & (df[col_day] <= v2)]
     return w2[col].sum() / w1[col].sum()
 
+
 compute_r(france)
 
 #########################################
@@ -125,7 +126,7 @@ gr.set_index('jour').plot(title="Evolution de R en Métropole")
 
 obs = []
 for d in set(deps.dep):
-    r = compute_r(deps[deps.dep == d])    
+    r = compute_r(deps[deps.dep == d])
     obs.append({'dep': d, 'R': r})
 
 depdf = DataFrame(obs).sort_values("dep")
