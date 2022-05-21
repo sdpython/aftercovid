@@ -11,8 +11,8 @@ init:
 install:
   - "%PYTHON%\\python -m pip install pymyinstall"
   - "%PYTHON%\\Scripts\\pymy_install3 Cartopy"
-  - "%PYTHON%\\Scripts\\pymy_install3 fiona"
   - "%PYTHON%\\Scripts\\pymy_install3 GDAL"
+  - "%PYTHON%\\Scripts\\pymy_install3 fiona"
   - "%PYTHON%\\python -m pip install -r requirements.txt"
   - "%PYTHON%\\python -m pip install -r requirements-dev.txt"
 build: off
