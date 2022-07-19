@@ -53,7 +53,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
                     self._eq[k] = parse_expr(v, locs, transformations=tr)
                 except (TypeError, ValueError) as e:  # pragma: no cover
                     raise RuntimeError(
-                        "Unable to parse '{}'.".format(v)) from e
+                        f"Unable to parse '{v}'.") from e
         else:
             self._eq = None
         if len(kwargs) != 0:
@@ -138,7 +138,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         for i, v in enumerate(self._c):
             if v[0] == name:
                 return 'c', i
-        raise ValueError("Unable to find name '{}'.".format(name))
+        raise ValueError(f"Unable to find name '{name}'.")
 
     def __setitem__(self, name, value):
         """
@@ -264,19 +264,19 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         Returns a string formatted in RST.
         '''
         rows = [
-            '*{}*'.format(self.__class__.__name__),
+            f'*{self.__class__.__name__}*',
             '',
             '*Quantities*',
             ''
         ]
         for name, _, doc in self._q:
-            rows.append('* *{}*: {}'.format(name, doc))
+            rows.append(f'* *{name}*: {doc}')
         rows.extend(['', '*Constants*', ''])
         for name, _, doc in self._c:
-            rows.append('* *{}*: {}'.format(name, doc))
+            rows.append(f'* *{name}*: {doc}')
         rows.extend(['', '*Parameters*', ''])
         for name, _, doc in self._p:
-            rows.append('* *{}*: {}'.format(name, doc))
+            rows.append(f'* *{name}*: {doc}')
         if self._eq is not None:
             rows.extend(['', '*Equations*', '', '.. math::',
                          '', '    \\begin{array}{l}'])
@@ -295,20 +295,20 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         Returns a string formatted in RST.
         '''
         rows = [
-            '<p><b>{}</b></p>'.format(self.__class__.__name__),
+            f'<p><b>{self.__class__.__name__}</b></p>',
             '',
             '<p><i>Quantities</i></p>',
             '',
             '<ul>'
         ]
         for name, _, doc in self._q:
-            rows.append('<li><i>{}</i>: {}</li>'.format(name, doc))
+            rows.append(f'<li><i>{name}</i>: {doc}</li>')
         rows.extend(['</ul>', '', '<p><i>Constants</i></p>', '', '<ul>'])
         for name, _, doc in self._c:
-            rows.append('<li><i>{}</i>: {}</li>'.format(name, doc))
+            rows.append(f'<li><i>{name}</i>: {doc}</li>')
         rows.extend(['</ul>', '', '<p><i>Parameters</i></p>', '', '<ul>'])
         for name, _, doc in self._p:
-            rows.append('<li><i>{}</i>: {}</li>'.format(name, doc))
+            rows.append(f'<li><i>{name}</i>: {doc}</li>')
         if self._eq is not None:
             rows.extend(['</ul>', '', '<p><i>Equations</i></p>', '', '<ul>'])
             for i, (k, v) in enumerate(sorted(self._eq.items())):
@@ -416,7 +416,7 @@ class BaseSIR(BaseSIRSimulation, BaseSIREstimation):
         leq = self._lambdified_(name)
         if leq is None:
             raise RuntimeError(  # pragma: no cover
-                "Equation '{}' was not lambdified.".format(name))
+                f"Equation '{name}' was not lambdified.")
         return leq(*self.vect(t))
 
     def _eval_cache(self):

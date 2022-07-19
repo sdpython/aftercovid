@@ -283,7 +283,7 @@ dfp = pandas.DataFrame(
         pandas.to_datetime(dates[-21:]))
 dfp[["Itrue"]].plot(ax=ax[0, 0])
 dfp[["Dtrue"]].plot(ax=ax[1, 0])
-ax[0, 0].set_title("Prediction à partir de %s" % dates[-21])
+ax[0, 0].set_title(f"Prediction à partir de {dates[-21]}")
 
 dt = pandas.to_datetime(dates[-7])
 dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
@@ -296,7 +296,7 @@ dfp = pandas.DataFrame(
         pandas.to_datetime(dates[-7:]))
 dfp[["Itrue"]].plot(ax=ax[0, 1])
 dfp[["Dtrue"]].plot(ax=ax[1, 1])
-ax[0, 1].set_title("Prediction à partir de %s" % dates[-7])
+ax[0, 1].set_title(f"Prediction à partir de {dates[-7]}")
 
 dt = pandas.to_datetime(dates[-1])
 dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
@@ -304,7 +304,7 @@ dfp = pandas.DataFrame(
     predictions[-1], columns='S Ipred R Dpred'.split()).set_index(dates2)
 dfp[["Ipred"]].plot(ax=ax[0, 2])
 dfp[["Dpred"]].plot(ax=ax[1, 2])
-ax[0, 1].set_title("Prediction à partir de %s" % dates[-1])
+ax[0, 1].set_title(f"Prediction à partir de {dates[-1]}")
 
 #################################################
 # Ces prédictions varient beaucoup car une petite imprécision
@@ -318,7 +318,7 @@ dfp = pandas.DataFrame(
     predictions[-1], columns='S Ipred R Dpred'.split()).set_index(dates2)
 dfp[["Ipred"]].plot(ax=ax[0])
 dfp[["Dpred"]].plot(ax=ax[1])
-ax[1].set_title("Prediction à partir de %s" % dates[-1])
+ax[1].set_title(f"Prediction à partir de {dates[-1]}")
 
 #################################################
 # Taille fenêtre glissante sur 7 jours

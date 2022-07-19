@@ -135,8 +135,7 @@ for k in range(0, X.shape[0] - 9):
     Xt, yt = X[k:end], y[k:end]
     m, loss = find_best_model(Xt, yt, [1e-2, 1e-3], 10)
     loss = m.score(Xt, yt)
-    print("k={} iter={} loss={:1.3f} coef={}".format(
-        k, m.iter_, loss, m.model_._val_p))
+    print(f"k={k} iter={m.iter_} loss={loss:1.3f} coef={m.model_._val_p}")
     obs = dict(k=k, loss=loss, it=m.iter_, R0=m.model_.R0())
     obs.update({k: v for k, v in zip(m.model_.param_names, m.model_._val_p)})
     coefs.append(obs)

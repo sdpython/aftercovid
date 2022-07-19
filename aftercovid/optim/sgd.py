@@ -156,11 +156,10 @@ class BaseOptimizer:
     def _display_progress(self, it, max_iter, loss, losses=None):
         'Displays training progress.'
         if losses is None:  # pragma: no cover
-            print('{}/{}: loss: {:1.4g}'.format(it, max_iter, loss))
+            print(f'{it}/{max_iter}: loss: {loss:1.4g}')
         else:
             print(  # pragma: no cover
-                '{}/{}: loss: {:1.4g} losses: {}'.format(
-                    it, max_iter, loss, losses))
+                f'{it}/{max_iter}: loss: {loss:1.4g} losses: {losses}')
 
 
 class SGDOptimizer(BaseOptimizer):
@@ -264,8 +263,8 @@ class SGDOptimizer(BaseOptimizer):
     def _display_progress(self, it, max_iter, loss, losses=None, msg='loss'):
         'Displays training progress.'
         if losses is None:
-            print('{}/{}: {}: {:1.4g} lr={:1.3g}'.format(
-                it, max_iter, msg, loss, self.learning_rate))
+            print(f'{it}/{max_iter}: {msg}: {loss:1.4g} '
+                  f'lr={self.learning_rate:1.3g}')
         else:
             print(  # pragma: no cover
                 '{}/{}: {}: {:1.4g} lr={:1.3g} {}es: {}'.format(

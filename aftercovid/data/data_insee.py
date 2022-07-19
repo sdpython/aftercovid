@@ -71,7 +71,7 @@ def data_covid_france_departments_tests(
         try:
             return len(v)
         except TypeError as e:  # pragma: no cover
-            raise TypeError("Issue with '{}'".format(v)) from e
+            raise TypeError(f"Issue with '{v}'") from e
     url = ("https://www.data.gouv.fr/fr/datasets/r/"
            "674bddab-6d61-4e59-b0bd-0be535490db0")
     df = read_csv_cache(cache, url, sep=";", decimal=",")

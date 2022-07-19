@@ -38,7 +38,7 @@ class SympyNode:
             self._children.append(SympyNode(a, self))
 
     def __repr__(self):
-        return 'SympyNode("%r")' % self.element
+        return f'SympyNode("{self.element!r}")'
 
     @property
     def element(self):

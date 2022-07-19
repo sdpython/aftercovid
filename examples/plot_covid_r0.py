@@ -48,7 +48,7 @@ def valid(df):
     "Checks that a dataframe is not empty."
     if 0 in df.shape:
         raise ValueError(
-            "One dataframe is empty with shape=%r." % (df.shape, ))
+            f"One dataframe is empty with shape={df.shape!r}.")
     return df
 
 
@@ -164,11 +164,11 @@ with warnings.catch_warnings():
     if (locdep.R < 1).sum() > 0:
         locdep[locdep.R < 1].geometry.boundary.plot(
             color=None, edgecolor='g', linewidth=2, ax=ax, label="R<1")
-    ax.set_title("R par départments de la métropole\n%r" % deps.jour.max())
+    ax.set_title(f"R par départments de la métropole\n{deps.jour.max()!r}")
 
     for _, row in locdep.iterrows():
         p = row['geometry'].representative_point()
-        ax.annotate("%1.1f" % row['R'], xy=(p.x, p.y),
+        ax.annotate(f"{row['R']:1.1f}", xy=(p.x, p.y),
                     horizontalalignment='center', color="black", fontsize=8)
 
     ax.legend()
@@ -181,11 +181,11 @@ with warnings.catch_warnings():
     locdep2.plot(
         column="R", ax=ax, edgecolor='black',
         legend=True, cax=cax, cmap="OrRd")
-    ax.set_title("R par départments de la métropole\n%r" % deps.jour.max())
+    ax.set_title(f"R par départments de la métropole\n{deps.jour.max()!r}")
 
     for _, row in locdep2.iterrows():
         p = row['geometry'].representative_point()
-        ax.annotate("%1.1f" % row['R'], xy=(p.x, p.y),
+        ax.annotate(f"{row['R']:1.1f}", xy=(p.x, p.y),
                     horizontalalignment='center', color="black", fontsize=8)
 
 plt.show()
