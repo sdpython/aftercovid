@@ -61,7 +61,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
                     init = None  # pragma: no cover
             elif not isinstance(init, dict):
                 raise TypeError(
-                    "init must be a dictionary not {}.".format(type(init)))
+                    f"init must be a dictionary not {type(init)}.")
         BaseEstimator.__init__(self)
         RegressorMixin.__init__(self)
         self.t = t
@@ -107,7 +107,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         if self.model.lower() in ('sirc', 'sirdc'):
             return CovidSIRDc()
         raise ValueError(
-            "Unknown model name '{}'.".format(self.model))
+            f"Unknown model name '{self.model}'.")
 
     def fit(self, X, y):
         """
@@ -122,8 +122,7 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         err = (ma - mi) / mi
         if err > 1e-5:
             raise RuntimeError(  # pragma: no cover
-                "Population is not constant, in [{}, {}].".format(
-                    mi, ma))
+                f"Population is not constant, in [{mi}, {ma}].")
         if self.init is not None:
             for k, v in self.init.items():
                 self.model_[k] = v
@@ -165,8 +164,8 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
         clq = self.model_.quantity_names
         if len(clq) != X.shape[1]:
             raise RuntimeError(  # pragma: no cover
-                "Unapexected shape for X ({}), expecting {} columns."
-                "".format(X.shape, len(clq)))
+                f"Unapexected shape for X ({X.shape}), "
+                f"expecting {len(clq)} columns.")
         res = None
         for i in range(X.shape[0]):
             for k, v in zip(clq, X[i]):
@@ -215,4 +214,4 @@ class EpidemicRegressor(BaseEstimator, RegressorMixin):
             return self.model_.score(X, y)
         if norm.lower() == 'l1':
             return self.model_.score_l1(X, y)
-        raise ValueError("Unexpected norm %r." % norm)
+        raise ValueError(f"Unexpected norm {norm!r}.")

@@ -203,7 +203,7 @@ df = pandas.DataFrame(X[-21:], columns='S Itrue R Dtrue'.split()
                       ).set_index(pandas.to_datetime(dates[-21:]))
 df[["Itrue"]].plot(ax=ax[0, 0])
 df[["Dtrue"]].plot(ax=ax[1, 0])
-ax[0, 0].set_title("Prediction à partir de %s" % dates[-21])
+ax[0, 0].set_title(f"Prediction à partir de {dates[-21]}")
 
 dt = pandas.to_datetime(dates[-7])
 dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
@@ -215,7 +215,7 @@ df = pandas.DataFrame(X[-7:], columns='S Itrue R Dtrue'.split()
                       ).set_index(pandas.to_datetime(dates[-7:]))
 df[["Itrue"]].plot(ax=ax[0, 1])
 df[["Dtrue"]].plot(ax=ax[1, 1])
-ax[0, 1].set_title("Prediction à partir de %s" % dates[-7])
+ax[0, 1].set_title(f"Prediction à partir de {dates[-7]}")
 
 dt = pandas.to_datetime(dates[-1])
 dates2 = pandas.to_datetime([dt + timedelta(i) for i in range(21)])
@@ -223,7 +223,7 @@ df = pandas.DataFrame(
     predictions[-7], columns='S Ipred R Dpred'.split()).set_index(dates2)
 df[["Ipred"]].plot(ax=ax[0, 2])
 df[["Dpred"]].plot(ax=ax[1, 2])
-ax[0, 1].set_title("Prediction à partir de %s" % dates[-1])
+ax[0, 1].set_title(f"Prediction à partir de {dates[-1]}")
 plt.show()
 
 #################################################

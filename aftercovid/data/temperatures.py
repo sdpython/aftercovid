@@ -18,10 +18,10 @@ def load_temperatures(country='France'):
       code2=75107005&mois=11&annee=2020>`_
     """
     this = os.path.abspath(os.path.dirname(__file__))
-    filename = os.path.join(this, "temperature_2020_%s.xlsx" % country.lower())
+    filename = os.path.join(this, f"temperature_2020_{country.lower()}.xlsx")
     if not os.path.exists(filename):
         raise ValueError(
-            "Unable to load data for country %r." % country)
+            f"Unable to load data for country {country!r}.")
 
     def to_float(val, c, cls=float):
         if val == '---':
@@ -34,8 +34,8 @@ def load_temperatures(country='France'):
         columns = [_ for _ in df.columns if 'Unnamed' not in _]
         if len(columns) != 5:
             raise ValueError(  # pragma: no cover
-                "Unexpected number of columns %r for month %r." % (
-                    df.columns, month))
+                f"Unexpected number of columns {df.columns!r} "
+                f"for month {month!r}.")
 
         df = df[columns]
         df.columns = ["day", "tmax", "tmin", "rain", "sun"]

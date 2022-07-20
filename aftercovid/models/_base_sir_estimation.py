@@ -20,9 +20,8 @@ class BaseSIREstimation:
             raise ValueError("X must be a matrix.")
         clq = self.quantity_names
         if len(clq) != X.shape[1]:
-            raise ValueError(
-                "Unexpected number of columns, got {}, expected {}.".format(
-                    X.shape[1], len(clq)))
+            raise ValueError(f"Unexpected number of columns, got "
+                             f"{X.shape[1]}, expected {len(clq)}.")
         sums = numpy.sum(X, axis=1)
         mi, ma = sums.min(), sums.max()
         df = abs(ma - mi)
@@ -34,9 +33,8 @@ class BaseSIREstimation:
             if not isinstance(y, numpy.ndarray):
                 raise TypeError("y must be a numpy array.")
             if y.shape != X.shape:
-                raise ValueError(
-                    "Unexpected shape of y, got {}, expected {}.".format(
-                        y.shape, X.shape))
+                raise ValueError(f"Unexpected shape of y, got {y.shape}, "
+                                 f"expected {X.shape}.")
         return clq, ma
 
     def fit(self, X, y, t=0, max_iter=100,
@@ -119,7 +117,7 @@ class BaseSIREstimation:
             sym = Symbol('d' + name)
             eq = self._eq[name]
             lo = (eq - sym) ** 2
-            la = self._lambdify_('loss-%s' % name, lo, derivative=True)
+            la = self._lambdify_(f'loss-{name}', lo, derivative=True)
             res.append((lo, la))
         return res
 
@@ -138,7 +136,7 @@ class BaseSIREstimation:
             for pn in prn:
                 pns = Symbol(pn)
                 df = sympy_diff(eq[0], pns)
-                gr = self._lambdify_('grad-%s/%s' % (name, pn), df,
+                gr = self._lambdify_(f'grad-{name}/{pn}', df,
                                      derivative=True)
                 row.append((df, gr))
             res.append(row)
@@ -158,7 +156,7 @@ class BaseSIREstimation:
         err = abs(N - self['N']) / N
         if err > 1e-4:
             raise ValueError(  # pragma: no cover
-                "All rows must sum up to {} not {}.".format(self['N'], N))
+                f"All rows must sum up to {self['N']} not {N}.")
         n = X.shape[0]
         C = X.shape[1]
         pred = numpy.empty(X.shape, dtype=X.dtype)
@@ -217,7 +215,7 @@ class BaseSIREstimation:
         err = abs(N - self['N']) / N
         if err > 1e-4:
             raise ValueError(  # pragma: no cover
-                "All rows must sum up to {} not {}.".format(self['N'], N))
+                f"All rows must sum up to {self['N']} not {N}.")
 
         # loss and gradients functions
         losses = self._losses_sympy()

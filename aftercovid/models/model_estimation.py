@@ -32,7 +32,7 @@ def find_best_model(Xt, yt, lrs, stop_loss, verbose=0,
     for ilr, lr in enumerate(lrs):
         if verbose:
             print(  # pragma: no cover
-                "--- TRY {}/{}: {}".format(ilr + 1, len(lrs), lr))
+                f"--- TRY {ilr + 1}/{len(lrs)}: {lr}")
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
             m = EpidemicRegressor(
@@ -42,7 +42,7 @@ def find_best_model(Xt, yt, lrs, stop_loss, verbose=0,
                 m.fit(Xt, yt)
             except RuntimeError as e:  # pragma: no cover
                 if verbose:
-                    print('ERROR: {}'.format(e))
+                    print(f'ERROR: {e}')
                 continue
             loss = m.score(Xt, yt)
             if numpy.isnan(loss):
@@ -100,7 +100,7 @@ def rolling_estimation(X, y,
             max_iter=max_iter)
         if m is None:
             if verbose:  # pragma: no cover
-                print("k={} loss=nan".format(k))
+                print(f"k={k} loss=nan")
             find_best_model(
                 Xt, yt, [1e8, 1e6, 1e4, 1e2, 1,
                          1e-2, 1e-4, 1e-6], 10,
