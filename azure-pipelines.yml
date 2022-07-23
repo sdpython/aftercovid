@@ -4,8 +4,8 @@ jobs:
     vmImage: 'ubuntu-latest'
   strategy:
     matrix:
-      Python39-Linux:
-        python.version: '3.9'
+      Python310-Linux:
+        python.version: '3.10'
     maxParallel: 3
 
   steps:
@@ -39,9 +39,6 @@ jobs:
   - script: |
       python -m aftercovid check
     displayName: 'Check speed'
-#  - script: |
-#      python -u setup.py build_sphinx
-#    displayName: 'Builds Documentation'
   - task: PublishPipelineArtifact@0
     inputs:
       artifactName: 'wheel-linux-$(python.version)'
@@ -52,8 +49,8 @@ jobs:
     vmImage: 'macOS-latest'
   strategy:
     matrix:
-      Python39-MacOs:
-        python.version: '3.9'
+      Python310-MacOs:
+        python.version: '3.10'
     maxParallel: 3
 
   steps:
@@ -76,10 +73,6 @@ jobs:
     displayName: 'Install omp'
   - script: brew install p7zip
     displayName: 'Install p7zip'
-#  - script: brew install pandoc
-#    displayName: 'Install Pandoc'
-#  - script: brew install graphviz
-#    displayName: 'Install Graphviz'
   - script: python -m pip install --upgrade pip setuptools wheel
     displayName: 'Install tools'
   - script: brew install pybind11
