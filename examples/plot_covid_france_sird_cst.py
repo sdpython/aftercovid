@@ -29,7 +29,6 @@ import pandas
 from pandas import to_datetime
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
-from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
 from aftercovid.data import extract_hopkins_data, preprocess_hopkins_data
 from aftercovid.models import CovidSIRDc, rolling_estimation
 
@@ -135,7 +134,7 @@ dfcoef['cn'] = -dfcoef['correctness']
 
 fig, ax = plt.subplots(2, 3, figsize=(14, 6), sharex=True)
 with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    warnings.simplefilter("ignore", DeprecationWarning)
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoef[["loss_l1"]].plot(ax=ax[1, 0], logy=True)
@@ -157,7 +156,7 @@ dflast = df.iloc[-30:, :]
 
 fig, ax = plt.subplots(2, 3, figsize=(14, 6), sharex=True)
 with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    warnings.simplefilter("ignore", DeprecationWarning)
     dfcoeflast[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoeflast[["beta"]].plot(ax=ax[0, 1], logy=True)
     dfcoeflast[["loss_l1"]].plot(ax=ax[1, 0], logy=True)

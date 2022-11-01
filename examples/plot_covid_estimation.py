@@ -19,7 +19,6 @@ Simulation des données
 import warnings
 from pprint import pprint
 import numpy
-from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
 import matplotlib.pyplot as plt
 import pandas
 from aftercovid.models import EpidemicRegressor, CovidSIRD
@@ -127,7 +126,7 @@ dfcoef
 
 
 with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    warnings.simplefilter("ignore", DeprecationWarning)
     fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)
@@ -176,7 +175,7 @@ dfcoef
 # Graphes
 
 with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    warnings.simplefilter("ignore", DeprecationWarning)
     fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     for delay in sorted(set(dfcoef['delay'])):
         dfcoef.pivot('k', 'delay', 'mu').plot(
@@ -235,7 +234,7 @@ dfcoef
 dfeps = pandas.DataFrame({_[0]: x for _, x in zip(model.Q, Xeps.T)})
 
 with warnings.catch_warnings():
-    warnings.simplefilter("ignore", MatplotlibDeprecationWarning)
+    warnings.simplefilter("ignore", DeprecationWarning)
     fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     dfcoef[["mu", "nu"]].plot(ax=ax[0, 0], logy=True)
     dfcoef[["beta"]].plot(ax=ax[0, 1], logy=True)

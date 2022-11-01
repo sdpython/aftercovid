@@ -36,7 +36,6 @@ Récupération des données
 import warnings
 from pandas import Timedelta, DataFrame
 from geopandas import GeoDataFrame
-from matplotlib.cbook.deprecation import MatplotlibDeprecationWarning
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from aftercovid.data import (
@@ -150,7 +149,7 @@ locdep.tail()
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=UserWarning)
-    warnings.filterwarnings("ignore", category=MatplotlibDeprecationWarning)
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
     fig, axs = plt.subplots(
         1, 2, figsize=(16, 10),
         gridspec_kw={'width_ratios': [2, 1]})
