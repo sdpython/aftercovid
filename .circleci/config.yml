@@ -56,7 +56,6 @@ jobs:
       - run:
           name: check speed
           command: |
-            . venv/bin/activate
             python -m aftercovid check
 
       - store_artifacts:
