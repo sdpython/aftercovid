@@ -26,7 +26,7 @@ def load_temperatures(country='France'):
     def to_float(val, c, cls=float):
         if val == '---':
             return numpy.nan
-        if isinstance(val, (str, numpy.str)):
+        if isinstance(val, (str, numpy.str_)):
             return cls(val.split()[c])
         return val
 
