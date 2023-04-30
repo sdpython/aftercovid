@@ -178,18 +178,18 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore", DeprecationWarning)
     fig, ax = plt.subplots(2, 3, figsize=(14, 6))
     for delay in sorted(set(dfcoef['delay'])):
-        dfcoef.pivot('k', 'delay', 'mu').plot(
+        dfcoef.pivot(index='k', columns='delay', values='mu').plot(
             ax=ax[0, 0], logy=True, legend=False).set_title('mu')
-        dfcoef.pivot('k', 'delay', 'nu').plot(
+        dfcoef.pivot(index='k', columns='delay', values='nu').plot(
             ax=ax[0, 1], logy=True, legend=False).set_title('nu')
-        dfcoef.pivot('k', 'delay', 'beta').plot(
+        dfcoef.pivot(index='k', columns='delay', values='beta').plot(
             ax=ax[0, 2], logy=True, legend=False).set_title('beta')
-        dfcoef.pivot('k', 'delay', 'R0').plot(
+        dfcoef.pivot(index='k', columns='delay', values='R0').plot(
             ax=ax[1, 2], logy=True, legend=False).set_title('R0')
         ax[1, 2].plot([dfcoef.index[0], dfcoef.index[-1]], [1, 1], '--',
                       label="R0=1")
         ax[1, 2].set_ylim(0, 5)
-        dfcoef.pivot('k', 'delay', 'loss').plot(
+        dfcoef.pivot(index='k', columns='delay', values='loss').plot(
             ax=ax[1, 0], logy=True, legend=False).set_title('loss')
     df.plot(ax=ax[1, 1], logy=True)
     fig.suptitle('Estimation de R0 tout au long de la simulation '
